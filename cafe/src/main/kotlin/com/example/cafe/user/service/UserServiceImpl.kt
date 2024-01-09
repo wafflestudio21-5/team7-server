@@ -3,6 +3,9 @@ package com.example.cafe.user.service
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import org.springframework.stereotype.Service
+import java.sql.Date
+import java.text.SimpleDateFormat
+
 @Service
 class UserServiceImpl (
     private val userRepository: UserRepository,
@@ -21,11 +24,17 @@ class UserServiceImpl (
                 username = username,
                 password = password,
                 email = email,
-                birthDate = birthDate,
+                birthDate = toSqlDate(birthDate),
                 phoneNumber = phoneNumber,
             )
         )
         return User(entity)
+    }
+
+    fun toSqlDate(birthDate: String): Date {
+        val dateFormat = SimpleDateFormat("yyyyMMdd")
+        val utilDate = dateFormat.parse(birthDate)
+        return Date(utilDate.time)
     }
 
     fun User(entity: UserEntity) = User(

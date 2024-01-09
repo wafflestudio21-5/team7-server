@@ -4,6 +4,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import java.sql.Date
 
 @Entity(name = "users")
 class UserEntity(
@@ -14,6 +15,6 @@ class UserEntity(
     val password: String,
     val username: String,
     val email: String,
-    val birthDate: String,
+    val birthDate: Date,
     val phoneNumber: String,
 )
