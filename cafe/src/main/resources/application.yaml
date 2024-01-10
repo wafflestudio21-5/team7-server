@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: local
   config:
     import: classpath:application-db.yaml
 
