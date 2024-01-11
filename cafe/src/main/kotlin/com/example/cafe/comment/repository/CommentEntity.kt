@@ -1,15 +1,9 @@
 package com.example.cafe.comment.repository
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
 import java.time.LocalDateTime
 import com.example.cafe.user.repository.UserEntity
-//import com.example.cafe.article.repository.ArticleEntity
+import com.example.cafe.article.repository.ArticleEntity
+import jakarta.persistence.*
 
 @Entity(name = "comments")
 class CommentEntity(
@@ -21,7 +15,9 @@ class CommentEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val user: UserEntity,
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "article_id")
-    //val article: ArticleEntity,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    val article: ArticleEntity,
+    @OneToMany(mappedBy = "comment")
+    val recomments: List<RecommentEntity> = emptyList(),
 )
