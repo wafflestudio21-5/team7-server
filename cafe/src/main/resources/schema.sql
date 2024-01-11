@@ -15,7 +15,7 @@ create table users (
     username varchar(100),
     password varchar(20),
     email varchar(100),
-    birth_date varchar(20),
+    birth_date date,
     phone_number varchar(20),
     primary key (id),
     unique(user_id)
