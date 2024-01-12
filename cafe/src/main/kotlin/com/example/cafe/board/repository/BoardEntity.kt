@@ -11,6 +11,6 @@ class BoardEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     val boardGroup: BoardGroupEntity,
-    val view_cnt: Long,
-    val like_cnt: Long,
+    val viewCnt: Long,
+    val likeCnt: Long,
 )

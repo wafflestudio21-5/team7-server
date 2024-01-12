@@ -7,6 +7,6 @@ class BoardLikeEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-    val board_id: Long,
-    val user_id: Long,
+    val boardId: Long,
+    val userId: Long,
 )

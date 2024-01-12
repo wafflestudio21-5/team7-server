@@ -11,7 +11,7 @@ class BoardViewEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-    val board_id: Long,
-    val user_id: Long,
-    val created_at: LocalDateTime,
+    val boardId: Long,
+    val userId: Long,
+    val createdAt: LocalDateTime,
 )
