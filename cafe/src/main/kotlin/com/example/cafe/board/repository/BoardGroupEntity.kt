@@ -1,9 +1,7 @@
 package com.example.cafe.board.repository
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
+import java.util.Collections.emptyList
 
 @Entity(name = "board_groups")
 class BoardGroupEntity(
@@ -11,4 +9,6 @@ class BoardGroupEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
     val name: String,
+    @OneToMany(mappedBy = "group")
+    val boards: List<BoardEntity> = emptyList(),
 )
