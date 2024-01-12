@@ -1,4 +1,4 @@
-INSERT into users (id, userId, username, password, email, birthDate, phoneNumber) VALUES (1, 'hong', '홍길동', 'hong123', 'hong@naver.com', '2000-05-03', '01023453444'),
+INSERT into users (id, user_id, username, password, email, birth_date, phone_number) VALUES (1, 'hong', '홍길동', 'hong123', 'hong@naver.com', '2000-05-03', '01023453444'),
 (2, 'doo', '황두현', 'doo123', 'doo@naver.com', '1997-04-26', '01023446673');
 
 INSERT into board_groups (id, name) VALUES (1, '백엔드'),

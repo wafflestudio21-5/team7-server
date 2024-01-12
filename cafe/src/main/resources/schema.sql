@@ -11,14 +11,14 @@ drop table if exists recomments cascade;
 
 create table users (
     id bigint auto_increment,
-    userId varchar(100),
+    user_id varchar(100),
     username varchar(100),
     password varchar(20),
     email varchar(100),
-    birthDate date,
-    phoneNumber varchar(20),
+    birth_date date,
+    phone_number varchar(20),
     primary key (id),
-    unique(userId)
+    unique(user_id)
 );
 create table articles (
     id bigint auto_increment,
