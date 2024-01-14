@@ -5,6 +5,6 @@ import java.time.LocalDateTime
 data class Recomment(
     val id: Long,
     val content: String,
-    var createdAt: LocalDateTime,
+    var updatedAt: LocalDateTime,
     val user: String,
 )

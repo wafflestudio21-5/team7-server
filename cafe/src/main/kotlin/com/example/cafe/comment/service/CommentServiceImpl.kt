@@ -33,11 +33,11 @@ class CommentServiceImpl (
         TODO()
     }
 
-    override fun modifyComment(id: Long, userId: Long, content: String) {
+    override fun modifyComment(id: Long, userId: Long, content: String, at: LocalDateTime) {
         TODO()
     }
 
-    override fun modifyRecomment(id: Long, userId: Long, content: String) {
+    override fun modifyRecomment(id: Long, userId: Long, content: String, at: LocalDateTime) {
         TODO()
     }
 

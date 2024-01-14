@@ -9,8 +9,8 @@ interface CommentService {
     fun getRecomments(commentId: Long): List<Recomment>
     fun createComment(userId: Long, articleId: Long, at: LocalDateTime = LocalDateTime.now())
     fun createRecomment(userId: Long, commentId: Long, at: LocalDateTime = LocalDateTime.now())
-    fun modifyComment(id: Long, userId: Long, content: String)
-    fun modifyRecomment(id: Long, userId: Long, content: String)
+    fun modifyComment(id: Long, userId: Long, content: String, at: LocalDateTime = LocalDateTime.now())
+    fun modifyRecomment(id: Long, userId: Long, content: String, at: LocalDateTime = LocalDateTime.now())
     fun deleteComment(id: Long, userId: Long)
     fun deleteRecomment(id: Long, userId: Long)
 }
