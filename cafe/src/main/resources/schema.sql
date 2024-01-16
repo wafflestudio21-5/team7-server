@@ -12,11 +12,17 @@ drop table if exists recomments cascade;
 create table users (
     id bigint auto_increment,
     user_id varchar(100),
-    username varchar(100),
     password varchar(20),
+    username varchar(100),
+    nickname varchar(100),
     email varchar(100),
     birth_date date,
     phone_number varchar(20),
+    rank varchar(20) default '씨앗',
+    register_date datetime not null default current_timestamp,
+    visit_count bigint default 0,
+    articles_count bigint default 0,
+    comments_count bigint default 0,
     primary key (id),
     unique(user_id)
 );
@@ -24,9 +30,10 @@ create table articles (
     id bigint auto_increment,
     title varchar(255),
     content varchar(10000),
-    created_at datetime not null,
+    created_at datetime not null default current_timestamp,
     view_cnt bigint default 0,
     like_cnt bigint default 0,
+    min_user_rank_allowed varchar(20) default '새싹',
     user_id bigint,
     board_id bigint,
     allow_comments boolean not null,
@@ -75,7 +82,7 @@ create table board_views (
 create table comments (
     id bigint auto_increment,
     content varchar(10000),
-    created_at datetime not null,
+    last_modified datetime not null,
     user_id bigint,
     article_id bigint,
     primary key (id)
@@ -83,7 +90,7 @@ create table comments (
 create table recomments (
     id bigint auto_increment,
     content varchar(10000),
-    created_at datetime not null,
+    last_modified datetime not null,
     user_id bigint,
     comment_id bigint,
     primary key (id)

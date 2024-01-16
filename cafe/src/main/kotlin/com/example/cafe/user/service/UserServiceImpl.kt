@@ -5,6 +5,7 @@ import com.example.cafe.user.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 
 @Service
 class UserServiceImpl (
@@ -16,7 +17,8 @@ class UserServiceImpl (
         password: String,
         email: String,
         birthDate: String,
-        phoneNumber: String
+        phoneNumber: String,
+        at: LocalDateTime
     ): User {
         val entity = userRepository.save(
             UserEntity(
@@ -26,6 +28,7 @@ class UserServiceImpl (
                 email = email,
                 birthDate = toSqlDate(birthDate),
                 phoneNumber = phoneNumber,
+                registerDate = at
             )
         )
         return User(entity)

@@ -1,5 +1,5 @@
-INSERT into users (id, user_id, username, password, email, birth_date, phone_number) VALUES (1, 'hong', '홍길동', 'hong123', 'hong@naver.com', '2000-05-03', '01023453444'),
-(2, 'doo', '황두현', 'doo123', 'doo@naver.com', '1997-04-26', '01023446673');
+정INSERT into users (id, user_id, password, username, nickname, email, birth_date, phone_number) VALUES (1, 'hong', 'hong123', '홍길동', '홍길동', 'hong@naver.com', '2000-05-03', '01023453444'),
+(2, 'doo', 'doo123', '황두현', '황두현', 'doo@naver.com', '1997-04-26', '01023446673');
 
 INSERT into board_groups (id, name) VALUES (1, '백엔드'),
 (2, '프론트엔드'),
@@ -16,6 +16,6 @@ INSERT into boards (id, name, group_id) VALUES (1, '스프링', 1),
 
 INSERT into articles (id, title, content, created_at, user_id, board_id, allow_comments, is_notification) VALUES (1, '스프링이란', '스프링은 ..', CURRENT_TIMESTAMP, 1, 1, true, true);
 
-INSERT into comments (id, content, created_at, user_id, article_id) VALUES (1, '잘 읽었습니다.', CURRENT_TIMESTAMP, 2, 1);
+INSERT into comments (id, content, last_modified, user_id, article_id) VALUES (1, '잘 읽었습니다.', CURRENT_TIMESTAMP, 2, 1);
 
-INSERT into recomments (id, content, created_at, user_id, comment_id) VALUES (1, '감사합니다.', CURRENT_TIMESTAMP, 1, 1);
+INSERT into recomments (id, content, last_modified, user_id, comment_id) VALUES (1, '감사합니다.', CURRENT_TIMESTAMP, 1, 1);
