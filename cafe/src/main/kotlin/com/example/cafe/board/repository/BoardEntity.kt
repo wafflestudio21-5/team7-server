@@ -1,5 +1,6 @@
 package com.example.cafe.board.repository
 
+import com.example.cafe.article.repository.ArticleEntity
 import jakarta.persistence.*
 
 @Entity(name = "boards")
@@ -13,4 +14,6 @@ class BoardEntity(
     val group: BoardGroupEntity,
     val viewCnt: Long,
     val likeCnt: Long,
+    @OneToMany(mappedBy = "board")
+    val articles: List<ArticleEntity>,
 )
