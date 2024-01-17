@@ -1,20 +1,42 @@
 package com.example.cafe.comment.service
 
+import com.example.cafe.article.repository.ArticleRepository
 import com.example.cafe.comment.repository.CommentEntity
 import com.example.cafe.comment.repository.CommentRepository
+import com.example.cafe.user.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
 class CommentServiceImpl (
     private val commentRepository: CommentRepository,
+    private val userRepository: UserRepository,
+    private val articleRepository: ArticleRepository,
 ) : CommentService {
     override fun getComment(id: Long): Comment {
         TODO()
     }
 
     override fun getComments(articleId: Long): List<Comment> {
-        TODO()
+        val article = articleRepository.findByIdOrNull(articleId) ?: throw CommentArticleNotFoundException()
+        val comments = article.comments.map{ commentEntity ->
+            Comment(
+                id = commentEntity.id,
+                content = commentEntity.content,
+                lastModified = commentEntity.lastModified,
+                nickname = commentEntity.user.nickname,
+                recomments = commentEntity.recomments.map { recommentEntity ->
+                    Recomment(
+                        id = recommentEntity.id,
+                        content = recommentEntity.content,
+                        lastModified = recommentEntity.lastModified,
+                        nickname = recommentEntity.user.nickname,
+                    )
+                }
+            )
+        }
+        return comments
     }
 
     override fun getRecomment(id: Long): Recomment {
@@ -25,27 +47,62 @@ class CommentServiceImpl (
         TODO()
     }
 
-    override fun createComment(userId: Long, articleId: Long, at: LocalDateTime) {
+    override fun createComment(userId: String, articleId: Long, content: String, at: LocalDateTime): Comment {
+        val user = userRepository.findByUserId(userId) ?: throw CommentUserNotFoundException()
+        val article = articleRepository.findByIdOrNull(articleId) ?: throw CommentArticleNotFoundException()
+        val comment = commentRepository.save(
+            CommentEntity(
+                content = content,
+                lastModified = at,
+                user = user,
+                article = article,
+            )
+        )
+        return Comment(
+            id = comment.id,
+            content = comment.content,
+            lastModified = comment.lastModified,
+            nickname = comment.user.nickname,
+        )
+    }
+
+    override fun createRecomment(userId: String, commentId: Long, content: String, at: LocalDateTime) : Recomment {
         TODO()
     }
 
-    override fun createRecomment(userId: Long, commentId: Long, at: LocalDateTime) {
+    override fun updateComment(id: Long, userId: String, content: String, at: LocalDateTime) : Comment {
+        val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
+        if (comment.user.userId != userId) {
+            throw InvalidCommentUserException()
+        }
+        comment.content = content
+        comment.lastModified = at
+        return Comment(
+            id = comment.id,
+            content = comment.content,
+            lastModified = comment.lastModified,
+            nickname = comment.user.nickname,
+            recomments = comment.recomments.map { recommentEntity ->
+                Recomment(
+                    id = recommentEntity.id,
+                    content = recommentEntity.content,
+                    lastModified = recommentEntity.lastModified,
+                    nickname = recommentEntity.user.nickname,
+                )
+            }
+        )
+    }
+
+    override fun updateRecomment(id: Long, userId: String, content: String, at: LocalDateTime) : Recomment {
         TODO()
     }
 
-    override fun modifyComment(id: Long, userId: Long, content: String, at: LocalDateTime) {
-        TODO()
+    override fun deleteComment(id: Long, userId: String) {
+        val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
+        commentRepository.delete(comment)
     }
 
-    override fun modifyRecomment(id: Long, userId: Long, content: String, at: LocalDateTime) {
-        TODO()
-    }
-
-    override fun deleteComment(id: Long, userId: Long) {
-        TODO()
-    }
-
-    override fun deleteRecomment(id: Long, userId: Long) {
+    override fun deleteRecomment(id: Long, userId: String) {
         TODO()
     }
 }
