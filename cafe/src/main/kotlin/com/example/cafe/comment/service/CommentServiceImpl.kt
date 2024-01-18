@@ -8,6 +8,7 @@ import com.example.cafe.comment.repository.RecommentRepository
 import com.example.cafe.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Service
@@ -89,6 +90,7 @@ class CommentServiceImpl (
         )
     }
 
+    @Transactional
     override fun updateComment(id: Long, userId: String, content: String, at: LocalDateTime) : Comment {
         val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
         if (comment.user.userId != userId) {
@@ -112,6 +114,7 @@ class CommentServiceImpl (
         )
     }
 
+    @Transactional
     override fun updateRecomment(id: Long, userId: String, content: String, at: LocalDateTime) : Recomment {
         val recomment = recommentRepository.findByIdOrNull(id) ?: throw RecommentNotFoundException()
         if (recomment.user.userId != userId) {
