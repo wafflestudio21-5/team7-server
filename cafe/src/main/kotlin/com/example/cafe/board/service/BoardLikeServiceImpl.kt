@@ -12,8 +12,12 @@ class BoardLikeServiceImpl (
     private val boardRepository: BoardRepository,
     private val userRepository: UserRepository
 ) : BoardLikeService {
+    override fun exist(userId: Long, boardId: Long): Boolean {
+        return boardLikeRepository.findByUserIdAndBoardId(userId, boardId) != null
+    }
+
     override fun get(userId: String): List<Board> {
-        val user = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+        val user = userRepository.findByUserId(userId) ?: throw BoardUserNotFoundException()
         val boardLikeList = boardRepository.findByUserId(user.id)
 
         return boardLikeList.map {
@@ -25,7 +29,14 @@ class BoardLikeServiceImpl (
     }
 
     override fun create(userId: String, boardId: Long) {
-        val user = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+        val user = userRepository.findByUserId(userId) ?: throw BoardUserNotFoundException()
+        if (boardRepository.findById(boardId).isEmpty) {
+            throw BoardNotFoundException()
+        }
+
+        if (exist(userId = user.id, boardId = boardId)) {
+            throw BoardAlreadyLikedException()
+        }
 
         boardLikeRepository.save(
             BoardLikeEntity(
@@ -36,8 +47,9 @@ class BoardLikeServiceImpl (
     }
 
     override fun delete(userId: String, boardId: Long) {
-        val user = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+        val user = userRepository.findByUserId(userId) ?: throw BoardUserNotFoundException()
         val boardLike = boardLikeRepository.findByUserIdAndBoardId(user.id, boardId)
+            ?: throw BoardNeverLikedException()
 
         boardLikeRepository.delete(boardLike)
     }

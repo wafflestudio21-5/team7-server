@@ -1,11 +1,8 @@
 package com.example.cafe.board.controller
 
-import com.example.cafe.article.controller.ArticlePostRequest
 import com.example.cafe.article.service.ArticleBrief
-import com.example.cafe.board.service.Board
-import com.example.cafe.board.service.BoardGroup
-import com.example.cafe.board.service.BoardLikeService
-import com.example.cafe.board.service.BoardService
+import com.example.cafe.board.service.*
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -53,6 +50,16 @@ class BoardController(
         @PathVariable boardId: Long,
     ):ArticleBriefResponse {
         return ArticleBriefResponse(boardService.getArticles(boardId))
+    }
+
+    @ExceptionHandler
+    fun handleException(e: BoardException): ResponseEntity<Unit> {
+        val status = when (e) {
+            is BoardUserNotFoundException, is BoardNotFoundException, is BoardNeverLikedException -> 404
+            is BoardAlreadyLikedException -> 409
+        }
+
+        return ResponseEntity.status(status).build()
     }
 
 }
