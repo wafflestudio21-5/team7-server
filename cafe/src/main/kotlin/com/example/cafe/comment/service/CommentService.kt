@@ -3,9 +3,7 @@ package com.example.cafe.comment.service
 import java.time.LocalDateTime
 
 interface CommentService {
-    fun getComment(id: Long): Comment
     fun getComments(articleId: Long): List<Comment>
-    fun getRecomment(id: Long): Recomment
     fun getRecomments(commentId: Long): List<Recomment>
     fun createComment(userId: String, articleId: Long, content: String, at: LocalDateTime = LocalDateTime.now()): Comment
     fun createRecomment(userId: String, commentId: Long, content: String, at: LocalDateTime = LocalDateTime.now()): Recomment
