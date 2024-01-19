@@ -24,7 +24,19 @@ class UserController(
             birthDate = request.birthDate,
             phoneNumber = request.phoneNumber,
         )
-        return SignUpResponse(userId = user.userId, username = user.username)
+        return SignUpResponse(userId = user.userId)
+    }
+
+    @PostMapping("/api/v1/signin")
+    fun signIn(
+        @RequestBody request: SignInRequest,
+    ): SignInResponse {
+        val user = userService.signIn(
+            userId = request.userId,
+            password = request.password
+        )
+
+        return SignInResponse(user.userId)
     }
 
     @ExceptionHandler
@@ -48,7 +60,15 @@ data class SignUpRequest(
     val phoneNumber: String,
 )
 
-data class SignUpResponse(
+data class SignInRequest(
     val userId: String,
-    val username: String,
+    val password: String,
+)
+
+data class SignUpResponse(
+    val userId: String
+)
+
+data class SignInResponse(
+    val userId: String
 )

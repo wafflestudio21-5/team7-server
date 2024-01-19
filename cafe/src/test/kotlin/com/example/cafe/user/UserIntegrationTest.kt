@@ -116,4 +116,69 @@ class UserIntegrationTest @Autowired constructor(
         )
             .andExpect(status().`is`(409))
     }
+
+    @Test
+    fun `로그인 정보가 정확하지 않으면 404 응답을 내려준다`() {
+        mvc.perform(
+            post("/api/v1/signup")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "username" to "username",
+                            "password" to "password123",
+                            "email" to "correct@naver.com",
+                            "birthDate" to "2000.01.01",
+                            "phoneNumber" to "01012345678"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(200))
+
+        // not exist username
+        mvc.perform(
+            post("/api/v1/signin")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid-404",
+                            "password" to "password123"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(404))
+
+        // wrong password
+        mvc.perform(
+            post("/api/v1/signin")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "password" to "wrong123"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(404))
+
+        mvc.perform(
+            post("/api/v1/signin")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "password" to "password123"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(200))
+    }
 }

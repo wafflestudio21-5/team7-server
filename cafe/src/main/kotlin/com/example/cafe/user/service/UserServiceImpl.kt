@@ -4,6 +4,8 @@ import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.ValidationUtil
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -33,6 +35,16 @@ class UserServiceImpl (
                 registerDate = at
             )
         )
+        return User(entity)
+    }
+
+    override fun signIn(userId: String, password: String): User {
+        val entity = userRepository.findByUserId(userId) ?: throw SignInUserNotFoundException()
+
+        if (entity.password != password) {
+            throw SignInInvalidPasswordException()
+        }
+
         return User(entity)
     }
 
@@ -71,8 +83,7 @@ class UserServiceImpl (
     }
 
     fun User(entity: UserEntity) = User(
-        userId = entity.userId,
-        username = entity.username
+        userId = entity.userId
     )
 
 }

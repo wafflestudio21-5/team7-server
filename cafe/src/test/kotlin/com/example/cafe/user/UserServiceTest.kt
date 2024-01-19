@@ -64,4 +64,39 @@ class UserServiceTest @Autowired constructor(
             )
         }
     }
+
+    @Test
+    fun `로그인시 유저 이름과 비밀번호가 정확해야 한다`() {
+        assertDoesNotThrow {
+            userService.signUp(
+                userId = "userid",
+                username = "username",
+                password = "correct1#",
+                email = "doo@naver.com",
+                birthDate = "2000.01.01",
+                phoneNumber = "01012345678",
+            )
+        }
+
+        assertThrows<SignInUserNotFoundException> {
+            userService.signIn(
+                userId = "userid-404",
+                password = "spring",
+            )
+        }
+
+        assertThrows<SignInInvalidPasswordException> {
+            userService.signIn(
+                userId = "userid",
+                password = "wrong1#",
+            )
+        }
+
+        assertDoesNotThrow {
+            userService.signIn(
+                userId = "userid",
+                password = "correct1#",
+            )
+        }
+    }
 }
