@@ -4,8 +4,10 @@ import com.example.cafe.user.service.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import kotlin.contracts.contract
 
 @RestController
 class UserController(
@@ -43,17 +45,30 @@ class UserController(
     fun signOut(
         @RequestBody request: SignOutRequest,
     ) {
-        val user = userService.signOut(
+        userService.signOut(
             userId = request.userId
         )
+    }
+
+    @PutMapping("/api/v1/users/user")
+    fun updateProfile(
+        @RequestBody request: UpdateProfileRequest,
+    ): UpdateProfileResponse {
+        val user = userService.updateProfile(
+            userId = request.userId,
+            nickname = request.nickname,
+            introduction = request.content
+        )
+
+        return UpdateProfileResponse(userId = user.userId)
     }
 
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
             is SignUpBadUserIdException, is SignUpBadPasswordException, is SignUpBadEmailException, is SignUpBadBirthDateException, is SignUpBadPhoneNumberException -> 400
-            is SignUpUserIdConflictException -> 409
-            is SignInUserNotFoundException, is SignInInvalidPasswordException, is SignOutUserNotFoundException -> 404
+            is SignUpUserIdConflictException, is NicknameConflictException -> 409
+            is SignInUserNotFoundException, is SignInInvalidPasswordException, is SignOutUserNotFoundException, is UserNotFoundException -> 404
         }
 
         return ResponseEntity.status(status).build()
@@ -78,10 +93,20 @@ data class SignOutRequest(
     val userId: String
 )
 
+data class UpdateProfileRequest(
+    val userId: String,
+    val nickname: String,
+    val content: String
+)
+
 data class SignUpResponse(
     val userId: String
 )
 
 data class SignInResponse(
+    val userId: String
+)
+
+data class UpdateProfileResponse(
     val userId: String
 )

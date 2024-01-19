@@ -19,3 +19,7 @@ class SignInUserNotFoundException : UserException()
 class SignInInvalidPasswordException : UserException()
 
 class SignOutUserNotFoundException() : UserException()
+
+class UserNotFoundException(): UserException()
+
+class NicknameConflictException(): UserException()

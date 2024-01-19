@@ -20,6 +20,7 @@ create table users (
     phone_number varchar(20),
     rank varchar(20) default '씨앗',
     register_date datetime not null default current_timestamp,
+    introduction varchar(10000) default '',
     visit_count bigint default 0,
     articles_count bigint default 0,
     comments_count bigint default 0,

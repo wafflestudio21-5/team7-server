@@ -52,6 +52,17 @@ class UserServiceImpl (
         if (userRepository.findByUserId(userId) == null) throw SignOutUserNotFoundException()
     }
 
+    override fun updateProfile(userId: String, nickname: String, introduction: String): User {
+        var entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+        val currentNickname = entity.nickname
+
+        if (nickname != currentNickname && userRepository.findByNickname(nickname) != null) throw NicknameConflictException()
+        entity.nickname = nickname
+        entity.introduction = introduction
+
+        return User(entity)
+    }
+
     private fun validate(userId: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 

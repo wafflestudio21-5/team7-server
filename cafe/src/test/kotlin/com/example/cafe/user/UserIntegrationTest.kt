@@ -7,8 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -222,6 +221,128 @@ class UserIntegrationTest @Autowired constructor(
                     mapper.writeValueAsString(
                         mapOf(
                             "userId" to "userid"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(200))
+    }
+
+    @Test
+    fun `회원 정보 수정시 사용중인 닉네임으로 변경할 수 없다`() {
+        mvc.perform(
+            post("/api/v1/signup")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "username" to "nickname1",
+                            "password" to "password123",
+                            "email" to "correct@naver.com",
+                            "birthDate" to "2000.01.01",
+                            "phoneNumber" to "01012345678"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(200))
+
+        mvc.perform(
+            post("/api/v1/signup")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid2",
+                            "username" to "nickname2",
+                            "password" to "password123",
+                            "email" to "correct@naver.com",
+                            "birthDate" to "2000.01.01",
+                            "phoneNumber" to "01012345678"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(200))
+
+        // not exist userid
+        mvc.perform(
+            put("/api/v1/users/user")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid-404",
+                            "nickname" to "nickname1",
+                            "content" to "content",
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(404))
+
+        //duplicated nickname
+        mvc.perform(
+            put("/api/v1/users/user")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "nickname" to "nickname2",
+                            "content" to "content",
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(409))
+
+        mvc.perform(
+            put("/api/v1/users/user")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "nickname" to "nickname",
+                            "content" to "content",
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(200))
+    }
+
+    @Test
+    fun `기존의 자신이 사용하던 닉네임을 사용해도 예외를 던지지 않는다`() {
+        mvc.perform(
+            post("/api/v1/signup")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "username" to "nickname",
+                            "password" to "password123",
+                            "email" to "correct@naver.com",
+                            "birthDate" to "2000.01.01",
+                            "phoneNumber" to "01012345678"
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().`is`(200))
+
+        mvc.perform(
+            put("/api/v1/users/user")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "userId" to "userid",
+                            "nickname" to "nickname",
+                            "content" to "content",
                         )
                     )
                 )
