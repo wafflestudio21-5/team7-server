@@ -7,11 +7,11 @@ import java.time.LocalDateTime
 data class ArticleBrief (
     val articleId: Long,
     val title: String,
+    val createdAt: LocalDateTime,
+    val viewCount: Long,
+    val likeCount: Long,
+    val commentCount: Int,
     val author: User,
     val board: Board,
-    val likeCount: Long,
-    val viewCount: Long,
-    val commentCount: Int,
-    val createdAt: LocalDateTime,
     val isNotification: Boolean,
 )

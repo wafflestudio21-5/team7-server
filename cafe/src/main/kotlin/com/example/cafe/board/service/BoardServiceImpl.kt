@@ -1,7 +1,6 @@
 package com.example.cafe.board.service
 
 import com.example.cafe.article.repository.ArticleRepository
-import com.example.cafe.article.service.Article
 import com.example.cafe.article.service.ArticleBrief
 import com.example.cafe.board.repository.BoardGroupRepository
 import com.example.cafe.board.repository.BoardRepository
@@ -40,18 +39,19 @@ class BoardServiceImpl (
     }
 
     override fun getArticles(boardId: Long): List<ArticleBrief> {
+        val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
         val articleList = articleRepository.findByBoardId(boardId)
 
         return articleList.map {article->
             ArticleBrief(
                 articleId = article.id,
                 title = article.title,
-                author = User(userId = article.user.userId, username = article.user.username),
-                board = Board(id = article.board.id, name = article.board.name),
-                likeCount = article.likeCnt,
-                viewCount = article.viewCnt,
-                commentCount = article.comments.size,
                 createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                likeCount = article.likeCnt,
+                commentCount = article.comments.size,
+                author = User(userId = article.user.userId, username = article.user.username),
+                board = Board(id = board.id, name = board.name),
                 isNotification = article.isNotification,
             )
         }

@@ -41,7 +41,7 @@ class BoardLikeServiceImpl (
         boardLikeRepository.save(
             BoardLikeEntity(
                 userId = user.id,
-                board = boardRepository.findById(boardId).get() //null?
+                board = boardRepository.findById(boardId).get()
             )
         )
     }

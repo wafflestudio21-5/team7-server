@@ -1,6 +1,5 @@
 package com.example.cafe.board.service
 
-import com.example.cafe.article.service.Article
 import com.example.cafe.article.service.ArticleBrief
 
 interface BoardService {
