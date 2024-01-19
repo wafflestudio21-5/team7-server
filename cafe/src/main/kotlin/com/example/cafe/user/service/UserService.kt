@@ -8,4 +8,5 @@ interface UserService {
     fun signOut(userId: String)
     fun updateProfile(userId: String, nickname: String, introduction: String): User
     fun delete(userId: String)
+    fun getUserBrief(userId: String): UserBrief
 }

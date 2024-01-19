@@ -350,4 +350,13 @@ class UserIntegrationTest @Autowired constructor(
         )
             .andExpect(status().`is`(200))
     }
+
+    @Test
+    fun `유저 요약 정보 조회`() {
+        mvc.perform(
+            get("/api/v1/users/user-brief?userId=doo")
+        )
+            .andExpect(status().`is`(200))
+
+    }
 }

@@ -2,13 +2,7 @@ package com.example.cafe.user.controller
 
 import com.example.cafe.user.service.*
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
-import kotlin.contracts.contract
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class UserController(
@@ -71,6 +65,13 @@ class UserController(
         userService.delete(userId = request.userId)
     }
 
+    @GetMapping("/api/v1/users/user-brief")
+    fun getUserBrief(
+        @RequestParam userId: String
+    ): UserBriefResponse {
+        return UserBriefResponse(user_brief = userService.getUserBrief(userId))
+    }
+
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
@@ -121,4 +122,8 @@ data class SignInResponse(
 
 data class UpdateProfileResponse(
     val userId: String
+)
+
+data class UserBriefResponse(
+    val user_brief: UserBrief
 )

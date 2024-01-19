@@ -69,6 +69,19 @@ class UserServiceImpl (
         userRepository.delete(entity)
     }
 
+    override fun getUserBrief(userId: String): UserBrief {
+        val entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+
+        return UserBrief(
+            nickname = entity.nickname,
+            rank = entity.rank,
+            visit_count = entity.visitCount,
+            my_article_count = entity.articlesCount,
+            my_comment_count = entity.commentsCount,
+            register_date = entity.registerDate.toLocalDate()
+        )
+    }
+
     private fun validate(userId: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 
