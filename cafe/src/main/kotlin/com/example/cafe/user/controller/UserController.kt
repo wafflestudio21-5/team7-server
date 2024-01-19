@@ -39,12 +39,21 @@ class UserController(
         return SignInResponse(user.userId)
     }
 
+    @PostMapping("/api/v1/signout")
+    fun signOut(
+        @RequestBody request: SignOutRequest,
+    ) {
+        val user = userService.signOut(
+            userId = request.userId
+        )
+    }
+
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
             is SignUpBadUserIdException, is SignUpBadPasswordException, is SignUpBadEmailException, is SignUpBadBirthDateException, is SignUpBadPhoneNumberException -> 400
             is SignUpUserIdConflictException -> 409
-            is SignInUserNotFoundException, is SignInInvalidPasswordException -> 404
+            is SignInUserNotFoundException, is SignInInvalidPasswordException, is SignOutUserNotFoundException -> 404
         }
 
         return ResponseEntity.status(status).build()
@@ -63,6 +72,10 @@ data class SignUpRequest(
 data class SignInRequest(
     val userId: String,
     val password: String,
+)
+
+data class SignOutRequest(
+    val userId: String
 )
 
 data class SignUpResponse(

@@ -48,6 +48,10 @@ class UserServiceImpl (
         return User(entity)
     }
 
+    override fun signOut(userId: String) {
+        if (userRepository.findByUserId(userId) == null) throw SignOutUserNotFoundException()
+    }
+
     private fun validate(userId: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 

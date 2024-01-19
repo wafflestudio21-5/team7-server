@@ -17,3 +17,5 @@ class SignUpBadPhoneNumberException : UserException()
 class SignInUserNotFoundException : UserException()
 
 class SignInInvalidPasswordException : UserException()
+
+class SignOutUserNotFoundException() : UserException()
