@@ -3,14 +3,12 @@ package com.example.cafe.comment.service
 import java.time.LocalDateTime
 
 interface CommentService {
-    fun getComment(id: Long): Comment
     fun getComments(articleId: Long): List<Comment>
-    fun getRecomment(id: Long): Recomment
     fun getRecomments(commentId: Long): List<Recomment>
-    fun createComment(userId: Long, articleId: Long, at: LocalDateTime = LocalDateTime.now())
-    fun createRecomment(userId: Long, commentId: Long, at: LocalDateTime = LocalDateTime.now())
-    fun modifyComment(id: Long, userId: Long, content: String)
-    fun modifyRecomment(id: Long, userId: Long, content: String)
-    fun deleteComment(id: Long, userId: Long)
-    fun deleteRecomment(id: Long, userId: Long)
+    fun createComment(userId: String, articleId: Long, content: String, at: LocalDateTime = LocalDateTime.now()): Comment
+    fun createRecomment(userId: String, commentId: Long, content: String, at: LocalDateTime = LocalDateTime.now()): Recomment
+    fun updateComment(id: Long, userId: String, content: String, at: LocalDateTime = LocalDateTime.now()) : Comment
+    fun updateRecomment(id: Long, userId: String, content: String, at: LocalDateTime = LocalDateTime.now()) : Recomment
+    fun deleteComment(id: Long, userId: String)
+    fun deleteRecomment(id: Long, userId: String)
 }

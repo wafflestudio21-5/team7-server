@@ -10,7 +10,7 @@ class CommentEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-    val content: String,
+    var content: String,
     var lastModified: LocalDateTime,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -18,6 +18,6 @@ class CommentEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
     val article: ArticleEntity,
-    @OneToMany(mappedBy = "comment")
-    val recomments: List<RecommentEntity> = emptyList(),
+    @OneToMany(mappedBy = "comment", cascade = [CascadeType.REMOVE])
+    val recomments: MutableList<RecommentEntity> = mutableListOf(),
 )

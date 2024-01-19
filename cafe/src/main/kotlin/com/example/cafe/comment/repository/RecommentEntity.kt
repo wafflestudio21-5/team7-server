@@ -15,7 +15,7 @@ class RecommentEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-    val content: String,
+    var content: String,
     var lastModified: LocalDateTime,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
