@@ -44,7 +44,20 @@ class ArticleController(
     }
 
 
-
+    @PostMapping("/api/v1/articles/{articleId}/like")
+    fun likeArticle(
+        @PathVariable articleId: Long,
+        @Authenticated user: User,
+    ) {
+        articleLikeService.create(articleId = articleId, userId = user.userId)
+    }
+    @DeleteMapping("/api/v1/articles/{articleId}/like")
+    fun unlikeArticle(
+        @PathVariable articleId: Long,
+        @Authenticated user: User,
+    ) {
+        articleLikeService.delete(articleId = articleId, userId = user.userId)
+    }
 
 
 
