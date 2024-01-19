@@ -12,6 +12,6 @@ class ArticleViewEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0,
         val articleId: Long,
-        val userId: Long,
+        val userId: String,
         val createdAt: LocalDateTime,
 )

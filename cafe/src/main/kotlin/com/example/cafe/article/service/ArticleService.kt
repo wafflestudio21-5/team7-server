@@ -12,4 +12,6 @@ interface ArticleService {
         allowComments: Boolean,
         isNotification: Boolean,
     )
+
+    fun get(id: Long): Article
 }

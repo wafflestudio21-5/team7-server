@@ -9,3 +9,9 @@ class PostBadTitleException : ArticleException()
 class PostBadContentException : ArticleException()
 
 class UserNotFoundException : ArticleException()
+
+class ArticleNotFoundException : ArticleException()
+
+class ArticleAlreadyLikedException: ArticleException()
+
+class ArticleNotLikedException: ArticleException()
