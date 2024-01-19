@@ -14,6 +14,8 @@ class BoardEntity(
     val group: BoardGroupEntity,
     val viewCnt: Long,
     val likeCnt: Long,
-    @OneToMany(mappedBy = "board")
-    val articles: List<ArticleEntity>,
+    @OneToMany(mappedBy = "board", cascade = [CascadeType.ALL])
+    val articles: MutableList<ArticleEntity>,
+    @OneToMany(mappedBy = "board", cascade = [CascadeType.ALL])
+    val boardLikes: MutableList<BoardLikeEntity>,
 )
