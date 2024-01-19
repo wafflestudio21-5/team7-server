@@ -41,7 +41,7 @@ class ArticleController(
     fun modify(
             @RequestBody request: ArticleModifyRequest,
             @PathVariable articleId : Long,
-            @RequestParam userId: String,
+            @Authenticated user: User?,
     ): ArticleModifyResponse {
         val modifiedArticle = articleService.modify(
                 userId = request.userId,
@@ -62,12 +62,12 @@ class ArticleController(
 
     @DeleteMapping("/api/v1/articles/{articleId}")
     fun delete(
-            @RequestParam userId: String,
+            @Authenticated user: User,
             @PathVariable articleId: Long,
     ){
         articleService.delete(
                 articleId = articleId,
-                userId = userId
+                userId = user.userId
         )
     }
 
