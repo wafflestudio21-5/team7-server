@@ -1,8 +1,7 @@
 package com.example.cafe.board.service
 
-
-data class Board (
+data class BoardGroup (
     val id: Long,
     val name: String,
+    val boards: List<Board>
 )
-
