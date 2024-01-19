@@ -21,4 +21,10 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     @Query("SELECT a FROM articles a JOIN FETCH a.user JOIN FETCH a.comments WHERE a.board.id = :boardId")
     fun findByBoardId(boardId: Long): List<ArticleEntity>
 
+    fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
+    fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>
+    fun findAllByOrderByCommentCntDesc(): List<ArticleEntity>
+
+
+
 }

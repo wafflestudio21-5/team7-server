@@ -1,6 +1,7 @@
 package com.example.cafe.article.controller
 
 import com.example.cafe.article.service.*
+import com.example.cafe.board.controller.ArticleBriefResponse
 import com.example.cafe.board.service.Board
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
@@ -104,6 +105,12 @@ class ArticleController(
         articleLikeService.delete(articleId = articleId, userId = user.userId)
     }
 
+    @GetMapping("/api/v1/articles/hot")
+    fun getHotArticles(
+        @RequestParam(required = false, defaultValue = "VIEW") sortBy: ArticleService.HotSortType,
+    ): ArticleBriefResponse {
+        return ArticleBriefResponse(articleService.getHotArticles(sortBy))
+    }
 
 
     @ExceptionHandler
@@ -156,3 +163,4 @@ data class ArticleGetResponse(
         val article: Article,
         val isLiked: Boolean,
 )
+

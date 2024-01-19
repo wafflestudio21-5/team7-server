@@ -28,4 +28,10 @@ interface ArticleService {
             userId: String
     )
     fun get(id: Long): Article
+
+    fun getHotArticles(sortBy: HotSortType): List<ArticleBrief>
+
+    enum class HotSortType {
+        VIEW, LIKE, COMMENT
+    }
 }

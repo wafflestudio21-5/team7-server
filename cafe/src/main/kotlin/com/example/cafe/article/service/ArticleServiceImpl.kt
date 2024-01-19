@@ -122,6 +122,30 @@ class ArticleServiceImpl(
             ),
             allowComments = article.allowComments,
             isNotification = article.isNotification,
+            commentCount = article.commentCnt,
         )
     }
+
+    override fun getHotArticles(sortBy: ArticleService.HotSortType): List<ArticleBrief> {
+        val articles = when(sortBy) {
+            ArticleService.HotSortType.VIEW -> articleRepository.findAllByOrderByViewCntDesc()
+            ArticleService.HotSortType.LIKE -> articleRepository.findAllByOrderByLikeCntDesc()
+            ArticleService.HotSortType.COMMENT -> articleRepository.findAllByOrderByCommentCntDesc()
+        }
+        return articles.map {article->
+            ArticleBrief(
+                id = article.id,
+                title = article.title,
+                createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                likeCount = article.likeCnt,
+                commentCount = article.commentCnt,
+                author = User(userId = article.user.userId, username = article.user.username),
+                board = Board(id = article.board.id, name = article.board.name),
+                isNotification = article.isNotification,
+            )
+        }
+    }
 }
+
+

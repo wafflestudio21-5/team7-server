@@ -10,6 +10,7 @@ data class Article(
         val createdAt: String,
         val viewCount: Long,
         val likeCount: Long,
+        val commentCount: Long,
         val author: User,
         val board: Board,
         val allowComments: Boolean,

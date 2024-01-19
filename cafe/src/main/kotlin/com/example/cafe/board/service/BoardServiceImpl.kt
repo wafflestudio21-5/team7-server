@@ -44,12 +44,12 @@ class BoardServiceImpl (
 
         return articleList.map {article->
             ArticleBrief(
-                articleId = article.id,
+                id = article.id,
                 title = article.title,
                 createdAt = article.createdAt,
                 viewCount = article.viewCnt,
                 likeCount = article.likeCnt,
-                commentCount = article.comments.size,
+                commentCount = article.commentCnt,
                 author = User(userId = article.user.userId, username = article.user.username),
                 board = Board(id = board.id, name = board.name),
                 isNotification = article.isNotification,
