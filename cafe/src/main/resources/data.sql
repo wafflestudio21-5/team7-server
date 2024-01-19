@@ -1,4 +1,4 @@
-정INSERT into users (id, user_id, password, username, nickname, email, birth_date, phone_number) VALUES (1, 'hong', 'hong123', '홍길동', '홍길동', 'hong@naver.com', '2000-05-03', '01023453444'),
+INSERT into users (id, user_id, password, username, nickname, email, birth_date, phone_number) VALUES (1, 'hong', 'hong123', '홍길동', '홍길동', 'hong@naver.com', '2000-05-03', '01023453444'),
 (2, 'doo', 'doo123', '황두현', '황두현', 'doo@naver.com', '1997-04-26', '01023446673');
 
 INSERT into board_groups (id, name) VALUES (1, '백엔드'),
