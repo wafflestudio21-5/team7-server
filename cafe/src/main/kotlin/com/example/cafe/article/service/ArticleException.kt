@@ -15,3 +15,5 @@ class ArticleNotFoundException : ArticleException()
 class ArticleAlreadyLikedException: ArticleException()
 
 class ArticleNotLikedException: ArticleException()
+
+class UnauthorizedModifyException : ArticleException()
