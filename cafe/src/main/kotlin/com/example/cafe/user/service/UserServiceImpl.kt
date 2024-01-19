@@ -63,6 +63,12 @@ class UserServiceImpl (
         return User(entity)
     }
 
+    override fun delete(userId: String) {
+        val entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+
+        userRepository.delete(entity)
+    }
+
     private fun validate(userId: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 

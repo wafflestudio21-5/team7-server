@@ -2,6 +2,7 @@ package com.example.cafe.user.controller
 
 import com.example.cafe.user.service.*
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -63,6 +64,13 @@ class UserController(
         return UpdateProfileResponse(userId = user.userId)
     }
 
+    @DeleteMapping("/api/v1/users/user")
+    fun deleteUser(
+        @RequestBody request: UserDeleteRequest,
+    ) {
+        userService.delete(userId = request.userId)
+    }
+
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
@@ -97,6 +105,10 @@ data class UpdateProfileRequest(
     val userId: String,
     val nickname: String,
     val content: String
+)
+
+data class UserDeleteRequest(
+    val userId: String
 )
 
 data class SignUpResponse(
