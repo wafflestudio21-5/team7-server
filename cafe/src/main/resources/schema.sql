@@ -34,6 +34,7 @@ create table articles (
     created_at datetime not null default current_timestamp,
     view_cnt bigint default 0,
     like_cnt bigint default 0,
+    comment_cnt bigint default 0,
     min_user_rank_allowed varchar(20) default '새싹',
     user_id bigint,
     board_id bigint,

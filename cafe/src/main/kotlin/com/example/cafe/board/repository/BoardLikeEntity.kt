@@ -7,6 +7,8 @@ class BoardLikeEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-    val boardId: Long,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    val board: BoardEntity,
     val userId: Long,
 )

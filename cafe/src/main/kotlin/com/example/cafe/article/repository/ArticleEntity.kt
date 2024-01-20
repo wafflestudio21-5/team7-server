@@ -1,6 +1,7 @@
 package com.example.cafe.article.repository
 
 import com.example.cafe.board.repository.BoardEntity
+import com.example.cafe.comment.repository.CommentEntity
 import com.example.cafe.user.repository.UserEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -15,6 +16,7 @@ class ArticleEntity (
         val createdAt : LocalDateTime,
         val viewCnt : Long = 0,
         val likeCnt : Long = 0,
+        val commentCnt: Long = 0,
         val minUserRankAllowed: String = "새싹",
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id")
@@ -23,5 +25,7 @@ class ArticleEntity (
         @JoinColumn(name = "board_id")
         val board : BoardEntity,
         val allowComments : Boolean,
-        val isNotification : Boolean
+        val isNotification : Boolean,
+        @OneToMany(mappedBy = "article", cascade = [CascadeType.REMOVE])
+        val comments: MutableList<CommentEntity> = mutableListOf(),
 )
