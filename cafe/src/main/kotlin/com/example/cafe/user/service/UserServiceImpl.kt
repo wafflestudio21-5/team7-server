@@ -2,7 +2,10 @@ package com.example.cafe.user.service
 
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
+import com.example.cafe.user.util.ValidationUtil
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -20,6 +23,7 @@ class UserServiceImpl (
         phoneNumber: String,
         at: LocalDateTime
     ): User {
+        validate(userId, password, email, birthDate, phoneNumber)
         val entity = userRepository.save(
             UserEntity(
                 userId = userId,
@@ -34,15 +38,86 @@ class UserServiceImpl (
         return User(entity)
     }
 
-    fun toSqlDate(birthDate: String): Date {
-        val dateFormat = SimpleDateFormat("yyyyMMdd")
+    override fun signIn(userId: String, password: String): User {
+        val entity = userRepository.findByUserId(userId) ?: throw SignInUserNotFoundException()
+
+        if (entity.password != password) {
+            throw SignInInvalidPasswordException()
+        }
+
+        return User(entity)
+    }
+
+    override fun signOut(userId: String) {
+        if (userRepository.findByUserId(userId) == null) throw SignOutUserNotFoundException()
+    }
+
+    override fun updateProfile(userId: String, nickname: String, introduction: String): User {
+        var entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+        val currentNickname = entity.nickname
+
+        if (nickname != currentNickname && userRepository.findByNickname(nickname) != null) throw NicknameConflictException()
+        entity.nickname = nickname
+        entity.introduction = introduction
+
+        return User(entity)
+    }
+
+    override fun delete(userId: String) {
+        val entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+
+        userRepository.delete(entity)
+    }
+
+    override fun getUserBrief(userId: String): UserBrief {
+        val entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+
+        return UserBrief(
+            nickname = entity.nickname,
+            rank = entity.rank,
+            visit_count = entity.visitCount,
+            my_article_count = entity.articlesCount,
+            my_comment_count = entity.commentsCount,
+            register_date = entity.registerDate.toLocalDate()
+        )
+    }
+
+    private fun validate(userId: String, password: String, email: String, birthDate: String, phoneNumber: String) {
+        val validationUtil = ValidationUtil()
+
+        if (!validationUtil.isUserIdValid(userId)) {
+            throw SignUpBadUserIdException()
+        }
+
+        if (!validationUtil.isPasswordValid(password)) {
+            throw SignUpBadPasswordException()
+        }
+
+        if (!validationUtil.isEmailValid(email)) {
+            throw SignUpBadEmailException()
+        }
+
+        if (!validationUtil.isBirthDateValid(birthDate)) {
+            throw SignUpBadBirthDateException()
+        }
+
+        if (!validationUtil.isPhoneNumberValid(phoneNumber)) {
+            throw SignUpBadPhoneNumberException()
+        }
+
+        if (userRepository.findByUserId(userId) != null) {
+            throw SignUpUserIdConflictException()
+        }
+    }
+
+    private fun toSqlDate(birthDate: String): Date {
+        val dateFormat = SimpleDateFormat("yyyy.MM.dd")
         val utilDate = dateFormat.parse(birthDate)
         return Date(utilDate.time)
     }
 
     fun User(entity: UserEntity) = User(
-        userId = entity.userId,
-        username = entity.username
+        userId = entity.userId
     )
 
 }
