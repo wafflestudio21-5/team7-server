@@ -17,9 +17,9 @@ class UserServiceTest @Autowired constructor(
     fun `유저 아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능하다`() {
         assertThrows<SignUpBadUserIdException> {
             userService.signUp(
-                userId = "bad",
-                username = "username",
+                username = "bad",
                 password = "password1#",
+                name = "username",
                 email = "doo@naver.com",
                 birthDate = "2000.01.01",
                 phoneNumber = "01012345678",
@@ -28,25 +28,25 @@ class UserServiceTest @Autowired constructor(
 
         val user = assertDoesNotThrow {
             userService.signUp(
-                userId = "userid",
                 username = "username",
                 password = "password1#",
+                name = "username",
                 email = "doo@naver.com",
                 birthDate = "2000.01.01",
                 phoneNumber = "01012345678",
             )
         }
 
-        assertThat(user.userId).isEqualTo("userid")
+        assertThat(user.nickname).isEqualTo("username")
     }
 
     @Test
     fun `이미 존재하는 유저 이름으로 가입할 수 없다`() {
         assertDoesNotThrow {
             userService.signUp(
-                userId = "userid",
                 username = "username",
                 password = "password1#",
+                name = "username",
                 email = "doo@naver.com",
                 birthDate = "2000.01.01",
                 phoneNumber = "01012345678",
@@ -55,9 +55,9 @@ class UserServiceTest @Autowired constructor(
 
         assertThrows<SignUpUserIdConflictException> {
             userService.signUp(
-                userId = "userid",
                 username = "username",
                 password = "password1#",
+                name = "username",
                 email = "doo@naver.com",
                 birthDate = "2000.01.01",
                 phoneNumber = "01012345678",
@@ -69,9 +69,9 @@ class UserServiceTest @Autowired constructor(
     fun `로그인시 유저 이름과 비밀번호가 정확해야 한다`() {
         assertDoesNotThrow {
             userService.signUp(
-                userId = "userid",
                 username = "username",
                 password = "correct1#",
+                name = "username",
                 email = "doo@naver.com",
                 birthDate = "2000.01.01",
                 phoneNumber = "01012345678",
@@ -80,21 +80,21 @@ class UserServiceTest @Autowired constructor(
 
         assertThrows<SignInUserNotFoundException> {
             userService.signIn(
-                userId = "userid-404",
+                username = "username-404",
                 password = "spring",
             )
         }
 
         assertThrows<SignInInvalidPasswordException> {
             userService.signIn(
-                userId = "userid",
+                username = "username",
                 password = "wrong1#",
             )
         }
 
         assertDoesNotThrow {
             userService.signIn(
-                userId = "userid",
+                username = "username",
                 password = "correct1#",
             )
         }

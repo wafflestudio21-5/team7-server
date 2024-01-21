@@ -12,16 +12,15 @@ class UserController(
     @PostMapping("/api/v1/signup")
     fun signup(
         @RequestBody request: SignUpRequest,
-    ): SignUpResponse {
-        val user = userService.signUp(
-            userId = request.userId,
+    ) {
+        userService.signUp(
             username = request.username,
+            name = request.name,
             password = request.password,
             email = request.email,
             birthDate = request.birthDate,
             phoneNumber = request.phoneNumber,
         )
-        return SignUpResponse(userId = user.userId)
     }
 
     @PostMapping("/api/v1/signin")
@@ -29,47 +28,38 @@ class UserController(
         @RequestBody request: SignInRequest,
     ): SignInResponse {
         val user = userService.signIn(
-            userId = request.userId,
+            username = request.username,
             password = request.password
         )
 
-        return SignInResponse(user.userId)
-    }
-
-    @PostMapping("/api/v1/signout")
-    fun signOut(
-        @RequestBody request: SignOutRequest,
-    ) {
-        userService.signOut(
-            userId = request.userId
-        )
+        return SignInResponse(user.getAccessToken())
     }
 
     @PutMapping("/api/v1/users/user")
     fun updateProfile(
         @RequestBody request: UpdateProfileRequest,
-    ): UpdateProfileResponse {
-        val user = userService.updateProfile(
-            userId = request.userId,
+        @Authenticated user: User
+    ) {
+        userService.updateProfile(
+            id = user.id,
             nickname = request.nickname,
-            introduction = request.content
+            introduction = request.content,
+            image = request.image
         )
-
-        return UpdateProfileResponse(userId = user.userId)
     }
 
     @DeleteMapping("/api/v1/users/user")
     fun deleteUser(
-        @RequestBody request: UserDeleteRequest,
+        @Authenticated user: User
     ) {
-        userService.delete(userId = request.userId)
+        userService.delete(id = user.id)
     }
 
     @GetMapping("/api/v1/users/user-brief")
     fun getUserBrief(
-        @RequestParam userId: String
+        @Authenticated user: User
     ): UserBriefResponse {
-        return UserBriefResponse(user_brief = userService.getUserBrief(userId))
+        return UserBriefResponse(userBrief = userService.getUserBrief(user.id))
     }
 
     @ExceptionHandler
@@ -85,8 +75,8 @@ class UserController(
 }
 
 data class SignUpRequest(
-    val userId: String,
     val username: String,
+    val name: String,
     val password: String,
     val email: String,
     val birthDate: String,
@@ -94,36 +84,20 @@ data class SignUpRequest(
 )
 
 data class SignInRequest(
-    val userId: String,
+    val username: String,
     val password: String,
 )
 
-data class SignOutRequest(
-    val userId: String
-)
-
 data class UpdateProfileRequest(
-    val userId: String,
     val nickname: String,
-    val content: String
-)
-
-data class UserDeleteRequest(
-    val userId: String
-)
-
-data class SignUpResponse(
-    val userId: String
+    val content: String,
+    val image: String
 )
 
 data class SignInResponse(
-    val userId: String
-)
-
-data class UpdateProfileResponse(
-    val userId: String
+    val accessToken: String,
 )
 
 data class UserBriefResponse(
-    val user_brief: UserBrief
+    val userBrief: UserBrief
 )

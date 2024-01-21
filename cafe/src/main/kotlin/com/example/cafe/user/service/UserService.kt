@@ -1,12 +1,13 @@
 package com.example.cafe.user.service
 
-import java.time.LocalDateTime
+import com.example.cafe.user.repository.UserEntity
+import java.time.LocalDate
 
 interface UserService {
-    fun signUp(userId: String, username: String, password: String, email: String, birthDate: String, phoneNumber: String, at: LocalDateTime = LocalDateTime.now()): User
-    fun signIn(userId: String, password: String): User
-    fun signOut(userId: String)
-    fun updateProfile(userId: String, nickname: String, introduction: String): User
-    fun delete(userId: String)
-    fun getUserBrief(userId: String): UserBrief
+    fun signUp(username: String, password: String, name: String, email: String, birthDate: String, phoneNumber: String, at: LocalDate = LocalDate.now()): User
+    fun signIn(username: String, password: String): User
+    fun updateProfile(id: Long, nickname: String, introduction: String, image: String): User
+    fun delete(id: Long)
+    fun getUserBrief(id: Long): UserBrief
+    fun authenticate(accessToken: String): User
 }

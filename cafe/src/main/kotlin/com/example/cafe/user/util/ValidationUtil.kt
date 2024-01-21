@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ValidationUtil {
-    fun isUserIdValid(username: String): Boolean {
+    fun isUsernameValid(username: String): Boolean {
         val regex = Regex("^(?!\\d+$)(?!.*([a-z0-9_-])\\1{4,})[a-z0-9_-]{5,20}$")
         return regex.matches(username)
     }
