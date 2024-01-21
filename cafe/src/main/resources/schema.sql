@@ -11,9 +11,10 @@ drop table if exists recomments cascade;
 
 create table users (
     id bigint auto_increment,
-    user_id varchar(100),
-    password varchar(20),
-    username varchar(100),
+    username varchar(100) default null,
+    password varchar(20) default null,
+    sns_id varchar(100) default null,
+    name varchar(30),
     nickname varchar(100),
     email varchar(100),
     birth_date date,
@@ -21,11 +22,12 @@ create table users (
     rank varchar(20) default '씨앗',
     register_date datetime not null default current_timestamp,
     introduction varchar(10000) default '',
+    image varchar(200) default null,
     visit_count bigint default 0,
     articles_count bigint default 0,
     comments_count bigint default 0,
     primary key (id),
-    unique(user_id)
+    unique(nickname)
 );
 create table articles (
     id bigint auto_increment,
