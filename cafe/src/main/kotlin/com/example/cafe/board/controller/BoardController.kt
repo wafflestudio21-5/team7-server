@@ -2,6 +2,8 @@ package com.example.cafe.board.controller
 
 import com.example.cafe.article.service.ArticleBrief
 import com.example.cafe.board.service.*
+import com.example.cafe.user.service.Authenticated
+import com.example.cafe.user.service.User
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -25,24 +27,24 @@ class BoardController(
     @PostMapping("/api/v1/boards/{boardId}/likes")
     fun likeBoard(
         @PathVariable boardId: Long,
-        @RequestParam userId: String
+        @Authenticated user: User
     ) {
-        boardLikeService.create(userId, boardId)
+        boardLikeService.create(user.id, boardId)
     }
 
     @DeleteMapping("/api/v1/boards/{boardId}/likes")
     fun undoLikeBoard(
         @PathVariable boardId: Long,
-        @RequestParam userId: String
+        @Authenticated user: User
     ) {
-        boardLikeService.delete(userId, boardId)
+        boardLikeService.delete(user.id, boardId)
     }
 
     @GetMapping("/api/v1/boards/likes")
     fun getLikeBoard(
-        @RequestParam userId: String
+        @Authenticated user: User
     ):BoardResponse {
-        return BoardResponse(boardLikeService.get(userId))
+        return BoardResponse(boardLikeService.get(user.id))
     }
 
     @GetMapping("/api/v1/boards/{boardId}/articles")
