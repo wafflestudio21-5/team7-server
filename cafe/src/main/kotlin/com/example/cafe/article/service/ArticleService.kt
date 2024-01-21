@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 interface ArticleService {
     fun post(
-        userId: String,
+        userId: Long,
         title: String,
         content: String,
         createdAt: LocalDateTime = LocalDateTime.now(),
@@ -14,7 +14,7 @@ interface ArticleService {
         isNotification: Boolean,
     ) : ArticleEntity
     fun modify(
-            userId: String,
+            userId: Long,
             articleId: Long,
             title: String,
             content: String,
@@ -25,7 +25,7 @@ interface ArticleService {
 
     fun delete(
             articleId: Long,
-            userId: String
+            userId: Long
     )
     fun get(id: Long): Article
 

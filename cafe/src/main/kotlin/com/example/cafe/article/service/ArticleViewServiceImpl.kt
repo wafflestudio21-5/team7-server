@@ -19,7 +19,7 @@ class ArticleViewServiceImpl(
     private val executors = Executors.newFixedThreadPool(8)
     private val txTemplate = TransactionTemplate(txManager)
 
-    override fun create(articleId: Long, userId: String, createdAt: LocalDateTime): Future<Boolean> {
+    override fun create(articleId: Long, userId: Long, createdAt: LocalDateTime): Future<Boolean> {
         return executors.submit<Boolean> {
             txTemplate.execute {
                 if (shouldIgnore(articleId = articleId, userId = userId, at = createdAt)) {
@@ -40,7 +40,7 @@ class ArticleViewServiceImpl(
             }
         }
     }
-    private fun shouldIgnore(articleId: Long, userId: String, at: LocalDateTime): Boolean =
+    private fun shouldIgnore(articleId: Long, userId: Long, at: LocalDateTime): Boolean =
             articleViewRepository.existsByArticleIdAndUserIdAndCreatedAtAfterAndCreatedAtBefore(
                     articleId = articleId,
                     userId = userId,

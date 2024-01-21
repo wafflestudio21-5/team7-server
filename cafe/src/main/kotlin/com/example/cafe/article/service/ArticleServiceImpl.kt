@@ -8,6 +8,7 @@ import com.example.cafe.article.repository.ArticleLikeRepository
 import com.example.cafe.article.repository.ArticleViewRepository
 import com.example.cafe.board.repository.BoardRepository
 import com.example.cafe.board.service.Board
+import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
 import java.time.LocalDateTime
 
@@ -21,7 +22,7 @@ class ArticleServiceImpl(
 ) : ArticleService {
 
     override fun post(
-        userId: String,
+        userId: Long,
         title: String,
         content: String,
         createdAt: LocalDateTime,
@@ -30,12 +31,10 @@ class ArticleServiceImpl(
         isNotification: Boolean,
     ) : ArticleEntity {
 
-        val user = userRepository.findByUserId(userId)
-            ?: throw UserNotFoundException()
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
 
         //board not selected -> id = 0
         val board = boardRepository.findById(boardId).get()
-
 
         if(content=="") throw PostBadContentException()
 
@@ -54,7 +53,7 @@ class ArticleServiceImpl(
         )
     }
     override fun modify(
-            userId: String,
+            userId: Long,
             articleId: Long,
             title: String,
             content: String,
@@ -90,11 +89,11 @@ class ArticleServiceImpl(
 
     override fun delete(
             articleId: Long,
-            userId: String
+            userId: Long
     ) {
         val article = articleRepository.findById(articleId).orElseThrow { ArticleNotFoundException() }
 
-        if(article.user.userId != userId) throw UnauthorizedModifyException()
+        if(article.user.id != userId) throw UnauthorizedModifyException()
 
         articleRepository.delete(article)
     }
@@ -112,10 +111,7 @@ class ArticleServiceImpl(
             createdAt = article.createdAt.toString(),
             viewCount = viewCount,
             likeCount = likeCount,
-            author = User(
-                userId = author.userId,
-                username = author.username,
-            ),
+            author = User(author),
             board = Board(
                 id = board.id,
                 name = board.name,
@@ -140,12 +136,23 @@ class ArticleServiceImpl(
                 viewCount = article.viewCnt,
                 likeCount = article.likeCnt,
                 commentCount = article.commentCnt,
-                author = User(userId = article.user.userId, username = article.user.username),
+                author = User(article.user),
                 board = Board(id = article.board.id, name = article.board.name),
                 isNotification = article.isNotification,
             )
         }
     }
+
+    fun User(entity: UserEntity) = User(
+        id = entity.id,
+        nickname = entity.nickname,
+        registerDate = entity.registerDate,
+        email = entity.email,
+        rank = entity.rank.name,
+        visitCount = entity.visitCount,
+        articlesCount = entity.articlesCount,
+        commentsCount = entity.commentsCount
+    )
 }
 
 

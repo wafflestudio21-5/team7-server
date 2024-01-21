@@ -6,7 +6,7 @@ import java.util.concurrent.Future
 interface ArticleViewService {
     fun create(
                articleId: Long,
-               userId: String,
+               userId: Long,
                createdAt: LocalDateTime = LocalDateTime.now()
     ) : Future<Boolean>
 }
