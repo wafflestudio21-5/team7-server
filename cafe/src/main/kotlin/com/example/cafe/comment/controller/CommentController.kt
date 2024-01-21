@@ -1,6 +1,8 @@
 package com.example.cafe.comment.controller
 
 import com.example.cafe.comment.service.*
+import com.example.cafe.user.service.Authenticated
+import com.example.cafe.user.service.User
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -11,11 +13,11 @@ class CommentController(
 ) {
     @PostMapping("/api/v1/articles/{articleId}/comments")
     fun postComment(
-        @RequestParam userId: String,
         @RequestParam content: String,
         @PathVariable articleId: Long,
+        @Authenticated user: User
     ) : PostCommentResponse {
-        val comment = commentService.createComment(userId, articleId, content)
+        val comment = commentService.createComment(user.id, articleId, content)
         return PostCommentResponse(
             commentId = comment.id,
             content = comment.content,
@@ -34,32 +36,32 @@ class CommentController(
 
     @PutMapping("/api/v1/articles/{articleId}/comments/{commentId}")
     fun updateComment(
-        @RequestParam userId: String,
         @RequestParam content: String,
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
+        @Authenticated user: User
     ) : UpdateCommentResponse {
-        val comment = commentService.updateComment(commentId, userId, content)
+        val comment = commentService.updateComment(commentId, user.id, content)
         return UpdateCommentResponse(comment = comment)
     }
 
     @DeleteMapping("/api/v1/articles/{articleId}/comments/{commentId}")
     fun deleteComment(
-        @RequestParam userId: String,
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
+        @Authenticated user: User
     ) {
-        commentService.deleteComment(commentId, userId)
+        commentService.deleteComment(commentId, user.id)
     }
 
     @PostMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments")
     fun postRecomment(
-        @RequestParam userId: String,
         @RequestParam content: String,
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
+        @Authenticated user: User
         ) : PostRecommentResponse {
-        val recomment = commentService.createRecomment(userId, commentId, content)
+        val recomment = commentService.createRecomment(user.id, commentId, content)
         return PostRecommentResponse(
             recommentId = recomment.id,
             content = recomment.content,
@@ -79,24 +81,24 @@ class CommentController(
 
     @PutMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments/{recommentId}")
     fun updateRecomment(
-        @RequestParam userId: String,
         @RequestParam content: String,
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
         @PathVariable recommentId: Long,
+        @Authenticated user: User
         ) : UpdateRecommentResponse {
-        val recomment = commentService.updateRecomment(recommentId, userId, content)
+        val recomment = commentService.updateRecomment(recommentId, user.id, content)
         return UpdateRecommentResponse(recomment = recomment)
     }
 
     @DeleteMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments/{recommentId}")
     fun deleteRecomment(
-        @RequestParam userId: String,
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
         @PathVariable recommentId: Long,
+        @Authenticated user: User
         ) {
-        commentService.deleteRecomment(recommentId, userId)
+        commentService.deleteRecomment(recommentId, user.id)
     }
 
     @ExceptionHandler

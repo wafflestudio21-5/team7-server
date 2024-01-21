@@ -6,6 +6,7 @@ import com.example.cafe.comment.repository.CommentRepository
 import com.example.cafe.comment.repository.RecommentEntity
 import com.example.cafe.comment.repository.RecommentRepository
 import com.example.cafe.user.repository.UserRepository
+import com.example.cafe.user.service.UserNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -52,8 +53,8 @@ class CommentServiceImpl (
         return recomments
     }
 
-    override fun createComment(userId: String, articleId: Long, content: String, at: LocalDateTime): Comment {
-        val user = userRepository.findByUserId(userId) ?: throw CommentUserNotFoundException()
+    override fun createComment(userId: Long, articleId: Long, content: String, at: LocalDateTime): Comment {
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         val article = articleRepository.findByIdOrNull(articleId) ?: throw CommentArticleNotFoundException()
         val comment = commentRepository.save(
             CommentEntity(
@@ -71,8 +72,8 @@ class CommentServiceImpl (
         )
     }
 
-    override fun createRecomment(userId: String, commentId: Long, content: String, at: LocalDateTime) : Recomment {
-        val user = userRepository.findByUserId(userId) ?: throw CommentUserNotFoundException()
+    override fun createRecomment(userId: Long, commentId: Long, content: String, at: LocalDateTime) : Recomment {
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw CommentNotFoundException()
         val recomment = recommentRepository.save(
             RecommentEntity(
@@ -91,9 +92,9 @@ class CommentServiceImpl (
     }
 
     @Transactional
-    override fun updateComment(id: Long, userId: String, content: String, at: LocalDateTime) : Comment {
+    override fun updateComment(id: Long, userId: Long, content: String, at: LocalDateTime) : Comment {
         val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
-        if (comment.user.userId != userId) {
+        if (comment.user.id != userId) {
             throw InvalidCommentUserException()
         }
         comment.content = content
@@ -115,9 +116,9 @@ class CommentServiceImpl (
     }
 
     @Transactional
-    override fun updateRecomment(id: Long, userId: String, content: String, at: LocalDateTime) : Recomment {
+    override fun updateRecomment(id: Long, userId: Long, content: String, at: LocalDateTime) : Recomment {
         val recomment = recommentRepository.findByIdOrNull(id) ?: throw RecommentNotFoundException()
-        if (recomment.user.userId != userId) {
+        if (recomment.user.id != userId) {
             throw InvalidCommentUserException()
         }
         recomment.content = content
@@ -130,17 +131,17 @@ class CommentServiceImpl (
         )
     }
 
-    override fun deleteComment(id: Long, userId: String) {
+    override fun deleteComment(id: Long, userId: Long) {
         val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
-        if (comment.user.userId != userId) {
+        if (comment.user.id != userId) {
             throw InvalidCommentUserException()
         }
         commentRepository.delete(comment)
     }
 
-    override fun deleteRecomment(id: Long, userId: String) {
+    override fun deleteRecomment(id: Long, userId: Long) {
         val recomment = recommentRepository.findByIdOrNull(id) ?: throw RecommentNotFoundException()
-        if (recomment.user.userId != userId) {
+        if (recomment.user.id != userId) {
             throw InvalidCommentUserException()
         }
         recommentRepository.delete(recomment)
