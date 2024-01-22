@@ -27,7 +27,7 @@ class UserServiceImpl (
             UserEntity(
                 username = username,
                 password = password,
-                name = username,
+                name = name,
                 email = email,
                 birthDate = toSqlDate(birthDate),
                 phoneNumber = phoneNumber,
@@ -78,6 +78,12 @@ class UserServiceImpl (
         )
     }
 
+    override fun authenticate(accessToken: String): User {
+        val entity = userRepository.findByNickname(accessToken) ?: throw AuthenticateException()
+
+        return User(entity)
+    }
+
     private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 
@@ -110,12 +116,6 @@ class UserServiceImpl (
         val dateFormat = SimpleDateFormat("yyyy.MM.dd")
         val utilDate = dateFormat.parse(birthDate)
         return Date(utilDate.time)
-    }
-
-    override fun authenticate(accessToken: String): User {
-        val entity = userRepository.findByNickname(accessToken) ?: throw AuthenticateException()
-
-        return User(entity)
     }
 
     fun User(entity: UserEntity) = User(
