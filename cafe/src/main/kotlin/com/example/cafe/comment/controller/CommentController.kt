@@ -51,7 +51,7 @@ class CommentController(
         @PathVariable commentId: Long,
         @Authenticated user: User
     ) {
-        commentService.deleteComment(commentId, user.id)
+        commentService.deleteComment(commentId, user.id, articleId)
     }
 
     @PostMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments")

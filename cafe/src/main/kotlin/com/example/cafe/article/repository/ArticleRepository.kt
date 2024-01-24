@@ -25,6 +25,23 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>
     fun findAllByOrderByCommentCntDesc(): List<ArticleEntity>
 
+    @Modifying
+    @Transactional
+    @Query(
+        """
+        UPDATE articles p SET p.commentCnt = p.commentCnt + 1 WHERE p.id = :articleId
+    """
+    )
+    fun incrementCommentCnt(articleId: Long)
+
+    @Modifying
+    @Transactional
+    @Query(
+        """
+        UPDATE articles p SET p.commentCnt = p.commentCnt - 1 WHERE p.id = :articleId
+    """
+    )
+    fun decrementCommentCnt(articleId: Long)
 
 
 }

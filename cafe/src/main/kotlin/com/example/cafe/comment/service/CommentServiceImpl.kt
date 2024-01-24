@@ -53,6 +53,7 @@ class CommentServiceImpl (
         return recomments
     }
 
+    @Transactional
     override fun createComment(userId: Long, articleId: Long, content: String, at: LocalDateTime): Comment {
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         val article = articleRepository.findByIdOrNull(articleId) ?: throw CommentArticleNotFoundException()
@@ -64,6 +65,8 @@ class CommentServiceImpl (
                 article = article,
             )
         )
+        articleRepository.incrementCommentCnt(articleId)
+
         return Comment(
             id = comment.id,
             content = comment.content,
@@ -131,11 +134,13 @@ class CommentServiceImpl (
         )
     }
 
-    override fun deleteComment(id: Long, userId: Long) {
+    @Transactional
+    override fun deleteComment(id: Long, userId: Long, articleId: Long) {
         val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
         if (comment.user.id != userId) {
             throw InvalidCommentUserException()
         }
+        articleRepository.decrementCommentCnt(articleId)
         commentRepository.delete(comment)
     }
 
