@@ -14,7 +14,21 @@ INSERT into boards (id, name, group_id) VALUES (1, '스프링', 1),
 (7, '자바스크립트', 3),
 (8, '리덕스', 2);
 
-INSERT into articles (id, title, content, created_at, user_id, board_id, allow_comments, is_notification) VALUES (1, '스프링이란', '스프링은 ..', CURRENT_TIMESTAMP, 1, 1, true, true);
+INSERT into articles (id, title, content, created_at, user_id, board_id, allow_comments, is_notification) VALUES (1, '스프링이란', '스프링은 ..', CURRENT_TIMESTAMP, 1, 1, true, true),
+(2, 'test2', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(3, 'test3', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(4, 'test4', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(5, 'test5', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(6, 'test6', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(7, 'test7', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(8, 'test8', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(9, 'test9', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(10, 'test10', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(11, 'test11', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(12, 'test12', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(13, 'test13', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(14, 'test14', '.', CURRENT_TIMESTAMP, 1, 1, true, false),
+(15, 'test15', '.', CURRENT_TIMESTAMP, 1, 1, true, false);
 
 INSERT into comments (id, content, last_modified, user_id, article_id) VALUES (1, '잘 읽었습니다.', CURRENT_TIMESTAMP, 2, 1);
 
