@@ -148,7 +148,7 @@ class ArticleServiceImpl(
         nickname = entity.nickname,
         registerDate = entity.registerDate,
         email = entity.email,
-        rank = entity.rank.name,
+        rank = entity.rank,
         visitCount = entity.visitCount,
         articlesCount = entity.articlesCount,
         commentsCount = entity.commentsCount

@@ -17,8 +17,9 @@ data class User(
         return nickname
     }
 
-    enum class Rank(s: String) {
-        USER("씨앗"), ADMIN("관리자")
+    enum class Rank(val s: String) {
+        USER("씨앗"),
+        ADMIN("관리자")
     }
 
 }

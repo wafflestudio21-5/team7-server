@@ -25,7 +25,7 @@ class UserEntity(
     val email: String,
     val birthDate: Date,
     val phoneNumber: String,
-    val rank: User.Rank = User.Rank.USER,
+    val rank: String = User.Rank.USER.name,
     val registerDate: LocalDate,
     var introduction: String? = null,
     var image: String? = null,
