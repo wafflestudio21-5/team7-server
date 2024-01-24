@@ -4,6 +4,7 @@ import com.example.cafe._web.exception.AuthenticateException
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.ValidationUtil
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.text.SimpleDateFormat
@@ -38,6 +39,8 @@ class UserServiceImpl (
     }
 
     override fun signIn(username: String, password: String): User {
+        println("username = ${username}")
+        println("password = ${password}")
         val entity = userRepository.findByUsername(username) ?: throw SignInUserNotFoundException()
 
         if (entity.password != password) {
@@ -47,6 +50,7 @@ class UserServiceImpl (
         return User(entity)
     }
 
+    @Transactional
     override fun updateProfile(id: Long, nickname: String, introduction: String, image: String): User {
         val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
         val currentNickname = entity.nickname
@@ -59,6 +63,7 @@ class UserServiceImpl (
         return User(entity)
     }
 
+    @Transactional
     override fun delete(id: Long) {
         val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
 
@@ -70,7 +75,7 @@ class UserServiceImpl (
 
         return UserBrief(
             nickname = entity.nickname,
-            rank = entity.rank.name,
+            rank = entity.rank,
             visit_count = entity.visitCount,
             my_article_count = entity.articlesCount,
             my_comment_count = entity.commentsCount,
@@ -123,7 +128,7 @@ class UserServiceImpl (
         nickname = entity.nickname,
         registerDate = entity.registerDate,
         email = entity.email,
-        rank = entity.rank.name,
+        rank = entity.rank,
         visitCount = entity.visitCount,
         articlesCount = entity.articlesCount,
         commentsCount = entity.commentsCount
