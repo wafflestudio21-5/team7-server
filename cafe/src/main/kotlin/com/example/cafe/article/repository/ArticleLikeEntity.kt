@@ -11,5 +11,5 @@ class ArticleLikeEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0,
         val articleId: Long,
-        val userId: String,
+        val userId: Long,
 )

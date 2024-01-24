@@ -1,34 +1,34 @@
 package com.example.cafe.user.service
 
+import com.example.cafe._web.exception.AuthenticateException
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.ValidationUtil
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import java.sql.Date
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Service
 class UserServiceImpl (
     private val userRepository: UserRepository,
 ) : UserService {
     override fun signUp(
-        userId: String,
         username: String,
         password: String,
+        name: String,
         email: String,
         birthDate: String,
         phoneNumber: String,
-        at: LocalDateTime
+        at: LocalDate
     ): User {
-        validate(userId, password, email, birthDate, phoneNumber)
+        validate(username, password, email, birthDate, phoneNumber)
         val entity = userRepository.save(
             UserEntity(
-                userId = userId,
                 username = username,
                 password = password,
+                name = name,
                 email = email,
                 birthDate = toSqlDate(birthDate),
                 phoneNumber = phoneNumber,
@@ -38,8 +38,10 @@ class UserServiceImpl (
         return User(entity)
     }
 
-    override fun signIn(userId: String, password: String): User {
-        val entity = userRepository.findByUserId(userId) ?: throw SignInUserNotFoundException()
+    override fun signIn(username: String, password: String): User {
+        println("username = ${username}")
+        println("password = ${password}")
+        val entity = userRepository.findByUsername(username) ?: throw SignInUserNotFoundException()
 
         if (entity.password != password) {
             throw SignInInvalidPasswordException()
@@ -48,29 +50,28 @@ class UserServiceImpl (
         return User(entity)
     }
 
-    override fun signOut(userId: String) {
-        if (userRepository.findByUserId(userId) == null) throw SignOutUserNotFoundException()
-    }
-
-    override fun updateProfile(userId: String, nickname: String, introduction: String): User {
-        var entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+    @Transactional
+    override fun updateProfile(id: Long, nickname: String, introduction: String, image: String): User {
+        val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
         val currentNickname = entity.nickname
 
         if (nickname != currentNickname && userRepository.findByNickname(nickname) != null) throw NicknameConflictException()
         entity.nickname = nickname
         entity.introduction = introduction
+        entity.image = image
 
         return User(entity)
     }
 
-    override fun delete(userId: String) {
-        val entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+    @Transactional
+    override fun delete(id: Long) {
+        val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
 
         userRepository.delete(entity)
     }
 
-    override fun getUserBrief(userId: String): UserBrief {
-        val entity: UserEntity = userRepository.findByUserId(userId) ?: throw UserNotFoundException()
+    override fun getUserBrief(id: Long): UserBrief {
+        val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
 
         return UserBrief(
             nickname = entity.nickname,
@@ -78,14 +79,20 @@ class UserServiceImpl (
             visit_count = entity.visitCount,
             my_article_count = entity.articlesCount,
             my_comment_count = entity.commentsCount,
-            register_date = entity.registerDate.toLocalDate()
+            register_date = entity.registerDate
         )
     }
 
-    private fun validate(userId: String, password: String, email: String, birthDate: String, phoneNumber: String) {
+    override fun authenticate(accessToken: String): User {
+        val entity = userRepository.findByNickname(accessToken) ?: throw AuthenticateException()
+
+        return User(entity)
+    }
+
+    private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 
-        if (!validationUtil.isUserIdValid(userId)) {
+        if (!validationUtil.isUsernameValid(username)) {
             throw SignUpBadUserIdException()
         }
 
@@ -105,7 +112,7 @@ class UserServiceImpl (
             throw SignUpBadPhoneNumberException()
         }
 
-        if (userRepository.findByUserId(userId) != null) {
+        if (userRepository.findByUsername(username) != null) {
             throw SignUpUserIdConflictException()
         }
     }
@@ -117,7 +124,13 @@ class UserServiceImpl (
     }
 
     fun User(entity: UserEntity) = User(
-        userId = entity.userId
+        id = entity.id,
+        nickname = entity.nickname,
+        registerDate = entity.registerDate,
+        email = entity.email,
+        rank = entity.rank,
+        visitCount = entity.visitCount,
+        articlesCount = entity.articlesCount,
+        commentsCount = entity.commentsCount
     )
-
 }

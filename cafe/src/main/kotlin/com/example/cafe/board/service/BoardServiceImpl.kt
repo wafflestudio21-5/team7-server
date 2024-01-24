@@ -4,6 +4,7 @@ import com.example.cafe.article.repository.ArticleRepository
 import com.example.cafe.article.service.ArticleBrief
 import com.example.cafe.board.repository.BoardGroupRepository
 import com.example.cafe.board.repository.BoardRepository
+import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
 import org.springframework.stereotype.Service
 
@@ -50,11 +51,21 @@ class BoardServiceImpl (
                 viewCount = article.viewCnt,
                 likeCount = article.likeCnt,
                 commentCount = article.commentCnt,
-                author = User(userId = article.user.userId, username = article.user.username),
+                author = User(article.user),
                 board = Board(id = board.id, name = board.name),
                 isNotification = article.isNotification,
             )
         }
     }
 
+    fun User(entity: UserEntity) = User(
+        id = entity.id,
+        nickname = entity.nickname,
+        registerDate = entity.registerDate,
+        email = entity.email,
+        rank = entity.rank,
+        visitCount = entity.visitCount,
+        articlesCount = entity.articlesCount,
+        commentsCount = entity.commentsCount
+    )
 }

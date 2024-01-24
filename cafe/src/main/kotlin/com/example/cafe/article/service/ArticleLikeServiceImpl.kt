@@ -10,11 +10,11 @@ class ArticleLikeServiceImpl(
         private val articleRepository: ArticleRepository,
         private val articleLikeRepository: ArticleLikeRepository
 ) : ArticleLikeService {
-    override fun exists(articleId: Long, userId: String): Boolean {
+    override fun exists(articleId: Long, userId: Long): Boolean {
         return articleLikeRepository.findByArticleIdAndUserId(articleId= articleId, userId=userId) != null
     }
 
-    override fun create(articleId: Long, userId: String) {
+    override fun create(articleId: Long, userId: Long) {
         if (articleRepository.findById(articleId).isEmpty) {
             throw ArticleNotFoundException()
         }
@@ -31,7 +31,7 @@ class ArticleLikeServiceImpl(
         )
     }
 
-    override fun delete(articleId: Long, userId: String) {
+    override fun delete(articleId: Long, userId: Long) {
         val like = articleLikeRepository.findByArticleIdAndUserId(articleId = articleId, userId = userId)
                 ?: throw ArticleNotLikedException()
         articleLikeRepository.delete(like)

@@ -22,7 +22,7 @@ class ArticleController(
             @Authenticated user: User,
     ) : ArticlePostResponse {
         val newArticle = articleService.post(
-            userId = user.userId,
+            userId = user.id,
             title = request.title,
             content = request.content,
             boardId = request.boardId,
@@ -33,7 +33,7 @@ class ArticleController(
                 id = newArticle.id,
                 title = newArticle.title,
                 content = newArticle.content,
-                username = newArticle.user.username,
+                nickname = newArticle.user.nickname,
                 createdAt = newArticle.createdAt,
         )
     }
@@ -42,10 +42,10 @@ class ArticleController(
     fun modify(
             @RequestBody request: ArticleModifyRequest,
             @PathVariable articleId : Long,
-            @Authenticated user: User?,
+            @Authenticated user: User,
     ): ArticleModifyResponse {
         val modifiedArticle = articleService.modify(
-                userId = request.userId,
+                userId = user.id,
                 articleId = articleId,
                 title = request.title,
                 content = request.content,
@@ -57,7 +57,7 @@ class ArticleController(
                 id = modifiedArticle.id,
                 title = modifiedArticle.title,
                 content = modifiedArticle.content,
-                username = modifiedArticle.user.username
+                nickname = modifiedArticle.user.nickname
         )
     }
 
@@ -68,7 +68,7 @@ class ArticleController(
     ){
         articleService.delete(
                 articleId = articleId,
-                userId = user.userId
+                userId = user.id
         )
     }
 
@@ -82,8 +82,8 @@ class ArticleController(
         val isLiked = if (user == null) {
             false
         } else {
-            articleViewService.create(articleId = articleId, userId = user.userId)
-            articleLikeService.exists(articleId = articleId, userId = user.userId)
+            articleViewService.create(articleId = articleId, userId = user.id)
+            articleLikeService.exists(articleId = articleId, userId = user.id)
         }
         return ArticleGetResponse(article, isLiked)
     }
@@ -94,7 +94,7 @@ class ArticleController(
         @PathVariable articleId: Long,
         @Authenticated user: User,
     ) {
-        articleLikeService.create(articleId = articleId, userId = user.userId)
+        articleLikeService.create(articleId = articleId, userId = user.id)
     }
 
     @DeleteMapping("/api/v1/articles/{articleId}/like")
@@ -102,7 +102,7 @@ class ArticleController(
         @PathVariable articleId: Long,
         @Authenticated user: User,
     ) {
-        articleLikeService.delete(articleId = articleId, userId = user.userId)
+        articleLikeService.delete(articleId = articleId, userId = user.id)
     }
 
     @GetMapping("/api/v1/articles/hot")
@@ -136,7 +136,6 @@ data class ArticlePostRequest(
 )
 
 data class ArticleModifyRequest(
-        val userId : String,
         val title: String,
         val content: String,
         val boardId: Long,
@@ -148,7 +147,7 @@ data class ArticlePostResponse(
         val id: Long,
         val title: String,
         val content: String,
-        val username : String,
+        val nickname : String,
         val createdAt: LocalDateTime
 )
 
@@ -156,7 +155,7 @@ data class ArticleModifyResponse(
         val id: Long,
         val title: String,
         val content: String,
-        val username : String,
+        val nickname : String,
 )
 
 data class ArticleGetResponse(

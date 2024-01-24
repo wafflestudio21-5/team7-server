@@ -8,17 +8,17 @@ class ValidationUtilTest {
 
     @Test
     fun isUserIdValid() {
-        assertThat(ValidationUtil().isUserIdValid("a")).isFalse()
-        assertThat(ValidationUtil().isUserIdValid("123456")).isFalse()
-        assertThat(ValidationUtil().isUserIdValid("ABC1234")).isFalse()
-        assertThat(ValidationUtil().isUserIdValid("abc###")).isFalse()
-        assertThat(ValidationUtil().isUserIdValid("-----1")).isFalse()
+        assertThat(ValidationUtil().isUsernameValid("a")).isFalse()
+        assertThat(ValidationUtil().isUsernameValid("123456")).isFalse()
+        assertThat(ValidationUtil().isUsernameValid("ABC1234")).isFalse()
+        assertThat(ValidationUtil().isUsernameValid("abc###")).isFalse()
+        assertThat(ValidationUtil().isUsernameValid("-----1")).isFalse()
 
-        assertThat(ValidationUtil().isUserIdValid("iuduf")).isTrue()
-        assertThat(ValidationUtil().isUserIdValid("ank123")).isTrue()
-        assertThat(ValidationUtil().isUserIdValid("aaaank123")).isTrue()
-        assertThat(ValidationUtil().isUserIdValid("abc---")).isTrue()
-        assertThat(ValidationUtil().isUserIdValid("abc---")).isTrue()
+        assertThat(ValidationUtil().isUsernameValid("iuduf")).isTrue()
+        assertThat(ValidationUtil().isUsernameValid("ank123")).isTrue()
+        assertThat(ValidationUtil().isUsernameValid("aaaank123")).isTrue()
+        assertThat(ValidationUtil().isUsernameValid("abc---")).isTrue()
+        assertThat(ValidationUtil().isUsernameValid("abc---")).isTrue()
     }
 
     @Test

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 interface ArticleViewRepository : JpaRepository<ArticleViewEntity, Long>{
     fun existsByArticleIdAndUserIdAndCreatedAtAfterAndCreatedAtBefore(
             articleId: Long,
-            userId: String,
+            userId: Long,
             after: LocalDateTime,
             before: LocalDateTime,
     ): Boolean
