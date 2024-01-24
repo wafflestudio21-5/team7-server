@@ -113,14 +113,17 @@ class ArticleController(
     }
     @GetMapping("/api/v1/articles")
     fun getArticles(
+        user: User?,
     ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleService.getArticles())
+        return ArticleBriefResponse(articleService.getArticles(
+            userId = user?.id
+        ))
     }
 
     @ExceptionHandler
     fun handleException(e: ArticleException): ResponseEntity<Unit> {
         val status = when (e) {
-            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException -> 404
+            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException -> 404
             is PostBadTitleException, is PostBadContentException, is ArticleAlreadyLikedException, is ArticleNotLikedException -> 400
             is UnauthorizedModifyException -> 401
         }

@@ -223,4 +223,65 @@ class ArticleIntegrationTest @Autowired constructor(
 
             )
     }
+
+    @Test
+    @Transactional
+    fun `게시물 전체 조회`() {
+        mvc.perform(
+            post("/api/v1/articles/post")
+                .header("Authorization", "Bearer hong")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "title" to "샘플 게시물 제목 1",
+                            "content" to "샘플 게시물 내용 1",
+                            "boardId" to 1L,
+                            "allowComments" to true,
+                            "isNotification" to false
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk)
+
+        mvc.perform(
+            post("/api/v1/articles/post")
+                .header("Authorization", "Bearer hong")
+                .content(
+                    mapper.writeValueAsString(
+                        mapOf(
+                            "title" to "샘플 게시물 제목 2",
+                            "content" to "샘플 게시물 내용 2",
+                            "boardId" to 1L,
+                            "allowComments" to true,
+                            "isNotification" to false
+                        )
+                    )
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk)
+
+        println(mvc.perform(
+            get("/api/v1/articles/hot")
+                .param("sortBy","VIEW")
+        ).toString())
+
+        mvc.perform(
+            get("/api/v1/articles")
+        )
+            .andExpect(status().isOk)
+            .andExpectAll(
+                jsonPath("$.articleBrief.length()").value(0),
+            )
+
+        mvc.perform(
+            get("/api/v1/articles")
+                .header("Authorization", "Bearer hong")
+        )
+            .andExpect(status().isOk)
+            .andExpectAll(
+                jsonPath("$.articleBrief.length()").value(3),
+            )
+
+    }
 }

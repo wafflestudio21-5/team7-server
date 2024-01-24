@@ -11,6 +11,7 @@ import com.example.cafe.board.service.Board
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
 import java.time.LocalDateTime
+import java.util.Dictionary
 
 @Service
 class ArticleServiceImpl(
@@ -141,8 +142,23 @@ class ArticleServiceImpl(
         }
     }
 
-    override fun getArticles(): List<ArticleBrief> {
-        return articleRepository.findAll().map{article->
+    override fun getArticles(
+        userId: Long?,
+    ): List<ArticleBrief> {
+        val userRank = if(userId != null) {
+            userRepository.findById(userId).orElseThrow { UserNotFoundException() }.rank
+        } else {
+            "VISITOR"
+        }
+
+        val allowedArticleRank = mapOf(
+            "VISITOR" to mutableListOf(),
+            User.Rank.USER.s to mutableListOf(User.Rank.USER.s),
+            User.Rank.ADMIN.s to mutableListOf(User.Rank.USER.s,User.Rank.ADMIN.s)
+        )
+        return articleRepository.findAllByMinUserRankAllowedIn(
+            allowedArticleRank[userRank]?:throw RankNotFoundException()
+        ).map { article ->
             ArticleBrief(
                 id = article.id,
                 title = article.title,

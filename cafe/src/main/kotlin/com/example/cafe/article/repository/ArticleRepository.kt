@@ -44,7 +44,7 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
     fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>
     fun findAllByOrderByCommentCntDesc(): List<ArticleEntity>
-
+    fun findAllByMinUserRankAllowedIn(ranks: MutableList<String>): List<ArticleEntity>
 
 
 }

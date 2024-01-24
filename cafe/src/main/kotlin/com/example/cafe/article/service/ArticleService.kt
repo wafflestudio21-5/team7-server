@@ -32,7 +32,7 @@ interface ArticleService {
 
     fun getHotArticles(sortBy: HotSortType): List<ArticleBrief>
 
-    fun getArticles(): List<ArticleBrief>
+    fun getArticles(userId: Long?): List<ArticleBrief>
 
     enum class HotSortType {
         VIEW, LIKE, COMMENT
