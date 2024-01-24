@@ -30,11 +30,9 @@ class ArticleServiceImpl(
         allowComments: Boolean,
         isNotification: Boolean,
     ) : ArticleEntity {
-
-        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
-
+        val user = userRepository.findById(userId).orElseThrow{ UserNotFoundException() }
         //board not selected -> id = 0
-        val board = boardRepository.findById(boardId).get()
+        val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
 
         if(content=="") throw PostBadContentException()
 
@@ -61,7 +59,7 @@ class ArticleServiceImpl(
             allowComments: Boolean,
             isNotification: Boolean
     ): ArticleEntity {
-        //if(user.userId != userId) throw UnauthorizedModifyException()
+        val article = articleRepository.findById(articleId).orElseThrow { ArticleNotFoundException() }
 
         val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
 
@@ -69,7 +67,7 @@ class ArticleServiceImpl(
 
         if(title=="") throw PostBadTitleException()
 
-        val article = articleRepository.findById(articleId).orElseThrow { ArticleNotFoundException() }
+        if(userId != article.user.id) throw UnauthorizedModifyException()
 
         return articleRepository.save(
                 ArticleEntity(
@@ -99,7 +97,7 @@ class ArticleServiceImpl(
     }
 
     override fun get(id: Long): Article {
-        val article = articleRepository.findById(id).get()
+        val article = articleRepository.findById(id).orElseThrow{ ArticleNotFoundException() }
         val author = article.user
         val board = article.board
         val likeCount = article.likeCnt

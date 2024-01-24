@@ -15,9 +15,7 @@ class ArticleLikeServiceImpl(
     }
 
     override fun create(articleId: Long, userId: Long) {
-        if (articleRepository.findById(articleId).isEmpty) {
-            throw ArticleNotFoundException()
-        }
+        articleRepository.findById(articleId).orElseThrow{ ArticleNotFoundException() }
 
         if (exists(articleId = articleId, userId = userId)) {
             throw ArticleAlreadyLikedException()
@@ -29,12 +27,14 @@ class ArticleLikeServiceImpl(
                         userId = userId
                 )
         )
+        articleRepository.incrementLikeCnt(articleId)
     }
 
     override fun delete(articleId: Long, userId: Long) {
         val like = articleLikeRepository.findByArticleIdAndUserId(articleId = articleId, userId = userId)
                 ?: throw ArticleNotLikedException()
         articleLikeRepository.delete(like)
+        articleRepository.decrementLikeCnt(articleId)
     }
 
 }

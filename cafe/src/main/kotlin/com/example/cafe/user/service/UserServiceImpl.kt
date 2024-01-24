@@ -119,6 +119,7 @@ class UserServiceImpl (
     }
 
     override fun authenticate(accessToken: String): User {
+        println(accessToken)
         val entity = userRepository.findByNickname(accessToken) ?: throw AuthenticateException()
         println(entity.password)
         return User(entity)

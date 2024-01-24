@@ -30,10 +30,6 @@ class UserArgumentResolver(
             val accessToken = requireNotNull(
                 webRequest.getHeader("Authorization")?.split(" ")?.get(1)
             )
-<<<<<<< HEAD
-
-=======
->>>>>>> ebc0865 (error fixed, integrationTest)
             userService.authenticate(accessToken)
         }.getOrElse {
             if (parameter.hasParameterAnnotation(Authenticated::class.java)) {

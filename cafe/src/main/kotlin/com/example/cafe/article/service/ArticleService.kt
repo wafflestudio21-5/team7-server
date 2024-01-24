@@ -1,6 +1,7 @@
 package com.example.cafe.article.service
 
 import com.example.cafe.article.repository.ArticleEntity
+import com.example.cafe.user.service.User
 import java.time.LocalDateTime
 
 interface ArticleService {
