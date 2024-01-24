@@ -140,8 +140,8 @@ class CommentServiceImpl (
         if (comment.user.id != userId) {
             throw InvalidCommentUserException()
         }
-        articleRepository.decrementCommentCnt(articleId)
         commentRepository.delete(comment)
+        articleRepository.decrementCommentCnt(articleId)
     }
 
     override fun deleteRecomment(id: Long, userId: Long) {
