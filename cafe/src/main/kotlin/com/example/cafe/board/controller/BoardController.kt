@@ -4,8 +4,11 @@ import com.example.cafe.article.service.ArticleBrief
 import com.example.cafe.board.service.*
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Page
 
 @RestController
 class BoardController(
@@ -50,8 +53,17 @@ class BoardController(
     @GetMapping("/api/v1/boards/{boardId}/articles")
     fun getBoardArticle(
         @PathVariable boardId: Long,
+        @RequestParam("size", defaultValue = "10") size: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
+    ):ArticleBriefPageResponse {
+        return ArticleBriefPageResponse(boardService.getArticles(boardId, PageRequest.of(page-1, size)))
+    }
+
+    @GetMapping("/api/v1/boards/{boardId}/notification")
+    fun getBoardNotification(
+        @PathVariable boardId: Long,
     ):ArticleBriefResponse {
-        return ArticleBriefResponse(boardService.getArticles(boardId))
+        return ArticleBriefResponse(boardService.getNotification(boardId))
     }
 
     @ExceptionHandler
@@ -76,4 +88,8 @@ data class BoardResponse(
 
 data class ArticleBriefResponse(
     val articleBrief: List<ArticleBrief>
+)
+
+data class ArticleBriefPageResponse(
+    val articleBrief: Page<ArticleBrief>
 )

@@ -1,5 +1,7 @@
 package com.example.cafe.article.repository
 
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Page
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -19,7 +21,10 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     fun incrementViewCnt(articleId: Long)
 
     @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE a.board.id = :boardId")
-    fun findByBoardId(boardId: Long): List<ArticleEntity>
+    fun findByBoardId(boardId: Long, pageable: Pageable): Page<ArticleEntity>
+
+    @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE a.board.id = :boardId AND a.isNotification = true")
+    fun findByBoardIdAndNotification(boardId: Long): List<ArticleEntity>
 
     fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
     fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>
