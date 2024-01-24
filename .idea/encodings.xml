@@ -2,6 +2,5 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/cafe/src/main/kotlin/com/example/cafe/_web/resolver/UserArgumentResolver.kt" charset="EUC-KR" />
-    <file url="file://$PROJECT_DIR$/cafe/src/main/resources/application.yaml" charset="EUC-KR" />
   </component>
 </project>
