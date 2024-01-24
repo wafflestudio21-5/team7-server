@@ -66,6 +66,7 @@ class UserController(
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
             is SignUpBadUserIdException, is SignUpBadPasswordException, is SignUpBadEmailException, is SignUpBadBirthDateException, is SignUpBadPhoneNumberException -> 400
+            is InvalidTokenException, is ExpiredTokenException -> 401
             is SignUpUserIdConflictException, is NicknameConflictException -> 409
             is SignInUserNotFoundException, is SignInInvalidPasswordException, is SignOutUserNotFoundException, is UserNotFoundException -> 404
         }
