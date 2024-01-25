@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Sort
 
 @RestController
 class BoardController(
@@ -55,8 +56,15 @@ class BoardController(
         @PathVariable boardId: Long,
         @RequestParam("size", defaultValue = "10") size: Int,
         @RequestParam("page", defaultValue = "1") page: Int,
+        @RequestParam("sort", defaultValue = "createdAt,desc") sort: List<String>,
     ):ArticleBriefPageResponse {
-        return ArticleBriefPageResponse(boardService.getArticles(boardId, PageRequest.of(page-1, size)))
+        var direction = Sort.Direction.DESC
+        if (sort.size > 1) {
+            if (sort[1] == "asc") direction = Sort.Direction.ASC
+        }
+
+        val property = sort[0]
+        return ArticleBriefPageResponse(boardService.getArticles(boardId, PageRequest.of(page-1, size, Sort.by(direction, property))))
     }
 
     @GetMapping("/api/v1/boards/{boardId}/notification")
