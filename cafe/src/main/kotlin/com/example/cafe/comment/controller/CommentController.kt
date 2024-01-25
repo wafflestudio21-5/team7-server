@@ -105,7 +105,7 @@ class CommentController(
     fun handleException(e: CommentException): ResponseEntity<Unit> {
         val status = when (e) {
             is CommentNotFoundException, is RecommentNotFoundException, is CommentUserNotFoundException, is CommentArticleNotFoundException -> 404
-            is InvalidCommentUserException -> 403
+            is InvalidCommentUserException -> 401
         }
 
         return ResponseEntity.status(status).build()
