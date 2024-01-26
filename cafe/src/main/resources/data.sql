@@ -29,7 +29,10 @@ INSERT into articles (id, title, content, created_at, user_id, board_id, allow_c
 (13, 'test13', '.', '2023-01-13', 1, 1, true, false),
 (16, 'test16', '.', '2023-01-14', 1, 1, true, false),
 (15, 'test15', '.', '2023-01-14', 1, 1, true, false),
-(14, 'test14', '.', '2023-01-14', 1, 1, true, false);
+(14, 'test14', '.', '2023-01-14', 1, 1, true, false),
+(17, 'A', '.', '2023-01-14', 1, 2, true, false),
+(18, 'B', '.', '2023-01-14', 1, 2, true, false),
+(19, 'C', '.', '2023-01-14', 1, 2, true, false);
 
 INSERT into comments (id, content, last_modified, user_id, article_id) VALUES (1, '잘 읽었습니다.', CURRENT_TIMESTAMP, 2, 1);
 
