@@ -59,7 +59,7 @@ class BoardController(
     ):ArticleBriefPageResponse {
         var desc = true
         if (sort.size > 1) {
-            if (sort[1] == "asc") desc = false;
+            if (sort[1] == "asc") desc = false
         }
         val property = sort[0]
 
