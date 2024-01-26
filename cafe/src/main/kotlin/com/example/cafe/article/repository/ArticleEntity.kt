@@ -17,7 +17,7 @@ class ArticleEntity (
         val viewCnt : Long = 0,
         val likeCnt : Long = 0,
         val commentCnt: Long = 0,
-        val minUserRankAllowed: String = "새싹",
+        val minUserRankAllowed: String = "씨앗",
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id")
         val user : UserEntity,
