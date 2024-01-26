@@ -18,12 +18,33 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     )
     fun incrementViewCnt(articleId: Long)
 
-    @Query("SELECT a FROM articles a JOIN FETCH a.user JOIN FETCH a.comments WHERE a.board.id = :boardId")
+    @Modifying
+    @Transactional
+    @Query(
+        """
+        UPDATE articles p SET p.likeCnt = p.likeCnt + 1 WHERE p.id = :articleId
+    """
+    )
+    fun incrementLikeCnt(articleId: Long)
+
+    @Modifying
+    @Transactional
+    @Query(
+        """
+        UPDATE articles p SET p.likeCnt = p.likeCnt - 1 WHERE p.id = :articleId
+    """
+    )
+    fun decrementLikeCnt(articleId: Long)
+
+
+    @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE a.board.id = :boardId")
     fun findByBoardId(boardId: Long): List<ArticleEntity>
 
     fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
     fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>
     fun findAllByOrderByCommentCntDesc(): List<ArticleEntity>
+  
+    fun findAllByMinUserRankAllowedIn(ranks: MutableList<String>): List<ArticleEntity>
 
     @Modifying
     @Transactional
@@ -42,6 +63,5 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     """
     )
     fun decrementCommentCnt(articleId: Long)
-
 
 }

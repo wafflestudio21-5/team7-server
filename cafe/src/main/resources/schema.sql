@@ -37,7 +37,7 @@ create table articles (
     view_cnt bigint default 0,
     like_cnt bigint default 0,
     comment_cnt bigint default 0,
-    min_user_rank_allowed varchar(20) default '새싹',
+    min_user_rank_allowed varchar(20) default '씨앗',
     user_id bigint,
     board_id bigint,
     allow_comments boolean not null,

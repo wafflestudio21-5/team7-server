@@ -6,6 +6,7 @@ import com.example.cafe.board.repository.BoardRepository
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.service.UserNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BoardLikeServiceImpl (
@@ -29,6 +30,7 @@ class BoardLikeServiceImpl (
         }
     }
 
+    @Transactional
     override fun create(userId: Long, boardId: Long) {
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         if (boardRepository.findById(boardId).isEmpty) {
@@ -45,14 +47,19 @@ class BoardLikeServiceImpl (
                 board = boardRepository.findById(boardId).get()
             )
         )
+
+        boardLikeRepository.incrementLikeCnt(boardId)
     }
 
+    @Transactional
     override fun delete(userId: Long, boardId: Long) {
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         val boardLike = boardLikeRepository.findByUserIdAndBoardId(user.id, boardId)
             ?: throw BoardNeverLikedException()
 
         boardLikeRepository.delete(boardLike)
+
+        boardLikeRepository.decrementLikeCnt(boardId)
     }
 
 }
