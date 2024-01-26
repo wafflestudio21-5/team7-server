@@ -51,7 +51,7 @@ class CommentController(
         @PathVariable commentId: Long,
         @Authenticated user: User
     ) {
-        commentService.deleteComment(commentId, user.id)
+        commentService.deleteComment(commentId, user.id, articleId)
     }
 
     @PostMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments")
@@ -105,7 +105,7 @@ class CommentController(
     fun handleException(e: CommentException): ResponseEntity<Unit> {
         val status = when (e) {
             is CommentNotFoundException, is RecommentNotFoundException, is CommentUserNotFoundException, is CommentArticleNotFoundException -> 404
-            is InvalidCommentUserException -> 403
+            is InvalidCommentUserException -> 401
         }
 
         return ResponseEntity.status(status).build()
