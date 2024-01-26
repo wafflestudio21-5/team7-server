@@ -6,6 +6,8 @@ import com.example.cafe.board.repository.BoardGroupRepository
 import com.example.cafe.board.repository.BoardRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -39,9 +41,28 @@ class BoardServiceImpl (
         }
     }
 
-    override fun getArticles(boardId: Long): List<ArticleBrief> {
+    override fun getArticles(boardId: Long, pageable: Pageable): Page<ArticleBrief> {
         val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
-        val articleList = articleRepository.findByBoardId(boardId)
+        val articleList = articleRepository.findByBoardId(boardId, pageable)
+
+        return articleList.map {article->
+            ArticleBrief(
+                id = article.id,
+                title = article.title,
+                createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                likeCount = article.likeCnt,
+                commentCount = article.commentCnt,
+                author = User(article.user),
+                board = Board(id = board.id, name = board.name),
+                isNotification = article.isNotification,
+            )
+        }
+    }
+
+    override fun getNotification(boardId: Long): List<ArticleBrief> {
+        val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
+        val articleList = articleRepository.findByBoardIdAndNotification(boardId)
 
         return articleList.map {article->
             ArticleBrief(
