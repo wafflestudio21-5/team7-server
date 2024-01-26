@@ -57,13 +57,21 @@ class BoardController(
         @RequestParam("page", defaultValue = "0") page: Int,
         @RequestParam("sort", defaultValue = "createdAt,desc") sort: List<String>,
     ):ArticleBriefPageResponse {
-        var direction = Sort.Direction.DESC
+        var desc = true
         if (sort.size > 1) {
-            if (sort[1] == "asc") direction = Sort.Direction.ASC
+            if (sort[1] == "asc") desc = false;
+        }
+        val property = sort[0]
+
+        val sortBy = when (desc) {
+            true -> Sort.by(Sort.Direction.DESC, property, "id")
+            false -> Sort.by(
+                Sort.Order.asc(property),
+                Sort.Order.desc("id")
+            )
         }
 
-        val property = sort[0]
-        return ArticleBriefPageResponse(boardService.getArticles(boardId, PageRequest.of(page, size, Sort.by(direction, property, "id"))))
+        return ArticleBriefPageResponse(boardService.getArticles(boardId, PageRequest.of(page, size, sortBy)))
     }
 
     @GetMapping("/api/v1/boards/{boardId}/notification")
