@@ -12,8 +12,8 @@ class BoardEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     val group: BoardGroupEntity,
-    val viewCnt: Long,
-    val likeCnt: Long,
+    var viewCnt: Long,
+    var likeCnt: Long,
     @OneToMany(mappedBy = "board", cascade = [CascadeType.ALL])
     val articles: MutableList<ArticleEntity>,
     @OneToMany(mappedBy = "board", cascade = [CascadeType.ALL])
