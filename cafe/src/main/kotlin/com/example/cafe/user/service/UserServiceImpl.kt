@@ -95,6 +95,12 @@ class UserServiceImpl (
         return User(entity)
     }
 
+    override fun getProfile(id: Long): UserProfile {
+        val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
+
+        return UserProfile(nickname = entity.nickname, introduction = entity.introduction, image = entity.image)
+    }
+
     private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 

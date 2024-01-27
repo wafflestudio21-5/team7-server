@@ -23,7 +23,7 @@ class UserController(
         )
     }
 
-    @PutMapping("/api/v1/users/user")
+    @PutMapping("/api/v1/users/user-profile")
     fun updateProfile(
         @RequestBody request: UpdateProfileRequest,
         @Authenticated user: User
@@ -34,6 +34,14 @@ class UserController(
             introduction = request.content,
             image = request.image
         )
+    }
+
+    @GetMapping("/api/v1/users/user-profile")
+    fun getProfile(
+        @Authenticated user: User
+    ): ProfileResponse {
+        val user = userService.getProfile(user.id)
+        return ProfileResponse(nickname = user.nickname, content = user.introduction, image = user.image)
     }
 
     @DeleteMapping("/api/v1/users/user")
@@ -85,4 +93,10 @@ data class UpdateProfileRequest(
 
 data class UserBriefResponse(
     val userBrief: UserBrief
+)
+
+data class ProfileResponse(
+    val nickname: String,
+    val content: String?,
+    val image: String?
 )
