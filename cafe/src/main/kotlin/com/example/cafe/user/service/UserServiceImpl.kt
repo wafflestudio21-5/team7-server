@@ -117,6 +117,23 @@ class UserServiceImpl (
         }
     }
 
+    override fun getMyArticles(id: Long, pageable: Pageable): Page<UserArticleBrief> {
+        val user = userRepository.findById(id).orElseThrow { UserNotFoundException() }
+        val articleList = articleRepository.findByUserId(id, pageable)
+
+        return articleList.map {article->
+            UserArticleBrief(
+                id = article.id,
+                title = article.title,
+                createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                likeCount = article.likeCnt,
+                commentCount = article.commentCnt,
+                author = User(user)
+            )
+        }
+    }
+
     private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 

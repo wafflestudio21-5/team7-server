@@ -47,6 +47,9 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     @Query("SELECT al.article FROM article_likes al WHERE al.userId = :userId")
     fun findByArticleLikeUserId(userId: Long, pageable: Pageable): Page<ArticleEntity>
 
+    @Query("SELECT a FROM articles a JOIN a.user WHERE a.user.id = :userId")
+    fun findByUserId(userId: Long, pageable: Pageable): Page<ArticleEntity>
+
     fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
     fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>
     fun findAllByOrderByCommentCntDesc(): List<ArticleEntity>

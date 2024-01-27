@@ -54,14 +54,24 @@ class UserController(
         return UserBriefResponse(userBrief = userService.getUserBrief(user.id))
     }
 
-    @GetMapping("/api/v1/users/articles")
-    fun getLikeArticles(
+    @GetMapping("/api/v1/users/liked-articles")
+    fun getLikedArticles(
         @Authenticated user: User,
         @RequestParam("size", defaultValue = "15") size: Int,
         @RequestParam("page", defaultValue = "0") page: Int,
         @RequestParam("sort", defaultValue = "id") sort: String,
     ): UserArticleBriefPageResponse {
         return UserArticleBriefPageResponse(userService.getLikeArticles(user.id, PageRequest.of(page, size, Sort.by(sort))))
+    }
+
+    @GetMapping("/api/v1/users/articles")
+    fun getMyArticles(
+        @Authenticated user: User,
+        @RequestParam("size", defaultValue = "15") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("sort", defaultValue = "createdAt") sort: String,
+    ): UserArticleBriefPageResponse {
+        return UserArticleBriefPageResponse(userService.getMyArticles(user.id, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort))))
     }
 
     @ExceptionHandler
