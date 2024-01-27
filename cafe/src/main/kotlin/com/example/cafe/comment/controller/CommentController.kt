@@ -24,6 +24,7 @@ class CommentController(
             content = comment.content,
             lastModified = comment.lastModified,
             nickname = comment.nickname,
+            isSecret = comment.isSecret,
         )
     }
 
@@ -74,6 +75,7 @@ class CommentController(
             content = recomment.content,
             lastModified = recomment.lastModified,
             nickname = recomment.nickname,
+            isSecret = recomment.isSecret,
         )
     }
 
@@ -129,6 +131,7 @@ data class PostCommentResponse(
     val content: String,
     val lastModified: LocalDateTime,
     val nickname: String,
+    val isSecret: Boolean,
 )
 
 data class GetCommentResponse(
@@ -144,6 +147,7 @@ data class PostRecommentResponse(
     val content: String,
     val lastModified: LocalDateTime,
     val nickname: String,
+    val isSecret: Boolean,
 )
 
 data class GetRecommentResponse(

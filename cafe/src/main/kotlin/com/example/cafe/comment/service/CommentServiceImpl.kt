@@ -52,8 +52,10 @@ class CommentServiceImpl (
                         },
                         lastModified = recommentEntity.lastModified,
                         nickname = recommentEntity.user.nickname,
+                        isSecret = recommentEntity.isSecret,
                     )
-                }
+                },
+                isSecret = commentEntity.isSecret,
             )
         }
         return comments
@@ -77,6 +79,7 @@ class CommentServiceImpl (
                 },
                 lastModified = recommentEntity.lastModified,
                 nickname = recommentEntity.user.nickname,
+                isSecret = recommentEntity.isSecret,
             )
         }
         return recomments
@@ -102,6 +105,7 @@ class CommentServiceImpl (
             content = comment.content,
             lastModified = comment.lastModified,
             nickname = comment.user.nickname,
+            isSecret = comment.isSecret,
         )
     }
 
@@ -122,6 +126,7 @@ class CommentServiceImpl (
             content = recomment.content,
             lastModified = recomment.lastModified,
             nickname = recomment.user.nickname,
+            isSecret = recomment.isSecret,
         )
     }
 
@@ -144,8 +149,10 @@ class CommentServiceImpl (
                     content = recommentEntity.content,
                     lastModified = recommentEntity.lastModified,
                     nickname = recommentEntity.user.nickname,
+                    isSecret = recommentEntity.isSecret,
                 )
-            }
+            },
+            isSecret = comment.isSecret,
         )
     }
 
@@ -162,6 +169,7 @@ class CommentServiceImpl (
             content = recomment.content,
             lastModified = recomment.lastModified,
             nickname = recomment.user.nickname,
+            isSecret = recomment.isSecret,
         )
     }
 

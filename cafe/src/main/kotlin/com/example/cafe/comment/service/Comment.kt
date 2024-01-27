@@ -8,4 +8,5 @@ data class Comment(
     var lastModified: LocalDateTime,
     val nickname: String,
     val recomments: List<Recomment> = emptyList(),
+    val isSecret: Boolean,
 )
