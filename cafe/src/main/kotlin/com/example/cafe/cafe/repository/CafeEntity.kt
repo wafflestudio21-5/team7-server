@@ -13,5 +13,5 @@ class CafeEntity (
     val id: Long = 0L,
     val name: String,
     val createdAt: Date,
-    val membersCount: Long = 0L
+    val memberCnt: Long = 0L
     )
