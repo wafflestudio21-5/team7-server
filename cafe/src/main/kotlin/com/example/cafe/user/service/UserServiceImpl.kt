@@ -129,13 +129,6 @@ class UserServiceImpl (
         return Date(utilDate.time)
     }
 
-    override fun authenticate(accessToken: String): User {
-        println(accessToken)
-        val entity = userRepository.findByNickname(accessToken) ?: throw AuthenticateException()
-        println(entity.password)
-        return User(entity)
-    }
-
     fun User(entity: UserEntity) = User(
         id = entity.id,
         nickname = entity.nickname,
