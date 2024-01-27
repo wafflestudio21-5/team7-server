@@ -1,6 +1,5 @@
 package com.example.cafe.comment.controller
 
-import com.example.cafe.article.service.PostBadContentException
 import com.example.cafe.comment.service.*
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
