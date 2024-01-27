@@ -84,7 +84,8 @@ class UserServiceImpl (
             visit_count = entity.visitCount,
             my_article_count = entity.articlesCount,
             my_comment_count = entity.commentsCount,
-            register_date = entity.registerDate
+            register_date = entity.registerDate,
+            image = entity.image
         )
     }
 

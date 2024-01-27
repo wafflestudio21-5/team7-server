@@ -8,5 +8,6 @@ data class UserBrief(
     val visit_count: Long,
     val my_article_count: Long,
     val my_comment_count: Long,
-    val register_date: LocalDate
+    val register_date: LocalDate,
+    val image: String?
 )
