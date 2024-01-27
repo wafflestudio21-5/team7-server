@@ -23,18 +23,6 @@ class UserController(
         )
     }
 
-    @PostMapping("/api/v1/signin")
-    fun signIn(
-        @RequestBody request: SignInRequest,
-    ): SignInResponse {
-        val user = userService.signIn(
-            username = request.username,
-            password = request.password
-        )
-
-        return SignInResponse(user.getAccessToken())
-    }
-
     @PutMapping("/api/v1/users/user")
     fun updateProfile(
         @RequestBody request: UpdateProfileRequest,
@@ -66,6 +54,7 @@ class UserController(
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
             is SignUpBadUserIdException, is SignUpBadPasswordException, is SignUpBadEmailException, is SignUpBadBirthDateException, is SignUpBadPhoneNumberException -> 400
+            is InvalidTokenException, is ExpiredTokenException -> 401
             is SignUpUserIdConflictException, is NicknameConflictException -> 409
             is SignInUserNotFoundException, is SignInInvalidPasswordException, is SignOutUserNotFoundException, is UserNotFoundException -> 404
         }
@@ -92,10 +81,6 @@ data class UpdateProfileRequest(
     val nickname: String,
     val content: String,
     val image: String
-)
-
-data class SignInResponse(
-    val accessToken: String,
 )
 
 data class UserBriefResponse(
