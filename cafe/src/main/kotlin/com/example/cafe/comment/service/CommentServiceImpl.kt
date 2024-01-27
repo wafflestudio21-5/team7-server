@@ -89,6 +89,9 @@ class CommentServiceImpl (
     override fun createComment(userId: Long, articleId: Long, content: String, isSecret: Boolean, at: LocalDateTime): Comment {
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         val article = articleRepository.findByIdOrNull(articleId) ?: throw CommentArticleNotFoundException()
+
+        if (content=="") throw PostBadCommentContentException()
+
         val comment = commentRepository.save(
             CommentEntity(
                 content = content,
@@ -112,6 +115,9 @@ class CommentServiceImpl (
     override fun createRecomment(userId: Long, commentId: Long, content: String, isSecret: Boolean, at: LocalDateTime) : Recomment {
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw CommentNotFoundException()
+
+        if (content=="") throw PostBadCommentContentException()
+
         val recomment = recommentRepository.save(
             RecommentEntity(
                 content = content,
@@ -134,8 +140,11 @@ class CommentServiceImpl (
     override fun updateComment(id: Long, userId: Long, content: String, at: LocalDateTime) : Comment {
         val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
         if (comment.user.id != userId) {
-            throw InvalidCommentUserException()
+            throw UnauthorizedCommentUserException()
         }
+
+        if (content=="") throw PostBadCommentContentException()
+
         comment.content = content
         comment.lastModified = at
         return Comment(
@@ -160,8 +169,11 @@ class CommentServiceImpl (
     override fun updateRecomment(id: Long, userId: Long, content: String, at: LocalDateTime) : Recomment {
         val recomment = recommentRepository.findByIdOrNull(id) ?: throw RecommentNotFoundException()
         if (recomment.user.id != userId) {
-            throw InvalidCommentUserException()
+            throw UnauthorizedCommentUserException()
         }
+
+        if (content=="") throw PostBadCommentContentException()
+
         recomment.content = content
         recomment.lastModified = at
         return Recomment(
@@ -177,7 +189,7 @@ class CommentServiceImpl (
     override fun deleteComment(id: Long, userId: Long, articleId: Long) {
         val comment = commentRepository.findByIdOrNull(id) ?: throw CommentNotFoundException()
         if (comment.user.id != userId) {
-            throw InvalidCommentUserException()
+            throw UnauthorizedCommentUserException()
         }
         commentRepository.delete(comment)
         articleRepository.decrementCommentCnt(articleId)
@@ -186,7 +198,7 @@ class CommentServiceImpl (
     override fun deleteRecomment(id: Long, userId: Long) {
         val recomment = recommentRepository.findByIdOrNull(id) ?: throw RecommentNotFoundException()
         if (recomment.user.id != userId) {
-            throw InvalidCommentUserException()
+            throw UnauthorizedCommentUserException()
         }
         recommentRepository.delete(recomment)
     }

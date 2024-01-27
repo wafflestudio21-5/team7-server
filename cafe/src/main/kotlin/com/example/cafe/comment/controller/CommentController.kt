@@ -1,5 +1,6 @@
 package com.example.cafe.comment.controller
 
+import com.example.cafe.article.service.PostBadContentException
 import com.example.cafe.comment.service.*
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
@@ -119,7 +120,8 @@ class CommentController(
     fun handleException(e: CommentException): ResponseEntity<Unit> {
         val status = when (e) {
             is CommentNotFoundException, is RecommentNotFoundException, is CommentUserNotFoundException, is CommentArticleNotFoundException -> 404
-            is InvalidCommentUserException -> 401
+            is UnauthorizedCommentUserException -> 401
+            is PostBadCommentContentException -> 400
         }
 
         return ResponseEntity.status(status).build()
