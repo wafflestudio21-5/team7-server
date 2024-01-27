@@ -69,7 +69,7 @@ class CommentController(
         @PathVariable commentId: Long,
         @Authenticated user: User
         ) : PostRecommentResponse {
-        val recomment = commentService.createRecomment(user.id, commentId, content, isSecret)
+        val recomment = commentService.createRecomment(user.id, articleId, commentId, content, isSecret)
         return PostRecommentResponse(
             id = recomment.id,
             content = recomment.content,
@@ -112,7 +112,7 @@ class CommentController(
         @PathVariable recommentId: Long,
         @Authenticated user: User
         ) {
-        commentService.deleteRecomment(recommentId, user.id)
+        commentService.deleteRecomment(recommentId, user.id, articleId)
     }
 
     @ExceptionHandler
