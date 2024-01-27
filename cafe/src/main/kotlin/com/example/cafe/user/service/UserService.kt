@@ -1,6 +1,8 @@
 package com.example.cafe.user.service
 
-import com.example.cafe.user.repository.UserEntity
+import com.example.cafe.article.service.UserArticleBrief
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.time.LocalDate
 
 interface UserService {
@@ -10,4 +12,5 @@ interface UserService {
     fun delete(id: Long)
     fun getUserBrief(id: Long): UserBrief
     fun authenticate(accessToken: String): User
+    fun getLikeArticles(id: Long, pageable: Pageable): Page<UserArticleBrief>
 }

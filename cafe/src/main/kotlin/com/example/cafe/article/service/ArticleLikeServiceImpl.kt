@@ -15,7 +15,7 @@ class ArticleLikeServiceImpl(
     }
 
     override fun create(articleId: Long, userId: Long) {
-        articleRepository.findById(articleId).orElseThrow{ ArticleNotFoundException() }
+        val article = articleRepository.findById(articleId).orElseThrow{ ArticleNotFoundException() }
 
         if (exists(articleId = articleId, userId = userId)) {
             throw ArticleAlreadyLikedException()
@@ -23,7 +23,7 @@ class ArticleLikeServiceImpl(
 
         articleLikeRepository.save(
                 ArticleLikeEntity(
-                        articleId = articleId,
+                        article = article,
                         userId = userId
                 )
         )

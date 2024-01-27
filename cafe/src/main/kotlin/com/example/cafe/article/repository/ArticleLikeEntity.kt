@@ -1,15 +1,14 @@
 package com.example.cafe.article.repository
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity(name = "article_likes")
 class ArticleLikeEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0,
-        val articleId: Long,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "article_id")
+        val article: ArticleEntity,
         val userId: Long,
 )

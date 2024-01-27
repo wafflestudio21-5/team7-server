@@ -1,6 +1,7 @@
 package com.example.cafe.article.repository
 
 import com.example.cafe.board.repository.BoardEntity
+import com.example.cafe.board.repository.BoardLikeEntity
 import com.example.cafe.comment.repository.CommentEntity
 import com.example.cafe.user.repository.UserEntity
 import jakarta.persistence.*
@@ -28,4 +29,6 @@ class ArticleEntity (
         val isNotification : Boolean,
         @OneToMany(mappedBy = "article", cascade = [CascadeType.REMOVE])
         val comments: MutableList<CommentEntity> = mutableListOf(),
+        @OneToMany(mappedBy = "article", cascade = [CascadeType.ALL])
+        val articleLikes: MutableList<ArticleLikeEntity> = mutableListOf(),
 )

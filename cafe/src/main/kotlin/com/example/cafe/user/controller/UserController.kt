@@ -1,8 +1,12 @@
 package com.example.cafe.user.controller
 
 import com.example.cafe.user.service.*
+import com.example.cafe.article.service.UserArticleBrief
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Page
 
 @RestController
 class UserController(
@@ -50,6 +54,16 @@ class UserController(
         return UserBriefResponse(userBrief = userService.getUserBrief(user.id))
     }
 
+    @GetMapping("/api/v1/users/articles")
+    fun getLikeArticles(
+        @Authenticated user: User,
+        @RequestParam("size", defaultValue = "15") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("sort", defaultValue = "id") sort: String,
+    ): UserArticleBriefPageResponse {
+        return UserArticleBriefPageResponse(userService.getLikeArticles(user.id, PageRequest.of(page, size, Sort.by(sort))))
+    }
+
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
@@ -85,4 +99,7 @@ data class UpdateProfileRequest(
 
 data class UserBriefResponse(
     val userBrief: UserBrief
+)
+data class UserArticleBriefPageResponse(
+    val articleBrief: Page<UserArticleBrief>
 )
