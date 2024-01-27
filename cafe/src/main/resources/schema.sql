@@ -89,6 +89,7 @@ create table comments (
     last_modified datetime not null,
     user_id bigint,
     article_id bigint,
+    is_secret boolean default false,
     primary key (id)
 );
 create table recomments (
@@ -97,5 +98,6 @@ create table recomments (
     last_modified datetime not null,
     user_id bigint,
     comment_id bigint,
+    is_secret boolean default false,
     primary key (id)
 );

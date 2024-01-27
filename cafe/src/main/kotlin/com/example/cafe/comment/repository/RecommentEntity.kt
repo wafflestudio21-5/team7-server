@@ -23,4 +23,5 @@ class RecommentEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     val comment: CommentEntity,
+    val isSecret: Boolean = false,
 )

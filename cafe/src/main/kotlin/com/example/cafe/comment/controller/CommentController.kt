@@ -14,10 +14,11 @@ class CommentController(
     @PostMapping("/api/v1/articles/{articleId}/comments")
     fun postComment(
         @RequestParam content: String,
+        @RequestParam isSecret: Boolean,
         @PathVariable articleId: Long,
-        @Authenticated user: User
+        @Authenticated user: User,
     ) : PostCommentResponse {
-        val comment = commentService.createComment(user.id, articleId, content)
+        val comment = commentService.createComment(user.id, articleId, content, isSecret)
         return PostCommentResponse(
             commentId = comment.id,
             content = comment.content,
@@ -27,10 +28,15 @@ class CommentController(
     }
 
     @GetMapping("/api/v1/articles/{articleId}/comments")
-    fun getComment(
+    fun getComments(
         @PathVariable articleId: Long,
+        @Authenticated user: User?,
     ) : GetCommentResponse {
-        val comments = commentService.getComments(articleId)
+        val comments = if (user == null) {
+            commentService.getComments(-1, articleId) // 로그인하지 않은 경우
+        } else {
+            commentService.getComments(user.id, articleId) // 로그인한 경우
+        }
         return GetCommentResponse(comments = comments)
     }
 
@@ -57,11 +63,12 @@ class CommentController(
     @PostMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments")
     fun postRecomment(
         @RequestParam content: String,
+        @RequestParam isSecret: Boolean,
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
         @Authenticated user: User
         ) : PostRecommentResponse {
-        val recomment = commentService.createRecomment(user.id, commentId, content)
+        val recomment = commentService.createRecomment(user.id, commentId, content, isSecret)
         return PostRecommentResponse(
             recommentId = recomment.id,
             content = recomment.content,
@@ -71,11 +78,16 @@ class CommentController(
     }
 
     @GetMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments")
-    fun getRecomment(
+    fun getRecomments(
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
+        @Authenticated user: User?,
         ) : GetRecommentResponse {
-        val recomments = commentService.getRecomments(commentId)
+        val recomments = if (user == null) {
+            commentService.getRecomments(-1, commentId) // 로그인하지 않은 경우
+        } else {
+            commentService.getRecomments(user.id, commentId) // 로그인한 경우
+        }
         return GetRecommentResponse(recomments = recomments)
     }
 
