@@ -1,6 +1,8 @@
 package com.example.cafe.user.service
 
 import com.example.cafe._web.exception.AuthenticateException
+import com.example.cafe.security.SecurityService
+import com.example.cafe.cafe.repository.CafeRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.ValidationUtil
@@ -13,7 +15,10 @@ import java.time.LocalDate
 @Service
 class UserServiceImpl (
     private val userRepository: UserRepository,
+    private val securityService: SecurityService,
+    private val cafeRepository: CafeRepository,
 ) : UserService {
+    @Transactional
     override fun signUp(
         username: String,
         password: String,
@@ -35,12 +40,12 @@ class UserServiceImpl (
                 registerDate = at
             )
         )
+
+        cafeRepository.incrementMemberCnt(1)
         return User(entity)
     }
 
     override fun signIn(username: String, password: String): User {
-        println("username = ${username}")
-        println("password = ${password}")
         val entity = userRepository.findByUsername(username) ?: throw SignInUserNotFoundException()
 
         if (entity.password != password) {
@@ -84,7 +89,8 @@ class UserServiceImpl (
     }
 
     override fun authenticate(accessToken: String): User {
-        val entity = userRepository.findByNickname(accessToken) ?: throw AuthenticateException()
+        val id = securityService.getSubject(accessToken)!!.toLong()
+        val entity = userRepository.findById(id).orElseThrow { AuthenticateException() }
 
         return User(entity)
     }

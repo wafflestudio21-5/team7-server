@@ -20,4 +20,5 @@ class CommentEntity(
     val article: ArticleEntity,
     @OneToMany(mappedBy = "comment", cascade = [CascadeType.REMOVE])
     val recomments: MutableList<RecommentEntity> = mutableListOf(),
+    val isSecret: Boolean = false,
 )

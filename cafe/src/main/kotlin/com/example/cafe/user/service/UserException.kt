@@ -23,3 +23,7 @@ class SignOutUserNotFoundException() : UserException()
 class UserNotFoundException(): UserException()
 
 class NicknameConflictException(): UserException()
+
+class InvalidTokenException(): UserException()
+
+class ExpiredTokenException(): UserException()
