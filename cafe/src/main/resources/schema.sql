@@ -8,6 +8,7 @@ drop table if exists board_likes cascade;
 drop table if exists board_views cascade;
 drop table if exists comments cascade;
 drop table if exists recomments cascade;
+drop table if exists cafe cascade;
 
 create table users (
     id bigint auto_increment,
@@ -89,6 +90,7 @@ create table comments (
     last_modified datetime not null,
     user_id bigint,
     article_id bigint,
+    is_secret boolean default false,
     primary key (id)
 );
 create table recomments (
@@ -97,5 +99,13 @@ create table recomments (
     last_modified datetime not null,
     user_id bigint,
     comment_id bigint,
+    is_secret boolean default false,
+    primary key (id)
+);
+create table cafe (
+    id bigint auto_increment,
+    name varchar(255),
+    created_at datetime not null,
+    member_cnt bigint default 0,
     primary key (id)
 );

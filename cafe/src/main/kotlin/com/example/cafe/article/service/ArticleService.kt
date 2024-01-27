@@ -1,6 +1,7 @@
 package com.example.cafe.article.service
 
 import com.example.cafe.article.repository.ArticleEntity
+import com.example.cafe.user.service.User
 import java.time.LocalDateTime
 
 interface ArticleService {
@@ -30,6 +31,8 @@ interface ArticleService {
     fun get(id: Long): Article
 
     fun getHotArticles(sortBy: HotSortType): List<ArticleBrief>
+
+    fun getArticles(userId: Long?): List<ArticleBrief>
 
     enum class HotSortType {
         VIEW, LIKE, COMMENT

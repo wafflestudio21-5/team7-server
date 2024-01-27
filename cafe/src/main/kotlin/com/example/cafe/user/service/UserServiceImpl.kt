@@ -2,6 +2,7 @@ package com.example.cafe.user.service
 
 import com.example.cafe._web.exception.AuthenticateException
 import com.example.cafe.security.SecurityService
+import com.example.cafe.cafe.repository.CafeRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.ValidationUtil
@@ -15,7 +16,9 @@ import java.time.LocalDate
 class UserServiceImpl (
     private val userRepository: UserRepository,
     private val securityService: SecurityService,
+    private val cafeRepository: CafeRepository,
 ) : UserService {
+    @Transactional
     override fun signUp(
         username: String,
         password: String,
@@ -37,6 +40,8 @@ class UserServiceImpl (
                 registerDate = at
             )
         )
+
+        cafeRepository.incrementMemberCnt(1)
         return User(entity)
     }
 
@@ -122,6 +127,13 @@ class UserServiceImpl (
         val dateFormat = SimpleDateFormat("yyyy.MM.dd")
         val utilDate = dateFormat.parse(birthDate)
         return Date(utilDate.time)
+    }
+
+    override fun authenticate(accessToken: String): User {
+        println(accessToken)
+        val entity = userRepository.findByNickname(accessToken) ?: throw AuthenticateException()
+        println(entity.password)
+        return User(entity)
     }
 
     fun User(entity: UserEntity) = User(

@@ -4,8 +4,11 @@ import com.example.cafe.article.service.ArticleBrief
 import com.example.cafe.board.service.*
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Sort
 
 @RestController
 class BoardController(
@@ -50,8 +53,32 @@ class BoardController(
     @GetMapping("/api/v1/boards/{boardId}/articles")
     fun getBoardArticle(
         @PathVariable boardId: Long,
+        @RequestParam("size", defaultValue = "15") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("sort", defaultValue = "createdAt,desc") sort: List<String>,
+    ):ArticleBriefPageResponse {
+        var desc = true
+        if (sort.size > 1) {
+            if (sort[1] == "asc") desc = false
+        }
+        val property = sort[0]
+
+        val sortBy = when (desc) {
+            true -> Sort.by(Sort.Direction.DESC, property, "id")
+            false -> Sort.by(
+                Sort.Order.asc(property),
+                Sort.Order.desc("id")
+            )
+        }
+
+        return ArticleBriefPageResponse(boardService.getArticles(boardId, PageRequest.of(page, size, sortBy)))
+    }
+
+    @GetMapping("/api/v1/boards/{boardId}/notification")
+    fun getBoardNotification(
+        @PathVariable boardId: Long,
     ):ArticleBriefResponse {
-        return ArticleBriefResponse(boardService.getArticles(boardId))
+        return ArticleBriefResponse(boardService.getNotification(boardId))
     }
 
     @ExceptionHandler
@@ -76,4 +103,8 @@ data class BoardResponse(
 
 data class ArticleBriefResponse(
     val articleBrief: List<ArticleBrief>
+)
+
+data class ArticleBriefPageResponse(
+    val articleBrief: Page<ArticleBrief>
 )
