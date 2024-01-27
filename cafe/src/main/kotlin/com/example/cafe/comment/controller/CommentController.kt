@@ -20,7 +20,7 @@ class CommentController(
     ) : PostCommentResponse {
         val comment = commentService.createComment(user.id, articleId, content, isSecret)
         return PostCommentResponse(
-            commentId = comment.id,
+            id = comment.id,
             content = comment.content,
             lastModified = comment.lastModified,
             nickname = comment.nickname,
@@ -70,7 +70,7 @@ class CommentController(
         ) : PostRecommentResponse {
         val recomment = commentService.createRecomment(user.id, commentId, content, isSecret)
         return PostRecommentResponse(
-            recommentId = recomment.id,
+            id = recomment.id,
             content = recomment.content,
             lastModified = recomment.lastModified,
             nickname = recomment.nickname,
@@ -125,7 +125,7 @@ class CommentController(
 }
 
 data class PostCommentResponse(
-    val commentId: Long,
+    val id: Long,
     val content: String,
     val lastModified: LocalDateTime,
     val nickname: String,
@@ -140,7 +140,7 @@ data class UpdateCommentResponse(
 )
 
 data class PostRecommentResponse(
-    val recommentId: Long,
+    val id: Long,
     val content: String,
     val lastModified: LocalDateTime,
     val nickname: String,
