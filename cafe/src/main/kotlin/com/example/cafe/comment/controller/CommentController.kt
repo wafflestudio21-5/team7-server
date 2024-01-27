@@ -30,7 +30,7 @@ class CommentController(
     @GetMapping("/api/v1/articles/{articleId}/comments")
     fun getComments(
         @PathVariable articleId: Long,
-        @Authenticated user: User?,
+        user: User?,
     ) : GetCommentResponse {
         val comments = if (user == null) {
             commentService.getComments(-1, articleId) // 로그인하지 않은 경우
@@ -81,7 +81,7 @@ class CommentController(
     fun getRecomments(
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
-        @Authenticated user: User?,
+        user: User?,
         ) : GetRecommentResponse {
         val recomments = if (user == null) {
             commentService.getRecomments(-1, commentId) // 로그인하지 않은 경우
