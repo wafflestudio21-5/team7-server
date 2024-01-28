@@ -1,4 +1,4 @@
-INSERT into users (id, username, password, name, nickname, email, birth_date, phone_number) VALUES (1, 'hong', 'hong123', '홍길동', 'hong', 'hong@naver.com', '2000-05-03', '01023453444'),
+INSERT into users (id, username, password, name, nickname, email, birth_date, phone_number) VALUES (1, 'hong', 'hong123', '홍길동', '홍길동', 'hong@naver.com', '2000-05-03', '01023453444'),
 (2, 'doo', 'doo123', '황두현', 'doo', 'doo@naver.com', '1997-04-26', '01023446673');
 
 INSERT into board_groups (id, name) VALUES (1, '백엔드'),
@@ -26,10 +26,10 @@ INSERT into articles (id, title, content, created_at, user_id, board_id, allow_c
 (10, 'test10', '.', '2023-01-10', 1, 1, true, false),
 (11, 'test11', '.', '2023-01-11', 1, 1, true, false),
 (12, 'test12', '.', '2023-01-12', 1, 1, true, false),
-(13, 'test13', '.', '2023-01-13', 1, 1, true, false),
-(16, 'test16', '.', '2023-01-14', 1, 1, true, false),
-(15, 'test15', '.', '2023-01-14', 1, 1, true, false),
-(14, 'test14', '.', '2023-01-14', 1, 1, true, false),
+(13, 'test13', '.', '2023-01-13', 2, 1, true, false),
+(16, 'test16', '.', '2023-01-14', 2, 1, true, false),
+(15, 'test15', '.', '2023-01-14', 2, 1, true, false),
+(14, 'test14', '.', '2023-01-14', 2, 1, true, false),
 (17, 'A', '.', '2023-01-14', 1, 2, true, false),
 (18, 'B', '.', '2023-01-14', 1, 2, true, false),
 (19, 'C', '.', '2023-01-14', 1, 2, true, false);

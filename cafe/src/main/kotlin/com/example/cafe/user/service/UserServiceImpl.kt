@@ -116,9 +116,9 @@ class UserServiceImpl (
         }
     }
 
-    override fun getMyArticles(id: Long, pageable: Pageable): Page<UserArticleBrief> {
-        val user = userRepository.findById(id).orElseThrow { UserNotFoundException() }
-        val articleList = articleRepository.findByUserId(id, pageable)
+    override fun getUserArticles(nickname: String, pageable: Pageable): Page<UserArticleBrief> {
+        val user = userRepository.findByNickname(nickname)?: throw UserNotFoundException()
+        val articleList = articleRepository.findByUserId(user.id, pageable)
 
         return articleList.map {article->
             UserArticleBrief(

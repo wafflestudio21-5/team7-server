@@ -13,5 +13,5 @@ interface UserService {
     fun getUserBrief(id: Long): UserBrief
     fun authenticate(accessToken: String): User
     fun getLikeArticles(id: Long, pageable: Pageable): Page<UserArticleBrief>
-    fun getMyArticles(id: Long, pageable: Pageable): Page<UserArticleBrief>
+    fun getUserArticles(username: String, pageable: Pageable): Page<UserArticleBrief>
 }

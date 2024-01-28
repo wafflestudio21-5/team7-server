@@ -62,12 +62,12 @@ class UserController(
         return UserArticleBriefPageResponse(userService.getLikeArticles(user.id, PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"))))
     }
 
-    @GetMapping("/api/v1/users/articles")
-    fun getMyArticles(
-        @Authenticated user: User,
+    @GetMapping("/api/v1/users/articles/{nickname}")
+    fun getUserArticles(
+        @PathVariable nickname: String,
         @RequestParam("page", defaultValue = "0") page: Int,
     ): UserArticleBriefPageResponse {
-        return UserArticleBriefPageResponse(userService.getMyArticles(user.id, PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "createdAt", "id"))))
+        return UserArticleBriefPageResponse(userService.getUserArticles(nickname, PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "createdAt", "id"))))
     }
 
     @ExceptionHandler
