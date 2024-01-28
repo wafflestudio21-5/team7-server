@@ -60,25 +60,6 @@ class BoardServiceImpl (
         }
     }
 
-    override fun getNotification(boardId: Long): List<ArticleBrief> {
-        val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
-        val articleList = articleRepository.findByBoardIdAndNotification(boardId)
-
-        return articleList.map {article->
-            ArticleBrief(
-                id = article.id,
-                title = article.title,
-                createdAt = article.createdAt,
-                viewCount = article.viewCnt,
-                likeCount = article.likeCnt,
-                commentCount = article.commentCnt,
-                author = User(article.user),
-                board = Board(id = board.id, name = board.name),
-                isNotification = article.isNotification,
-            )
-        }
-    }
-
     fun User(entity: UserEntity) = User(
         id = entity.id,
         nickname = entity.nickname,

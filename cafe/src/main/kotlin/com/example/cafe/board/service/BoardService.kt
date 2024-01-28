@@ -11,5 +11,4 @@ interface BoardService {
 
     fun getArticles(boardId: Long, pageable: Pageable): Page<ArticleBrief>
 
-    fun getNotification(boardId: Long): List<ArticleBrief>
 }

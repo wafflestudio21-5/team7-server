@@ -74,13 +74,6 @@ class BoardController(
         return ArticleBriefPageResponse(boardService.getArticles(boardId, PageRequest.of(page, size, sortBy)))
     }
 
-    @GetMapping("/api/v1/boards/{boardId}/notification")
-    fun getBoardNotification(
-        @PathVariable boardId: Long,
-    ):ArticleBriefResponse {
-        return ArticleBriefResponse(boardService.getNotification(boardId))
-    }
-
     @ExceptionHandler
     fun handleException(e: BoardException): ResponseEntity<Unit> {
         val status = when (e) {
