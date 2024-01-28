@@ -1,10 +1,12 @@
 package com.example.cafe.article.controller
 
 import com.example.cafe.article.service.*
-import com.example.cafe.board.controller.ArticleBriefResponse
+import com.example.cafe.board.controller.ArticleBriefPageResponse
 import com.example.cafe.board.service.Board
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -108,9 +110,16 @@ class ArticleController(
 
     @GetMapping("/api/v1/articles/hot")
     fun getHotArticles(
-        @RequestParam(required = false, defaultValue = "VIEW") sortBy: ArticleService.HotSortType,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleService.getHotArticles(sortBy))
+        @RequestParam("size", defaultValue = "20") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("sortBy", defaultValue = "viewCnt") sortBy: String,
+    ): ArticleBriefPageResponse {
+
+        if(sortBy !in hotSortProperties) throw HotSortPropertyNotFoundException()
+
+        val sort = Sort.by(Sort.Direction.DESC, sortBy, "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleService.getHotArticles(pageRequest))
     }
     @GetMapping("/api/v1/articles")
     fun getArticles(
@@ -157,7 +166,7 @@ class ArticleController(
     @ExceptionHandler
     fun handleException(e: ArticleException): ResponseEntity<Unit> {
         val status = when (e) {
-            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException -> 404
+            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException, is HotSortPropertyNotFoundException -> 404
             is PostBadTitleException, is PostBadContentException, is ArticleAlreadyLikedException, is ArticleNotLikedException, is BadCategoryException -> 400
             is UnauthorizedModifyException -> 401
         }
@@ -212,3 +221,4 @@ data class ArticleGetResponse(
         val isLiked: Boolean,
 )
 
+val hotSortProperties = listOf("viewCnt", "likeCnt", "commentCnt")

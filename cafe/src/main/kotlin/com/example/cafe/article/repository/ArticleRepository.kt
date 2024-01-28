@@ -45,12 +45,11 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE a.board.id = :boardId AND a.isNotification = true")
     fun findByBoardIdAndNotification(boardId: Long): List<ArticleEntity>
 
-    fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
-    fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>
-    fun findAllByOrderByCommentCntDesc(): List<ArticleEntity>
-  
-    fun findAllByMinUserRankAllowedIn(ranks: MutableList<String>): List<ArticleEntity>
+    @Query("SELECT a FROM articles a JOIN FETCH a.user")
+    override fun findAll(pageable: Pageable): Page<ArticleEntity>
 
+    @Query("SELECT a FROM article a JOIN FETCH a.user WHERE DATE(a.createdAt) >= CURRENT_DATE - 7")
+    fun findAllInWeek(pageable: Pageable): Page<ArticleEntity>
     @Modifying
     @Transactional
     @Query(

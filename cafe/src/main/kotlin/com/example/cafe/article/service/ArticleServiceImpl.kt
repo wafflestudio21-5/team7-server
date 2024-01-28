@@ -11,6 +11,8 @@ import com.example.cafe.board.service.Board
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 import java.util.Dictionary
 
@@ -125,12 +127,8 @@ class ArticleServiceImpl(
         )
     }
 
-    override fun getHotArticles(sortBy: ArticleService.HotSortType): List<ArticleBrief> {
-        val articles = when(sortBy) {
-            ArticleService.HotSortType.VIEW -> articleRepository.findAllByOrderByViewCntDesc()
-            ArticleService.HotSortType.LIKE -> articleRepository.findAllByOrderByLikeCntDesc()
-            ArticleService.HotSortType.COMMENT -> articleRepository.findAllByOrderByCommentCntDesc()
-        }
+    override fun getHotArticles(pageable: Pageable): Page<ArticleBrief> {
+        val articles = articleRepository.findAllInWeek(pageable)
         return articles.map {article->
             ArticleBrief(
                 id = article.id,
