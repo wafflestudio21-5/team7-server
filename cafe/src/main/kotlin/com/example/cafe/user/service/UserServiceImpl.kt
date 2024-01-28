@@ -8,6 +8,7 @@ import com.example.cafe.security.SecurityService
 import com.example.cafe.cafe.repository.CafeRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
+import com.example.cafe.user.util.RandomNicknameGenerator
 import com.example.cafe.user.util.ValidationUtil
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
@@ -39,6 +40,7 @@ class UserServiceImpl (
                 username = username,
                 password = password,
                 name = name,
+                nickname = generateUniqueNickname(),
                 email = email,
                 birthDate = toSqlDate(birthDate),
                 phoneNumber = phoneNumber,
@@ -168,6 +170,14 @@ class UserServiceImpl (
         val dateFormat = SimpleDateFormat("yyyy.MM.dd")
         val utilDate = dateFormat.parse(birthDate)
         return Date(utilDate.time)
+    }
+
+    private fun generateUniqueNickname(): String {
+        var generatedNickname: String
+        do {
+            generatedNickname = RandomNicknameGenerator().generate()
+        } while (userRepository.existsByNickname(generatedNickname))
+        return generatedNickname
     }
 
     fun User(entity: UserEntity) = User(

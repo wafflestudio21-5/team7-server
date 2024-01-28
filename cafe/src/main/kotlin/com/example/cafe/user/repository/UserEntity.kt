@@ -21,7 +21,7 @@ class UserEntity(
     val password: String? = null,
     val snsId: String? = null,
     val name: String,
-    var nickname: String = name,
+    var nickname: String,
     val email: String,
     val birthDate: Date,
     val phoneNumber: String,

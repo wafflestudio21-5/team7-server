@@ -76,7 +76,6 @@ class AuthController(
 
                     val accessToken = authService.socialSignin(
                         snsId = profile.id,
-                        nickname = profile.nickname,
                         name = profile.name,
                         email = profile.email,
                         birthDate = toDate(profile.birthyear, profile.birthday),
