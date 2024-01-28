@@ -69,4 +69,14 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     )
     fun decrementCommentCnt(articleId: Long)
 
+    fun findByTitleContaining(item: String): List<ArticleEntity>
+
+    fun findByContentContaining(item: String): List<ArticleEntity>
+    @Query(
+        """
+            SELECT a FROM articles a JOIN FETCH a.user WHERE a.user.nickname  LIKE %:item%
+        """
+    )
+    fun findByUser_NicknameContaining(item: String): List<ArticleEntity>
+
 }

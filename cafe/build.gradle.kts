@@ -30,6 +30,7 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	implementation("com.github.ben-manes.caffeine:caffeine:3.0.3")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+	implementation("org.jsoup:jsoup:1.13.1")
 }
 
 tasks.withType<KotlinCompile> {
