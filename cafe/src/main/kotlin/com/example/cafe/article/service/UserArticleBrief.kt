@@ -8,7 +8,6 @@ data class UserArticleBrief (
     val title: String,
     val createdAt: LocalDateTime,
     val viewCount: Long,
-    val likeCount: Long,
     val commentCount: Long,
     val author: User,
 )

@@ -110,7 +110,6 @@ class UserServiceImpl (
                 title = article.title,
                 createdAt = article.createdAt,
                 viewCount = article.viewCnt,
-                likeCount = article.likeCnt,
                 commentCount = article.commentCnt,
                 author = User(user)
             )
@@ -127,7 +126,6 @@ class UserServiceImpl (
                 title = article.title,
                 createdAt = article.createdAt,
                 viewCount = article.viewCnt,
-                likeCount = article.likeCnt,
                 commentCount = article.commentCnt,
                 author = User(user)
             )
