@@ -10,4 +10,5 @@ interface UserService {
     fun getUserBrief(id: Long): UserBrief
     fun authenticate(accessToken: String): User
     fun getProfile(id: Long): UserProfile
+    fun getUserInfo(nickname: String): UserInfo
 }

@@ -58,6 +58,13 @@ class UserController(
         return UserBriefResponse(userBrief = userService.getUserBrief(user.id))
     }
 
+    @GetMapping("/api/v1/users/user/{nickname}")
+    fun getUserInfo(
+        @PathVariable nickname: String
+    ): UserInfoResponse {
+        return UserInfoResponse(userInfo = userService.getUserInfo(nickname))
+    }
+
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
@@ -93,6 +100,10 @@ data class UpdateProfileRequest(
 
 data class UserBriefResponse(
     val userBrief: UserBrief
+)
+
+data class UserInfoResponse(
+    val userInfo: UserInfo
 )
 
 data class ProfileResponse(

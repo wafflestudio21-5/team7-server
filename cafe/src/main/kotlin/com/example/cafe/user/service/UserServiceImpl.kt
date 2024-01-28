@@ -1,12 +1,16 @@
 package com.example.cafe.user.service
 
 import com.example.cafe._web.exception.AuthenticateException
+import com.example.cafe.article.repository.ArticleRepository
+import com.example.cafe.article.service.ArticleBrief
+import com.example.cafe.board.service.Board
 import com.example.cafe.security.SecurityService
 import com.example.cafe.cafe.repository.CafeRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.ValidationUtil
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.text.SimpleDateFormat
@@ -15,6 +19,7 @@ import java.time.LocalDate
 @Service
 class UserServiceImpl (
     private val userRepository: UserRepository,
+    private val articleRepository: ArticleRepository,
     private val securityService: SecurityService,
     private val cafeRepository: CafeRepository,
 ) : UserService {
@@ -100,6 +105,35 @@ class UserServiceImpl (
         val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
 
         return UserProfile(nickname = entity.nickname, introduction = entity.introduction, image = entity.image)
+    }
+
+    override fun getUserInfo(nickname: String): UserInfo {
+        val entity: UserEntity = userRepository.findByNickname(nickname)?: throw UserNotFoundException()
+
+        val pageable = PageRequest.of(0, 15)
+        val articles = articleRepository.findFirst15ByUserId(userId = entity.id, pageable = pageable)
+        return UserInfo(
+            nickname = entity.nickname,
+            rank = entity.rank,
+            introduction = entity.introduction,
+            visit_count = entity.visitCount,
+            my_article_count = entity.articlesCount,
+            my_comment_count = entity.commentsCount,
+            register_date = entity.registerDate,
+            image = entity.image,
+            articles = articles!!.stream()
+                .map { ArticleBrief(
+                    id = it.id,
+                    title = it.title,
+                    createdAt = it.createdAt,
+                    viewCount = it.viewCnt,
+                    likeCount = it.likeCnt,
+                    commentCount = it.commentCnt,
+                    author = User(it.user),
+                    board = Board(id = it.board.id, name = it.board.name),
+                    isNotification = it.isNotification) }
+                .toList()
+            )
     }
 
     private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {

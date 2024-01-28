@@ -69,4 +69,6 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     )
     fun decrementCommentCnt(articleId: Long)
 
+    @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE a.user.id = :userId")
+    fun findFirst15ByUserId(userId: Long, pageable: Pageable): List<ArticleEntity>?
 }
