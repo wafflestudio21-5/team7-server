@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
 
 
@@ -48,8 +49,9 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     @Query("SELECT a FROM articles a JOIN FETCH a.user")
     override fun findAll(pageable: Pageable): Page<ArticleEntity>
 
-    @Query("SELECT a FROM article a JOIN FETCH a.user WHERE DATE(a.createdAt) >= CURRENT_DATE - 7")
-    fun findAllInWeek(pageable: Pageable): Page<ArticleEntity>
+    @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE DATE(a.createdAt) >= CURRENT_DATE - 7 ORDER BY CONCAT('a.', :property) DESC LIMIT 200")
+    fun findTop200ByProperty(property: String, pageable: Pageable): Page<ArticleEntity>
+
     @Modifying
     @Transactional
     @Query(

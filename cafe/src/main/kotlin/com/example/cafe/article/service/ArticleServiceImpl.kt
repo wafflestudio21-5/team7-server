@@ -127,8 +127,8 @@ class ArticleServiceImpl(
         )
     }
 
-    override fun getHotArticles(pageable: Pageable): Page<ArticleBrief> {
-        val articles = articleRepository.findAllInWeek(pageable)
+    override fun getHotArticles(sortBy: String, pageable: Pageable): Page<ArticleBrief> {
+        val articles = articleRepository.findTop200ByProperty(sortBy, pageable)
         return convertPageToArticleBriefPage(articles)
     }
 

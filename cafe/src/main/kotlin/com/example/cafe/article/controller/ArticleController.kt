@@ -118,9 +118,9 @@ class ArticleController(
 
         if(sortBy !in hotSortProperties) throw HotSortPropertyNotFoundException()
 
-        val sort = Sort.by(Sort.Direction.DESC, sortBy, "id")
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
         val pageRequest = PageRequest.of(page, size, sort)
-        return ArticleBriefPageResponse(articleService.getHotArticles(pageRequest))
+        return ArticleBriefPageResponse(articleService.getHotArticles(sortBy, pageRequest))
     }
     @GetMapping("/api/v1/articles")
     fun getArticles(

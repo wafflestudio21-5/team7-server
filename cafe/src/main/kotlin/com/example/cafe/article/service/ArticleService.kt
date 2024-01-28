@@ -32,7 +32,7 @@ interface ArticleService {
     )
     fun get(id: Long): Article
 
-    fun getHotArticles(pageable: Pageable): Page<ArticleBrief>
+    fun getHotArticles(sortBy:String, pageable: Pageable): Page<ArticleBrief>
 
     fun getArticles(pageable: Pageable): Page<ArticleBrief>
 
