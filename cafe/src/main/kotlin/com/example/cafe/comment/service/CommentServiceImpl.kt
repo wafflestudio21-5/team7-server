@@ -113,6 +113,7 @@ class CommentServiceImpl (
         )
     }
 
+    @Transactional
     override fun createRecomment(userId: Long, articleId: Long, commentId: Long, content: String, isSecret: Boolean, at: LocalDateTime) : Recomment {
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
         val comment = commentRepository.findByIdOrNull(commentId) ?: throw CommentNotFoundException()
@@ -200,6 +201,7 @@ class CommentServiceImpl (
         userRepository.decrementCommentsCount(userId)
     }
 
+    @Transactional
     override fun deleteRecomment(id: Long, userId: Long, articleId: Long) {
         val recomment = recommentRepository.findByIdOrNull(id) ?: throw RecommentNotFoundException()
         if (recomment.user.id != userId) {
