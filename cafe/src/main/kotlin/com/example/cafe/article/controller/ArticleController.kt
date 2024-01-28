@@ -2,6 +2,7 @@ package com.example.cafe.article.controller
 
 import com.example.cafe.article.service.*
 import com.example.cafe.board.controller.ArticleBriefPageResponse
+import com.example.cafe.board.controller.ArticleBriefResponse
 import com.example.cafe.board.service.Board
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
@@ -123,10 +124,13 @@ class ArticleController(
     }
     @GetMapping("/api/v1/articles")
     fun getArticles(
-        user: User?,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleService.getArticles(
-            userId = user?.id
+        @RequestParam("size", defaultValue = "20") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): ArticleBriefPageResponse {
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleService.getArticles(
+            pageable = pageRequest
         ))
     }
 

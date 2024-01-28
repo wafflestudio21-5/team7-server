@@ -129,50 +129,15 @@ class ArticleServiceImpl(
 
     override fun getHotArticles(pageable: Pageable): Page<ArticleBrief> {
         val articles = articleRepository.findAllInWeek(pageable)
-        return articles.map {article->
-            ArticleBrief(
-                id = article.id,
-                title = article.title,
-                createdAt = article.createdAt,
-                viewCount = article.viewCnt,
-                likeCount = article.likeCnt,
-                commentCount = article.commentCnt,
-                author = User(article.user),
-                board = Board(id = article.board.id, name = article.board.name),
-                isNotification = article.isNotification,
-            )
-        }
+        return convertPageToArticleBriefPage(articles)
     }
 
     override fun getArticles(
-        userId: Long?,
-    ): List<ArticleBrief> {
-        val userRank = if(userId != null) {
-            userRepository.findById(userId).orElseThrow { UserNotFoundException() }.rank
-        } else {
-            "VISITOR"
-        }
+        pageable: Pageable
+    ): Page<ArticleBrief> {
+        val articles = articleRepository.findAll(pageable)
+        return convertPageToArticleBriefPage(articles)
 
-        val allowedArticleRank = mapOf(
-            "VISITOR" to mutableListOf(),
-            User.Rank.USER.s to mutableListOf(User.Rank.USER.s),
-            User.Rank.ADMIN.s to mutableListOf(User.Rank.USER.s,User.Rank.ADMIN.s)
-        )
-        return articleRepository.findAllByMinUserRankAllowedIn(
-            allowedArticleRank[userRank]?:throw RankNotFoundException()
-        ).map { article ->
-            ArticleBrief(
-                id = article.id,
-                title = article.title,
-                createdAt = article.createdAt,
-                viewCount = article.viewCnt,
-                likeCount = article.likeCnt,
-                commentCount = article.commentCnt,
-                author = User(article.user),
-                board = Board(id = article.board.id, name = article.board.name),
-                isNotification = article.isNotification,
-            )
-        }
     }
 
     fun User(entity: UserEntity) = User(
@@ -185,6 +150,22 @@ class ArticleServiceImpl(
         articlesCount = entity.articlesCount,
         commentsCount = entity.commentsCount
     )
+    fun convertPageToArticleBriefPage(page: Page<ArticleEntity>): Page<ArticleBrief> {
+        return page.map { article ->
+            ArticleBrief(
+                id = article.id,
+                title = article.title,
+                createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                likeCount = article.likeCnt,
+                commentCount = article.commentCnt,
+                author = User(article.user),
+                board = Board(id = article.board.id, name = article.board.name),
+                isNotification = article.isNotification,
+            )
+        }
+    }
+
 }
 
 
