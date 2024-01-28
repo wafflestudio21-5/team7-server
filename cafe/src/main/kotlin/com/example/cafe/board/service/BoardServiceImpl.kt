@@ -7,7 +7,8 @@ import com.example.cafe.board.repository.BoardRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -41,8 +42,9 @@ class BoardServiceImpl (
         }
     }
 
-    override fun getArticles(boardId: Long, pageable: Pageable): Page<ArticleBrief> {
+    override fun getArticles(boardId: Long, page: Int, size: Int, sort: List<String>): Page<ArticleBrief> {
         val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
+        val pageable = PageRequest.of(page, size, sortBy(sort))
         val articleList = articleRepository.findByBoardId(boardId, pageable)
 
         return articleList.map {article->
@@ -58,6 +60,37 @@ class BoardServiceImpl (
                 isNotification = article.isNotification,
             )
         }
+    }
+
+    private fun sortBy(sort: List<String>): Sort {
+        if (sort.size != 2) {
+            throw IllegalSortArgumentException()
+        }
+
+        if (!isPropertyValid(sort[0]) || !isDirectionValid(sort[1])) {
+            throw IllegalSortArgumentException()
+        }
+
+        val property = sort[0]
+        return when (sort[1] == "desc") {
+            true -> Sort.by(Sort.Direction.DESC, property, "id")
+            false -> Sort.by(
+                Sort.Order.asc(property),
+                Sort.Order.desc("id")
+            )
+        }
+    }
+
+    private fun isPropertyValid(property: String): Boolean {
+        val validProperties = listOf("createdAt", "title", "likeCnt", "viewCnt", "commentCnt")
+
+        return validProperties.contains(property)
+    }
+
+    private fun isDirectionValid(direction: String): Boolean {
+        val validDirection = listOf("desc", "asc")
+
+        return validDirection.contains(direction)
     }
 
     fun User(entity: UserEntity) = User(
