@@ -1,8 +1,12 @@
 package com.example.cafe.user.controller
 
 import com.example.cafe.user.service.*
+import com.example.cafe.article.service.UserArticleBrief
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Page
 
 @RestController
 class UserController(
@@ -63,6 +67,21 @@ class UserController(
         @PathVariable nickname: String
     ): UserInfoResponse {
         return UserInfoResponse(userInfo = userService.getUserInfo(nickname))
+
+    @GetMapping("/api/v1/users/liked-articles")
+    fun getLikedArticles(
+        @Authenticated user: User,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): UserArticleBriefPageResponse {
+        return UserArticleBriefPageResponse(userService.getLikeArticles(user.id, PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"))))
+    }
+
+    @GetMapping("/api/v1/users/articles/{nickname}")
+    fun getUserArticles(
+        @PathVariable nickname: String,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): UserArticleBriefPageResponse {
+        return UserArticleBriefPageResponse(userService.getUserArticles(nickname, PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "createdAt", "id"))))
     }
 
     @ExceptionHandler
@@ -111,3 +130,8 @@ data class ProfileResponse(
     val content: String?,
     val image: String?
 )
+
+data class UserArticleBriefPageResponse(
+    val articleBrief: Page<UserArticleBrief>
+)
+

@@ -19,3 +19,5 @@ class ArticleNotLikedException: ArticleException()
 class UnauthorizedModifyException : ArticleException()
 
 class RankNotFoundException : ArticleException()
+
+class BadCategoryException : ArticleException()
