@@ -95,6 +95,19 @@ class UserController(
         )
     }
 
+    @GetMapping("/api/v1/users/comments")
+    fun getUserComments(
+        @RequestParam("page", defaultValue = "1") page: Int,
+        @Authenticated user: User,
+    ): UserCommentsPageResponse {
+        return UserCommentsPageResponse(
+            userService.getUserComments(
+                user.id,
+                PageRequest.of(page - 1, 15, Sort.by(Sort.Direction.DESC, "lastModified", "id"))
+            )
+        )
+    }
+
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
@@ -138,6 +151,10 @@ class UserController(
 
     data class UserArticleBriefPageResponse(
         val articleBrief: Page<UserArticleBrief>
+    )
+
+    data class  UserCommentsPageResponse(
+        val userComments: Page<UserComment>
     )
 }
 

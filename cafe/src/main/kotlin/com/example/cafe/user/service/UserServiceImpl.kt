@@ -7,6 +7,7 @@ import com.example.cafe.board.service.Board
 import com.example.cafe.article.service.UserArticleBrief
 import com.example.cafe.security.SecurityService
 import com.example.cafe.cafe.repository.CafeRepository
+import com.example.cafe.comment.repository.CommentRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.RandomNicknameGenerator
@@ -15,6 +16,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.text.SimpleDateFormat
@@ -26,6 +28,7 @@ class UserServiceImpl (
     private val articleRepository: ArticleRepository,
     private val securityService: SecurityService,
     private val cafeRepository: CafeRepository,
+    private val commentRepository: CommentRepository,
 ) : UserService {
     @Transactional
     override fun signUp(
@@ -169,6 +172,23 @@ class UserServiceImpl (
                 viewCount = article.viewCnt,
                 commentCount = article.commentCnt,
                 author = User(user)
+            )
+        }
+    }
+
+    override fun getUserComments(userId: Long, pageable: Pageable): Page<UserComment> {
+        val user = userRepository.findByIdOrNull(userId) ?: throw UserNotFoundException()
+        val commentList = commentRepository.findAllByUserId(userId, pageable)
+
+        return commentList.map { commentEntity ->
+            UserComment(
+                id = commentEntity.id,
+                articleId = commentEntity.article.id,
+                content = commentEntity.content,
+                nickname = user.nickname,
+                lastModified = commentEntity.lastModified,
+                articleTitle = commentEntity.article.title,
+                articleCommentCnt = commentEntity.article.commentCnt,
             )
         }
     }

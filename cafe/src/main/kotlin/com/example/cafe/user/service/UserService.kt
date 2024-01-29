@@ -16,4 +16,5 @@ interface UserService {
     fun getUserInfo(nickname: String): UserInfo
     fun getLikeArticles(id: Long, pageable: Pageable): Page<UserArticleBrief>
     fun getUserArticles(username: String, pageable: Pageable): Page<UserArticleBrief>
+    fun getUserComments(userId: Long, pageable: Pageable): Page<UserComment>
 }
