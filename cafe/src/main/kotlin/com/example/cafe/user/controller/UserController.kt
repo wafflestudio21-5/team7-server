@@ -67,13 +67,19 @@ class UserController(
         @PathVariable nickname: String
     ): UserInfoResponse {
         return UserInfoResponse(userInfo = userService.getUserInfo(nickname))
+    }
 
     @GetMapping("/api/v1/users/liked-articles")
     fun getLikedArticles(
         @Authenticated user: User,
         @RequestParam("page", defaultValue = "0") page: Int,
     ): UserArticleBriefPageResponse {
-        return UserArticleBriefPageResponse(userService.getLikeArticles(user.id, PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"))))
+        return UserArticleBriefPageResponse(
+            userService.getLikeArticles(
+                user.id,
+                PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"))
+            )
+        )
     }
 
     @GetMapping("/api/v1/users/articles/{nickname}")
@@ -81,7 +87,12 @@ class UserController(
         @PathVariable nickname: String,
         @RequestParam("page", defaultValue = "0") page: Int,
     ): UserArticleBriefPageResponse {
-        return UserArticleBriefPageResponse(userService.getUserArticles(nickname, PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "createdAt", "id"))))
+        return UserArticleBriefPageResponse(
+            userService.getUserArticles(
+                nickname,
+                PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "createdAt", "id"))
+            )
+        )
     }
 
     @ExceptionHandler
@@ -95,43 +106,38 @@ class UserController(
 
         return ResponseEntity.status(status).build()
     }
+
+    data class SignUpRequest(
+        val username: String,
+        val name: String,
+        val password: String,
+        val email: String,
+        val birthDate: String,
+        val phoneNumber: String,
+    )
+
+    data class UpdateProfileRequest(
+        val nickname: String,
+        val content: String,
+        val image: String
+    )
+
+    data class UserBriefResponse(
+        val userBrief: UserBrief
+    )
+
+    data class UserInfoResponse(
+        val userInfo: UserInfo
+    )
+
+    data class ProfileResponse(
+        val nickname: String,
+        val content: String?,
+        val image: String?
+    )
+
+    data class UserArticleBriefPageResponse(
+        val articleBrief: Page<UserArticleBrief>
+    )
 }
-
-data class SignUpRequest(
-    val username: String,
-    val name: String,
-    val password: String,
-    val email: String,
-    val birthDate: String,
-    val phoneNumber: String,
-)
-
-data class SignInRequest(
-    val username: String,
-    val password: String,
-)
-
-data class UpdateProfileRequest(
-    val nickname: String,
-    val content: String,
-    val image: String
-)
-
-data class UserBriefResponse(
-    val userBrief: UserBrief
-)
-
-data class UserInfoResponse(
-    val userInfo: UserInfo
-)
-
-data class ProfileResponse(
-    val nickname: String,
-    val content: String?,
-    val image: String?
-)
-
-data class UserArticleBriefPageResponse(
-    val articleBrief: Page<UserArticleBrief>
-)
 
