@@ -173,6 +173,23 @@ class ArticleServiceImpl(
         }
     }
 
+    override fun getNotification(): List<ArticleBrief> {
+        return articleRepository.findByIsNotificationTrue().map {article ->
+            ArticleBrief(
+                id = article.id,
+                title = article.title,
+                createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                likeCount = article.likeCnt,
+                commentCount = article.commentCnt,
+                author = User(article.user),
+                board = Board(id = article.board.id, name = article.board.name),
+                isNotification = article.isNotification,
+            )
+        }
+
+    }
+
     fun User(entity: UserEntity) = User(
         id = entity.id,
         nickname = entity.nickname,
