@@ -26,7 +26,6 @@ class UserServiceImpl (
     private val articleRepository: ArticleRepository,
     private val securityService: SecurityService,
     private val cafeRepository: CafeRepository,
-    private val articleRepository: ArticleRepository
 ) : UserService {
     @Transactional
     override fun signUp(
@@ -140,6 +139,7 @@ class UserServiceImpl (
                     isNotification = it.isNotification) }
                 .toList()
             )
+    }
 
     override fun getLikeArticles(id: Long, pageable: Pageable): Page<UserArticleBrief> {
         val user = userRepository.findById(id).orElseThrow { UserNotFoundException() }
