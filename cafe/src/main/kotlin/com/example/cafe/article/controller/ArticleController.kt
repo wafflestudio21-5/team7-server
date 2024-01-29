@@ -151,7 +151,7 @@ class ArticleController(
             startDate = request.startDate,
             endDate = request.endDate,
             wordInclude = request.wordInclude,
-            wordExclude = request.wordExclude.
+            wordExclude = request.wordExclude,
             pageable= pageRequest
         ))
     }
