@@ -22,9 +22,9 @@ class ArticleController(
 
     @PostMapping("/api/v1/articles/post")
     fun postArticle(
-            @RequestBody request: ArticlePostRequest,
-            @Authenticated user: User,
-    ) : ArticlePostResponse {
+        @RequestBody request: ArticlePostRequest,
+        @Authenticated user: User,
+    ): ArticlePostResponse {
         val newArticle = articleService.post(
             userId = user.id,
             title = request.title,
@@ -34,45 +34,45 @@ class ArticleController(
             isNotification = request.isNotification,
         )
         return ArticlePostResponse(
-                id = newArticle.id,
-                title = newArticle.title,
-                content = newArticle.content,
-                nickname = newArticle.user.nickname,
-                createdAt = newArticle.createdAt,
+            id = newArticle.id,
+            title = newArticle.title,
+            content = newArticle.content,
+            nickname = newArticle.user.nickname,
+            createdAt = newArticle.createdAt,
         )
     }
 
     @PutMapping("/api/v1/articles/{articleId}/modify")
     fun modify(
-            @RequestBody request: ArticleModifyRequest,
-            @PathVariable articleId : Long,
-            @Authenticated user: User,
+        @RequestBody request: ArticleModifyRequest,
+        @PathVariable articleId: Long,
+        @Authenticated user: User,
     ): ArticleModifyResponse {
         val modifiedArticle = articleService.modify(
-                userId = user.id,
-                articleId = articleId,
-                title = request.title,
-                content = request.content,
-                boardId = request.boardId,
-                allowComments = request.allowComments,
-                isNotification = request.isNotification,
+            userId = user.id,
+            articleId = articleId,
+            title = request.title,
+            content = request.content,
+            boardId = request.boardId,
+            allowComments = request.allowComments,
+            isNotification = request.isNotification,
         )
         return ArticleModifyResponse(
-                id = modifiedArticle.id,
-                title = modifiedArticle.title,
-                content = modifiedArticle.content,
-                nickname = modifiedArticle.user.nickname
+            id = modifiedArticle.id,
+            title = modifiedArticle.title,
+            content = modifiedArticle.content,
+            nickname = modifiedArticle.user.nickname
         )
     }
 
     @DeleteMapping("/api/v1/articles/{articleId}")
     fun delete(
-            @Authenticated user: User,
-            @PathVariable articleId: Long,
-    ){
+        @Authenticated user: User,
+        @PathVariable articleId: Long,
+    ) {
         articleService.delete(
-                articleId = articleId,
-                userId = user.id
+            articleId = articleId,
+            userId = user.id
         )
     }
 
@@ -116,7 +116,7 @@ class ArticleController(
         @RequestParam("sortBy", defaultValue = "viewCnt") sortBy: String,
     ): ArticleBriefPageResponse {
 
-        if(sortBy !in hotSortProperties) throw HotSortPropertyNotFoundException()
+        if (sortBy !in hotSortProperties) throw HotSortPropertyNotFoundException()
 
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
         val pageRequest = PageRequest.of(page, size, sort)
@@ -130,15 +130,18 @@ class ArticleController(
     ): ArticleBriefPageResponse {
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
         val pageRequest = PageRequest.of(page, size, sort)
-        return ArticleBriefPageResponse(articleService.getArticles(
-            pageable = pageRequest
-        ))
+        return ArticleBriefPageResponse(
+            articleService.getArticles(
+                pageable = pageRequest
+            )
+        )
     }
 
     @GetMapping("/api/v1/articles/notification")
     fun getNotification(
     ): ArticleBriefResponse {
         return ArticleBriefResponse(articleService.getNotification())
+    }
 
     @GetMapping("/api/v1/boards/{boardId}/search/{item}")
     fun searchArticlesInBoard(
@@ -150,16 +153,18 @@ class ArticleController(
     ): ArticleBriefPageResponse {
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
         val pageRequest = PageRequest.of(page, size, sort)
-        return ArticleBriefPageResponse(articleSearchService.search(
-            item = item,
-            boardId = boardId,
-            searchCategory = request.searchCategory,
-            startDate = request.startDate,
-            endDate = request.endDate,
-            wordInclude = request.wordInclude,
-            wordExclude = request.wordExclude,
-            pageable= pageRequest
-        ))
+        return ArticleBriefPageResponse(
+            articleSearchService.search(
+                item = item,
+                boardId = boardId,
+                searchCategory = request.searchCategory,
+                startDate = request.startDate,
+                endDate = request.endDate,
+                wordInclude = request.wordInclude,
+                wordExclude = request.wordExclude,
+                pageable = pageRequest
+            )
+        )
     }
 
     @GetMapping("/api/v1/search/{item}")
@@ -171,16 +176,18 @@ class ArticleController(
     ): ArticleBriefPageResponse {
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
         val pageRequest = PageRequest.of(page, size, sort)
-        return ArticleBriefPageResponse(articleSearchService.search(
-            item = item,
-            boardId = null,
-            searchCategory = request.searchCategory,
-            startDate = request.startDate,
-            endDate = request.endDate,
-            wordInclude = request.wordInclude,
-            wordExclude = request.wordExclude,
-            pageable= pageRequest
-        ))
+        return ArticleBriefPageResponse(
+            articleSearchService.search(
+                item = item,
+                boardId = null,
+                searchCategory = request.searchCategory,
+                startDate = request.startDate,
+                endDate = request.endDate,
+                wordInclude = request.wordInclude,
+                wordExclude = request.wordExclude,
+                pageable = pageRequest
+            )
+        )
     }
 
     @ExceptionHandler
@@ -192,53 +199,51 @@ class ArticleController(
         }
         return ResponseEntity.status(status).build()
     }
-
 }
 
 
-
 data class ArticlePostRequest(
-        val title: String,
-        val content: String,
-        val boardId: Long,
-        val allowComments: Boolean,
-        val isNotification: Boolean,
+    val title: String,
+    val content: String,
+    val boardId: Long,
+    val allowComments: Boolean,
+    val isNotification: Boolean,
 )
 
 data class ArticleModifyRequest(
-        val title: String,
-        val content: String,
-        val boardId: Long,
-        val allowComments: Boolean,
-        val isNotification: Boolean,
+    val title: String,
+    val content: String,
+    val boardId: Long,
+    val allowComments: Boolean,
+    val isNotification: Boolean,
 )
 
 data class ArticleSearchRequest(
-    val searchCategory : Long,
-    val startDate : String,
+    val searchCategory: Long,
+    val startDate: String,
     val endDate: String,
     val wordInclude: String,
     val wordExclude: String
 )
 
 data class ArticlePostResponse(
-        val id: Long,
-        val title: String,
-        val content: String,
-        val nickname : String,
-        val createdAt: LocalDateTime
+    val id: Long,
+    val title: String,
+    val content: String,
+    val nickname: String,
+    val createdAt: LocalDateTime
 )
 
 data class ArticleModifyResponse(
-        val id: Long,
-        val title: String,
-        val content: String,
-        val nickname : String,
+    val id: Long,
+    val title: String,
+    val content: String,
+    val nickname: String,
 )
 
 data class ArticleGetResponse(
-        val article: Article,
-        val isLiked: Boolean,
+    val article: Article,
+    val isLiked: Boolean,
 )
 
 val hotSortProperties = listOf("viewCnt", "likeCnt", "commentCnt")
