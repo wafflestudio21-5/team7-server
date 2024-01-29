@@ -112,24 +112,24 @@ class ArticleController(
     @GetMapping("/api/v1/articles/hot")
     fun getHotArticles(
         @RequestParam("size", defaultValue = "20") size: Int,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
         @RequestParam("sortBy", defaultValue = "viewCnt") sortBy: String,
     ): ArticleBriefPageResponse {
 
         if (sortBy !in hotSortProperties) throw HotSortPropertyNotFoundException()
 
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
-        val pageRequest = PageRequest.of(page, size, sort)
+        val pageRequest = PageRequest.of(page-1, size, sort)
         return ArticleBriefPageResponse(articleService.getHotArticles(sortBy, pageRequest))
     }
 
     @GetMapping("/api/v1/articles")
     fun getArticles(
         @RequestParam("size", defaultValue = "20") size: Int,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
     ): ArticleBriefPageResponse {
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
-        val pageRequest = PageRequest.of(page, size, sort)
+        val pageRequest = PageRequest.of(page-1, size, sort)
         return ArticleBriefPageResponse(
             articleService.getArticles(
                 pageable = pageRequest
@@ -149,10 +149,10 @@ class ArticleController(
         @PathVariable boardId: Long,
         @PathVariable item: String,
         @RequestParam("size", defaultValue = "15") size: Int,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
     ): ArticleBriefPageResponse {
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
-        val pageRequest = PageRequest.of(page, size, sort)
+        val pageRequest = PageRequest.of(page-1, size, sort)
         return ArticleBriefPageResponse(
             articleSearchService.search(
                 item = item,
@@ -172,10 +172,10 @@ class ArticleController(
         @RequestBody request: ArticleSearchRequest,
         @PathVariable item: String,
         @RequestParam("size", defaultValue = "15") size: Int,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
     ): ArticleBriefPageResponse {
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
-        val pageRequest = PageRequest.of(page, size, sort)
+        val pageRequest = PageRequest.of(page-1, size, sort)
         return ArticleBriefPageResponse(
             articleSearchService.search(
                 item = item,

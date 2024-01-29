@@ -72,12 +72,12 @@ class UserController(
     @GetMapping("/api/v1/users/liked-articles")
     fun getLikedArticles(
         @Authenticated user: User,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
     ): UserArticleBriefPageResponse {
         return UserArticleBriefPageResponse(
             userService.getLikeArticles(
                 user.id,
-                PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"))
+                PageRequest.of(page-1, 15, Sort.by(Sort.Direction.DESC, "id"))
             )
         )
     }
@@ -85,12 +85,12 @@ class UserController(
     @GetMapping("/api/v1/users/articles/{nickname}")
     fun getUserArticles(
         @PathVariable nickname: String,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
     ): UserArticleBriefPageResponse {
         return UserArticleBriefPageResponse(
             userService.getUserArticles(
                 nickname,
-                PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "createdAt", "id"))
+                PageRequest.of(page-1, 15, Sort.by(Sort.Direction.DESC, "createdAt", "id"))
             )
         )
     }
