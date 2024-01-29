@@ -29,14 +29,15 @@ class BoardServiceImpl (
     }
 
     override fun getGroup(): List<BoardGroup> {
-        val boardGroupList = boardGroupRepository.find()
+        val boardGroupList = boardGroupRepository.findAllWithFetchJoin()
+        val hotList = getHotBoardId()
 
         return boardGroupList.map {boardGroup->
             BoardGroup(
                 id = boardGroup.id,
                 name = boardGroup.name,
                 boards = boardGroup.boards.map {board->
-                    Board(id = board.id, name = board.name)
+                    BoardSideBar(id = board.id, name = board.name, isHot = hotList.contains(board.id))
                 }
             )
         }
@@ -91,6 +92,10 @@ class BoardServiceImpl (
         val validDirection = listOf("desc", "asc")
 
         return validDirection.contains(direction)
+    }
+
+    private fun getHotBoardId(): List<Long> {
+        return boardRepository.findTop3ByOrderByLikeCntDesc().map { it.id }
     }
 
     fun User(entity: UserEntity) = User(

@@ -1,7 +1,7 @@
 package com.example.cafe.board
 
 import com.example.cafe.article.repository.ArticleRepository
-import com.example.cafe.board.repository.BoardRepository
+import com.example.cafe.board.repository.BoardLikeRepository
 import com.example.cafe.board.service.BoardNotFoundException
 import com.example.cafe.board.service.BoardService
 import com.example.cafe.board.service.IllegalSortArgumentException
@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest
 class BoardServiceTest @Autowired constructor(
     private val boardService: BoardService,
-    private val articleRepository: ArticleRepository
+    private val boardLikeRepository: BoardLikeRepository,
+    private val articleRepository: ArticleRepository,
 ) {
     @Test
     fun `존재하지 않는 게시판`() {
@@ -88,6 +89,39 @@ class BoardServiceTest @Autowired constructor(
         val list = boardService.get()
         assertThat(list.toList().map { it.id }).isEqualTo(listOf(
             1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L
+        ))
+    }
+
+    @Transactional
+    @Test
+    fun `게시판 그룹, 인기게시판 조회`() {
+        for (i: Int in 1..3)
+            boardLikeRepository.incrementLikeCnt(2)
+        for (i: Int in 1..3)
+            boardLikeRepository.incrementLikeCnt(3)
+        for (i: Int in 1..2)
+            boardLikeRepository.incrementLikeCnt(5)
+        boardLikeRepository.incrementLikeCnt(4)
+
+        val list = boardService.getGroup()
+        assertThat(list[0].boards.map { it.id }).isEqualTo(listOf(
+            1L, 2L, 3L
+        ))
+        assertThat(list[1].boards.map { it.id }).isEqualTo(listOf(
+            4L, 6L, 7L
+        ))
+        assertThat(list[2].boards.map { it.id }).isEqualTo(listOf(
+            5L, 8L
+        ))
+
+        assertThat(list[0].boards.map { it.isHot }).isEqualTo(listOf(
+            false, true, true
+        ))
+        assertThat(list[1].boards.map { it.isHot }).isEqualTo(listOf(
+            false, false, false
+        ))
+        assertThat(list[2].boards.map { it.isHot }).isEqualTo(listOf(
+            true, false
         ))
     }
 

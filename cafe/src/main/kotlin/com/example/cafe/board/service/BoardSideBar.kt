@@ -1,6 +1,7 @@
 package com.example.cafe.board.service
 
-data class Board (
+data class BoardSideBar (
     val id: Long,
     val name: String,
+    val isHot: Boolean
 )
