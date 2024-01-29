@@ -3,6 +3,7 @@ package com.example.cafe.user.service
 import com.example.cafe._web.exception.AuthenticateException
 import com.example.cafe.article.repository.ArticleRepository
 import com.example.cafe.article.service.ArticleBrief
+import com.example.cafe.article.service.CommentedArticle
 import com.example.cafe.board.service.Board
 import com.example.cafe.article.service.UserArticleBrief
 import com.example.cafe.security.SecurityService
@@ -189,6 +190,22 @@ class UserServiceImpl (
                 lastModified = commentEntity.lastModified,
                 articleTitle = commentEntity.article.title,
                 articleCommentCnt = commentEntity.article.commentCnt,
+            )
+        }
+    }
+
+    override fun getUserCommentedArticles(nickname: String, pageable: Pageable): Page<CommentedArticle> {
+        val user = userRepository.findByNickname(nickname)?: throw UserNotFoundException()
+        val articleList = articleRepository.findByCommentUserId(user.id, pageable)
+
+        return articleList.map { articleEntity ->
+            CommentedArticle(
+                id = articleEntity.id,
+                title = articleEntity.title,
+                createdAt = articleEntity.createdAt,
+                viewCnt = articleEntity.viewCnt,
+                commentCnt = articleEntity.commentCnt,
+                authorNickname = articleEntity.user.nickname,
             )
         }
     }
