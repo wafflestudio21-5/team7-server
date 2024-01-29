@@ -7,4 +7,5 @@ data class Recomment(
     val content: String,
     var lastModified: LocalDateTime,
     val nickname: String,
+    val isSecret: Boolean,
 )

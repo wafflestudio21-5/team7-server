@@ -14,23 +14,30 @@ class CommentController(
     @PostMapping("/api/v1/articles/{articleId}/comments")
     fun postComment(
         @RequestParam content: String,
+        @RequestParam isSecret: Boolean,
         @PathVariable articleId: Long,
-        @Authenticated user: User
+        @Authenticated user: User,
     ) : PostCommentResponse {
-        val comment = commentService.createComment(user.id, articleId, content)
+        val comment = commentService.createComment(user.id, articleId, content, isSecret)
         return PostCommentResponse(
-            commentId = comment.id,
+            id = comment.id,
             content = comment.content,
             lastModified = comment.lastModified,
             nickname = comment.nickname,
+            isSecret = comment.isSecret,
         )
     }
 
     @GetMapping("/api/v1/articles/{articleId}/comments")
-    fun getComment(
+    fun getComments(
         @PathVariable articleId: Long,
+        user: User?,
     ) : GetCommentResponse {
-        val comments = commentService.getComments(articleId)
+        val comments = if (user == null) {
+            commentService.getComments(-1, articleId) // 로그인하지 않은 경우
+        } else {
+            commentService.getComments(user.id, articleId) // 로그인한 경우
+        }
         return GetCommentResponse(comments = comments)
     }
 
@@ -57,25 +64,32 @@ class CommentController(
     @PostMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments")
     fun postRecomment(
         @RequestParam content: String,
+        @RequestParam isSecret: Boolean,
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
         @Authenticated user: User
         ) : PostRecommentResponse {
-        val recomment = commentService.createRecomment(user.id, commentId, content)
+        val recomment = commentService.createRecomment(user.id, articleId, commentId, content, isSecret)
         return PostRecommentResponse(
-            recommentId = recomment.id,
+            id = recomment.id,
             content = recomment.content,
             lastModified = recomment.lastModified,
             nickname = recomment.nickname,
+            isSecret = recomment.isSecret,
         )
     }
 
     @GetMapping("/api/v1/articles/{articleId}/comments/{commentId}/recomments")
-    fun getRecomment(
+    fun getRecomments(
         @PathVariable articleId: Long,
         @PathVariable commentId: Long,
+        user: User?,
         ) : GetRecommentResponse {
-        val recomments = commentService.getRecomments(commentId)
+        val recomments = if (user == null) {
+            commentService.getRecomments(-1, commentId) // 로그인하지 않은 경우
+        } else {
+            commentService.getRecomments(user.id, commentId) // 로그인한 경우
+        }
         return GetRecommentResponse(recomments = recomments)
     }
 
@@ -98,14 +112,15 @@ class CommentController(
         @PathVariable recommentId: Long,
         @Authenticated user: User
         ) {
-        commentService.deleteRecomment(recommentId, user.id)
+        commentService.deleteRecomment(recommentId, user.id, articleId)
     }
 
     @ExceptionHandler
     fun handleException(e: CommentException): ResponseEntity<Unit> {
         val status = when (e) {
             is CommentNotFoundException, is RecommentNotFoundException, is CommentUserNotFoundException, is CommentArticleNotFoundException -> 404
-            is InvalidCommentUserException -> 401
+            is UnauthorizedCommentUserException -> 401
+            is PostBadCommentContentException -> 400
         }
 
         return ResponseEntity.status(status).build()
@@ -113,10 +128,11 @@ class CommentController(
 }
 
 data class PostCommentResponse(
-    val commentId: Long,
+    val id: Long,
     val content: String,
     val lastModified: LocalDateTime,
     val nickname: String,
+    val isSecret: Boolean,
 )
 
 data class GetCommentResponse(
@@ -128,10 +144,11 @@ data class UpdateCommentResponse(
 )
 
 data class PostRecommentResponse(
-    val recommentId: Long,
+    val id: Long,
     val content: String,
     val lastModified: LocalDateTime,
     val nickname: String,
+    val isSecret: Boolean,
 )
 
 data class GetRecommentResponse(
