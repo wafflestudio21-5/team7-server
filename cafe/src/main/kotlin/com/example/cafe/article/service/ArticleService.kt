@@ -2,6 +2,8 @@ package com.example.cafe.article.service
 
 import com.example.cafe.article.repository.ArticleEntity
 import com.example.cafe.user.service.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 
 interface ArticleService {
@@ -30,9 +32,9 @@ interface ArticleService {
     )
     fun get(id: Long): Article
 
-    fun getHotArticles(sortBy: HotSortType): List<ArticleBrief>
+    fun getHotArticles(sortBy:String, pageable: Pageable): Page<ArticleBrief>
 
-    fun getArticles(userId: Long?): List<ArticleBrief>
+    fun getArticles(pageable: Pageable): Page<ArticleBrief>
 
     fun getNotification(): List<ArticleBrief>
 

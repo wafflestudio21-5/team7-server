@@ -1,10 +1,13 @@
 package com.example.cafe.article.controller
 
 import com.example.cafe.article.service.*
+import com.example.cafe.board.controller.ArticleBriefPageResponse
 import com.example.cafe.board.controller.ArticleBriefResponse
 import com.example.cafe.board.service.Board
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -108,17 +111,27 @@ class ArticleController(
 
     @GetMapping("/api/v1/articles/hot")
     fun getHotArticles(
-        @RequestParam(required = false, defaultValue = "VIEW") sortBy: ArticleService.HotSortType,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleService.getHotArticles(sortBy))
+        @RequestParam("size", defaultValue = "20") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("sortBy", defaultValue = "viewCnt") sortBy: String,
+    ): ArticleBriefPageResponse {
+
+        if(sortBy !in hotSortProperties) throw HotSortPropertyNotFoundException()
+
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleService.getHotArticles(sortBy, pageRequest))
     }
 
     @GetMapping("/api/v1/articles")
     fun getArticles(
-        user: User?,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleService.getArticles(
-            userId = user?.id
+        @RequestParam("size", defaultValue = "20") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): ArticleBriefPageResponse {
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleService.getArticles(
+            pageable = pageRequest
         ))
     }
 
@@ -132,15 +145,20 @@ class ArticleController(
         @RequestBody request: ArticleSearchRequest,
         @PathVariable boardId: Long,
         @PathVariable item: String,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleSearchService.search(
+        @RequestParam("size", defaultValue = "15") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): ArticleBriefPageResponse {
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleSearchService.search(
             item = item,
             boardId = boardId,
             searchCategory = request.searchCategory,
             startDate = request.startDate,
             endDate = request.endDate,
             wordInclude = request.wordInclude,
-            wordExclude = request.wordExclude
+            wordExclude = request.wordExclude,
+            pageable= pageRequest
         ))
     }
 
@@ -148,22 +166,27 @@ class ArticleController(
     fun searchArticles(
         @RequestBody request: ArticleSearchRequest,
         @PathVariable item: String,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleSearchService.search(
+        @RequestParam("size", defaultValue = "15") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): ArticleBriefPageResponse {
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleSearchService.search(
             item = item,
             boardId = null,
             searchCategory = request.searchCategory,
             startDate = request.startDate,
             endDate = request.endDate,
             wordInclude = request.wordInclude,
-            wordExclude = request.wordExclude
+            wordExclude = request.wordExclude,
+            pageable= pageRequest
         ))
     }
 
     @ExceptionHandler
     fun handleException(e: ArticleException): ResponseEntity<Unit> {
         val status = when (e) {
-            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException -> 404
+            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException, is HotSortPropertyNotFoundException -> 404
             is PostBadTitleException, is PostBadContentException, is ArticleAlreadyLikedException, is ArticleNotLikedException, is BadCategoryException -> 400
             is UnauthorizedModifyException -> 401
         }
@@ -218,3 +241,4 @@ data class ArticleGetResponse(
         val isLiked: Boolean,
 )
 
+val hotSortProperties = listOf("viewCnt", "likeCnt", "commentCnt")

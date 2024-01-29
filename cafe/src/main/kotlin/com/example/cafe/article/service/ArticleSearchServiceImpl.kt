@@ -7,10 +7,14 @@ import com.example.cafe.comment.repository.CommentRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
 import org.jsoup.Jsoup
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.min
 
 @Service
 class ArticleSearchServiceImpl(
@@ -24,8 +28,9 @@ class ArticleSearchServiceImpl(
         startDate: String,
         endDate: String,
         wordInclude: String,
-        wordExclude: String
-    ): List<ArticleBrief> {
+        wordExclude: String,
+        pageable: Pageable
+    ): Page<ArticleBrief> {
         val startDateInDate = LocalDateTime.parse(startDate)
         val endDateInDate = LocalDateTime.parse(endDate)
 
@@ -44,9 +49,12 @@ class ArticleSearchServiceImpl(
             val articleIncludeIntersection = articleInclude.reduce{acc, set -> acc.intersect(set)}.toList()
             (articleIncludeIntersection.intersect(articleFound) - articleExclude).toList()
         }
-        return articleFoundFiltered.filter {article ->
+        val result = articleFoundFiltered.filter {article ->
             article.createdAt.isAfter(startDateInDate) && article.createdAt.isBefore(endDateInDate) && (boardId?.equals(article.board.id)?:true)
         }
+        val startIndex = pageable.pageNumber * pageable.pageSize
+        val endIndex = min(startIndex + pageable.pageSize, result.size)
+        return PageImpl(result.subList(startIndex, endIndex), pageable, result.size.toLong())
     }
     private fun findItem(item: String, searchCategory: Long): List<ArticleBrief>{
         return when(searchCategory){
