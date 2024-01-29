@@ -29,8 +29,8 @@ INSERT into articles (id, title, content, created_at, user_id, board_id, allow_c
 (13, 'I', '.', '2023-01-13', 2, 1, true, false),
 (16, 'J', '.', '2023-01-14', 2, 1, true, false),
 (15, 'K', '.', '2023-01-14', 2, 1, true, false),
-(14, 'L', '.', '2023-01-14', 2, 1, true, false),
-(17, 'A', '.', '2023-01-14', 1, 2, true, false),
+(14, 'L', '.', '2023-01-14', 2, 1, true, true),
+(17, 'A', '.', '2023-01-14', 1, 2, true, true),
 (18, 'B', '.', '2023-01-14', 1, 2, true, false),
 (19, 'C', '.', '2023-01-14', 1, 2, true, false);
 

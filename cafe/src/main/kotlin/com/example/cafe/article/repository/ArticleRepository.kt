@@ -47,6 +47,7 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     @Query("SELECT a FROM articles a JOIN a.user WHERE a.user.id = :userId")
     fun findByUserId(userId: Long, pageable: Pageable): Page<ArticleEntity>
 
+    @Query("SELECT a FROM articles a JOIN FETCH a.user JOIN FETCH a.board WHERE a.isNotification = true")
     fun findByIsNotificationTrue(): List<ArticleEntity>
 
     fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
