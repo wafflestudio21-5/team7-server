@@ -3,6 +3,8 @@ package com.example.cafe.user.service
 import com.example.cafe.security.SecurityService
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
+import com.example.cafe.user.util.RandomNicknameGenerator
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.time.LocalDate
@@ -11,10 +13,10 @@ class AuthServiceImpl (
     private val userRepository: UserRepository,
     private val securityService: SecurityService,
 ): AuthService {
+    @Transactional
     override fun socialSignin(
         snsId: String,
         name: String,
-        nickname: String,
         email: String,
         birthDate: Date,
         phoneNumber: String,
@@ -29,7 +31,7 @@ class AuthServiceImpl (
         } else {
             // User does not exist, save the profile in the repository
             val newUser = UserEntity(
-                nickname = nickname,
+                nickname = generateUniqueNickname(),
                 snsId = snsId,
                 name = name,
                 email = email,
@@ -44,5 +46,13 @@ class AuthServiceImpl (
 
     private fun toSecretKey(userId: String): String {
         return securityService.createSecretKey(userId)
+    }
+
+    private fun generateUniqueNickname(): String {
+        var generatedNickname: String
+        do {
+            generatedNickname = RandomNicknameGenerator().generate()
+        } while (userRepository.existsByNickname(generatedNickname))
+        return generatedNickname
     }
 }

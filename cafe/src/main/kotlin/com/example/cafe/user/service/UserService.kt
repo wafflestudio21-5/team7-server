@@ -12,6 +12,8 @@ interface UserService {
     fun delete(id: Long)
     fun getUserBrief(id: Long): UserBrief
     fun authenticate(accessToken: String): User
+    fun getProfile(id: Long): UserProfile
+    fun getUserInfo(nickname: String): UserInfo
     fun getLikeArticles(id: Long, pageable: Pageable): Page<UserArticleBrief>
     fun getUserArticles(username: String, pageable: Pageable): Page<UserArticleBrief>
 }

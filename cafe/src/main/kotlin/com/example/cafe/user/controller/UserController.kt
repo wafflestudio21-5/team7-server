@@ -27,7 +27,7 @@ class UserController(
         )
     }
 
-    @PutMapping("/api/v1/users/user")
+    @PutMapping("/api/v1/users/user-profile")
     fun updateProfile(
         @RequestBody request: UpdateProfileRequest,
         @Authenticated user: User
@@ -38,6 +38,14 @@ class UserController(
             introduction = request.content,
             image = request.image
         )
+    }
+
+    @GetMapping("/api/v1/users/user-profile")
+    fun getProfile(
+        @Authenticated user: User
+    ): ProfileResponse {
+        val user = userService.getProfile(user.id)
+        return ProfileResponse(nickname = user.nickname, content = user.introduction, image = user.image)
     }
 
     @DeleteMapping("/api/v1/users/user")
@@ -53,6 +61,12 @@ class UserController(
     ): UserBriefResponse {
         return UserBriefResponse(userBrief = userService.getUserBrief(user.id))
     }
+
+    @GetMapping("/api/v1/users/user/{nickname}")
+    fun getUserInfo(
+        @PathVariable nickname: String
+    ): UserInfoResponse {
+        return UserInfoResponse(userInfo = userService.getUserInfo(nickname))
 
     @GetMapping("/api/v1/users/liked-articles")
     fun getLikedArticles(
@@ -107,6 +121,17 @@ data class UserBriefResponse(
     val userBrief: UserBrief
 )
 
+data class UserInfoResponse(
+    val userInfo: UserInfo
+)
+
+data class ProfileResponse(
+    val nickname: String,
+    val content: String?,
+    val image: String?
+)
+
 data class UserArticleBriefPageResponse(
     val articleBrief: Page<UserArticleBrief>
 )
+

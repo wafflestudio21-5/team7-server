@@ -15,6 +15,7 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     """)
     fun incrementArticleCount(userId: Long)
     fun findBySnsId(id: String): UserEntity?
+    fun existsByNickname(nickname: String): Boolean
 
     @Modifying
     @Transactional
