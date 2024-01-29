@@ -1,12 +1,16 @@
 package com.example.cafe.user.service
 
 import com.example.cafe._web.exception.AuthenticateException
+import com.example.cafe.article.repository.ArticleRepository
+import com.example.cafe.article.service.UserArticleBrief
 import com.example.cafe.security.SecurityService
 import com.example.cafe.cafe.repository.CafeRepository
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.repository.UserRepository
 import com.example.cafe.user.util.ValidationUtil
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.text.SimpleDateFormat
@@ -17,6 +21,7 @@ class UserServiceImpl (
     private val userRepository: UserRepository,
     private val securityService: SecurityService,
     private val cafeRepository: CafeRepository,
+    private val articleRepository: ArticleRepository
 ) : UserService {
     @Transactional
     override fun signUp(
@@ -93,6 +98,38 @@ class UserServiceImpl (
         val entity = userRepository.findById(id).orElseThrow { AuthenticateException() }
 
         return User(entity)
+    }
+
+    override fun getLikeArticles(id: Long, pageable: Pageable): Page<UserArticleBrief> {
+        val user = userRepository.findById(id).orElseThrow { UserNotFoundException() }
+        val articleList = articleRepository.findByArticleLikeUserId(id, pageable)
+
+        return articleList.map {article->
+            UserArticleBrief(
+                id = article.id,
+                title = article.title,
+                createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                commentCount = article.commentCnt,
+                author = User(user)
+            )
+        }
+    }
+
+    override fun getUserArticles(nickname: String, pageable: Pageable): Page<UserArticleBrief> {
+        val user = userRepository.findByNickname(nickname)?: throw UserNotFoundException()
+        val articleList = articleRepository.findByUserId(user.id, pageable)
+
+        return articleList.map {article->
+            UserArticleBrief(
+                id = article.id,
+                title = article.title,
+                createdAt = article.createdAt,
+                viewCount = article.viewCnt,
+                commentCount = article.commentCnt,
+                author = User(user)
+            )
+        }
     }
 
     private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {
