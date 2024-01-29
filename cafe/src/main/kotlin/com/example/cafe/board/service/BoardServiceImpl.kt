@@ -18,7 +18,7 @@ class BoardServiceImpl (
     private val articleRepository: ArticleRepository,
 ) : BoardService {
     override fun get(): List<Board> {
-        val boardList = boardRepository.find()
+        val boardList = boardRepository.findAll()
 
         return boardList.map {
             Board(
