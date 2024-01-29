@@ -139,15 +139,20 @@ class ArticleController(
         @RequestBody request: ArticleSearchRequest,
         @PathVariable boardId: Long,
         @PathVariable item: String,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleSearchService.search(
+        @RequestParam("size", defaultValue = "15") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): ArticleBriefPageResponse {
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleSearchService.search(
             item = item,
             boardId = boardId,
             searchCategory = request.searchCategory,
             startDate = request.startDate,
             endDate = request.endDate,
             wordInclude = request.wordInclude,
-            wordExclude = request.wordExclude
+            wordExclude = request.wordExclude.
+            pageable= pageRequest
         ))
     }
 
@@ -155,15 +160,20 @@ class ArticleController(
     fun searchArticles(
         @RequestBody request: ArticleSearchRequest,
         @PathVariable item: String,
-    ): ArticleBriefResponse {
-        return ArticleBriefResponse(articleSearchService.search(
+        @RequestParam("size", defaultValue = "15") size: Int,
+        @RequestParam("page", defaultValue = "0") page: Int,
+    ): ArticleBriefPageResponse {
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+        val pageRequest = PageRequest.of(page, size, sort)
+        return ArticleBriefPageResponse(articleSearchService.search(
             item = item,
             boardId = null,
             searchCategory = request.searchCategory,
             startDate = request.startDate,
             endDate = request.endDate,
             wordInclude = request.wordInclude,
-            wordExclude = request.wordExclude
+            wordExclude = request.wordExclude,
+            pageable= pageRequest
         ))
     }
 
