@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Date
+import kotlin.math.min
 
 
 class CustomArticleRepositoryImpl: CustomArticleRepository {
@@ -31,6 +32,8 @@ class CustomArticleRepositoryImpl: CustomArticleRepository {
             .setMaxResults(200)
         val result = query.resultList
         result.sortBy { it.createdAt }
-        return PageImpl(result, pageable, result.size.toLong())
+        val startIndex = pageable.pageNumber * pageable.pageSize
+        val endIndex = min(startIndex + pageable.pageSize, result.size)
+        return PageImpl(result.subList(startIndex, endIndex), pageable, result.size.toLong()
     }
 }

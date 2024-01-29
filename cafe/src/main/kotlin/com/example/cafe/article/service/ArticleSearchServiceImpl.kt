@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.min
 
 @Service
 class ArticleSearchServiceImpl(
@@ -51,7 +52,9 @@ class ArticleSearchServiceImpl(
         val result = articleFoundFiltered.filter {article ->
             article.createdAt.isAfter(startDateInDate) && article.createdAt.isBefore(endDateInDate) && (boardId?.equals(article.board.id)?:true)
         }
-        return PageImpl(result,pageable,result.size.toLong())
+        val startIndex = pageable.pageNumber * pageable.pageSize
+        val endIndex = min(startIndex + pageable.pageSize, result.size)
+        return PageImpl(result.subList(startIndex, endIndex), pageable, result.size.toLong())
     }
     private fun findItem(item: String, searchCategory: Long): List<ArticleBrief>{
         return when(searchCategory){
