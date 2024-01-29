@@ -24,16 +24,15 @@ class CustomArticleRepositoryImpl: CustomArticleRepository {
 
         val jpqlQuery = """SELECT a FROM articles a JOIN FETCH a.user 
             |WHERE a.createdAt >= :seven_days_ago 
-            |ORDER BY CONCAT('a.', :property) DESC
+            |ORDER BY a.$property DESC
             |""".trimMargin()
         val query = entityManager.createQuery(jpqlQuery, ArticleEntity::class.java)
-            .setParameter("property", property)
             .setParameter("seven_days_ago", LocalDateTime.now().minusDays(7))
             .setMaxResults(200)
         val result = query.resultList
         result.sortBy { it.createdAt }
         val startIndex = pageable.pageNumber * pageable.pageSize
         val endIndex = min(startIndex + pageable.pageSize, result.size)
-        return PageImpl(result.subList(startIndex, endIndex), pageable, result.size.toLong()
+        return PageImpl(result.subList(startIndex, endIndex), pageable, result.size.toLong())
     }
 }
