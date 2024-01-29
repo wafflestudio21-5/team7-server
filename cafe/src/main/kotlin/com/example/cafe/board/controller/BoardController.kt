@@ -52,10 +52,10 @@ class BoardController(
     fun getBoardArticle(
         @PathVariable boardId: Long,
         @RequestParam("size", defaultValue = "15") size: Int,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("page", defaultValue = "1") page: Int,
         @RequestParam("sort", defaultValue = "createdAt,desc") sort: List<String>,
     ):ArticleBriefPageResponse {
-        return ArticleBriefPageResponse(boardService.getArticles(boardId, page, size, sort))
+        return ArticleBriefPageResponse(boardService.getArticles(boardId, page-1, size, sort))
     }
 
     @ExceptionHandler
