@@ -41,14 +41,14 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>{
     @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE a.board.id = :boardId")
     fun findByBoardId(boardId: Long, pageable: Pageable): Page<ArticleEntity>
 
-    @Query("SELECT a FROM articles a JOIN FETCH a.user WHERE a.board.id = :boardId AND a.isNotification = true")
-    fun findByBoardIdAndNotification(boardId: Long): List<ArticleEntity>
-
     @Query("SELECT al.article FROM article_likes al WHERE al.userId = :userId")
     fun findByArticleLikeUserId(userId: Long, pageable: Pageable): Page<ArticleEntity>
 
     @Query("SELECT a FROM articles a JOIN a.user WHERE a.user.id = :userId")
     fun findByUserId(userId: Long, pageable: Pageable): Page<ArticleEntity>
+
+    @Query("SELECT a FROM articles a JOIN FETCH a.user JOIN FETCH a.board WHERE a.isNotification = true")
+    fun findByIsNotificationTrue(): List<ArticleEntity>
 
     fun findAllByOrderByViewCntDesc(): List<ArticleEntity>
     fun findAllByOrderByLikeCntDesc(): List<ArticleEntity>

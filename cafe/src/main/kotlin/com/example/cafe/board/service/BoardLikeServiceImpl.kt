@@ -4,7 +4,6 @@ import com.example.cafe.board.repository.BoardLikeEntity
 import com.example.cafe.board.repository.BoardLikeRepository
 import com.example.cafe.board.repository.BoardRepository
 import com.example.cafe.user.repository.UserRepository
-import com.example.cafe.user.service.UserNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,7 +18,7 @@ class BoardLikeServiceImpl (
     }
 
     override fun get(userId: Long): List<Board> {
-        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
+        val user = userRepository.findById(userId).orElseThrow { BoardUserNotFoundException() }
         val boardLikeList = boardRepository.findByUserId(user.id)
 
         return boardLikeList.map {
@@ -32,7 +31,7 @@ class BoardLikeServiceImpl (
 
     @Transactional
     override fun create(userId: Long, boardId: Long) {
-        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
+        val user = userRepository.findById(userId).orElseThrow { BoardUserNotFoundException() }
         if (boardRepository.findById(boardId).isEmpty) {
             throw BoardNotFoundException()
         }
@@ -53,7 +52,7 @@ class BoardLikeServiceImpl (
 
     @Transactional
     override fun delete(userId: Long, boardId: Long) {
-        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException() }
+        val user = userRepository.findById(userId).orElseThrow { BoardUserNotFoundException() }
         val boardLike = boardLikeRepository.findByUserIdAndBoardId(user.id, boardId)
             ?: throw BoardNeverLikedException()
 

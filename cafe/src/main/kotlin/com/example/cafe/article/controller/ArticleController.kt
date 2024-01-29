@@ -112,6 +112,7 @@ class ArticleController(
     ): ArticleBriefResponse {
         return ArticleBriefResponse(articleService.getHotArticles(sortBy))
     }
+
     @GetMapping("/api/v1/articles")
     fun getArticles(
         user: User?,
@@ -120,6 +121,11 @@ class ArticleController(
             userId = user?.id
         ))
     }
+
+    @GetMapping("/api/v1/articles/notification")
+    fun getNotification(
+    ): ArticleBriefResponse {
+        return ArticleBriefResponse(articleService.getNotification())
 
     @GetMapping("/api/v1/boards/{boardId}/search/{item}")
     fun searchArticlesInBoard(
