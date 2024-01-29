@@ -10,6 +10,7 @@ import com.example.cafe.board.repository.BoardRepository
 import com.example.cafe.board.service.Board
 import com.example.cafe.user.repository.UserEntity
 import com.example.cafe.user.service.User
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.Dictionary
 
@@ -22,6 +23,7 @@ class ArticleServiceImpl(
         private val articleViewRepository: ArticleViewRepository
 ) : ArticleService {
 
+    @Transactional
     override fun post(
         userId: Long,
         title: String,
@@ -39,6 +41,7 @@ class ArticleServiceImpl(
 
         if(title=="") throw PostBadTitleException()
 
+        userRepository.incrementArticleCount(userId)
         return articleRepository.save(
             ArticleEntity(
                 title = title,
@@ -86,6 +89,7 @@ class ArticleServiceImpl(
         )
     }
 
+    @Transactional
     override fun delete(
             articleId: Long,
             userId: Long
@@ -93,7 +97,7 @@ class ArticleServiceImpl(
         val article = articleRepository.findById(articleId).orElseThrow { ArticleNotFoundException() }
 
         if(article.user.id != userId) throw UnauthorizedModifyException()
-
+        userRepository.decrementArticleCount(userId)
         articleRepository.delete(article)
     }
 

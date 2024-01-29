@@ -17,9 +17,7 @@ import java.util.Calendar
 class AuthController(
     private val userService: UserService,
     private val authService: AuthService,
-    private val webClient: WebClient,
-    private val userRepository: UserRepository,
-    private val securityService: SecurityService,
+    private val webClient: WebClient
 ) {
     private val clientId = "OemkbWdkEHFr93oA3sxR"
     private val clientSecret = "O46GLDeEKM"
@@ -76,7 +74,6 @@ class AuthController(
 
                     val accessToken = authService.socialSignin(
                         snsId = profile.id,
-                        nickname = profile.nickname,
                         name = profile.name,
                         email = profile.email,
                         birthDate = toDate(profile.birthyear, profile.birthday),
@@ -99,6 +96,11 @@ class AuthController(
         )
         return Date(calendar.timeInMillis)
     }
+
+    data class SignInRequest(
+        val username: String,
+        val password: String,
+    )
 
     data class SignInResponse(
         val accessToken: String,

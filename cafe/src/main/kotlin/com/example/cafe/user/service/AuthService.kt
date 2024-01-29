@@ -7,7 +7,6 @@ interface AuthService {
     fun socialSignin(
         snsId: String,
         name: String,
-        nickname: String,
         email: String,
         birthDate: Date,
         phoneNumber: String,

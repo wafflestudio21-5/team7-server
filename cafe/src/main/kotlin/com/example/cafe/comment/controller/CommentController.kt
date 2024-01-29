@@ -69,7 +69,7 @@ class CommentController(
         @PathVariable commentId: Long,
         @Authenticated user: User
         ) : PostRecommentResponse {
-        val recomment = commentService.createRecomment(user.id, commentId, content, isSecret)
+        val recomment = commentService.createRecomment(user.id, articleId, commentId, content, isSecret)
         return PostRecommentResponse(
             id = recomment.id,
             content = recomment.content,
@@ -112,14 +112,15 @@ class CommentController(
         @PathVariable recommentId: Long,
         @Authenticated user: User
         ) {
-        commentService.deleteRecomment(recommentId, user.id)
+        commentService.deleteRecomment(recommentId, user.id, articleId)
     }
 
     @ExceptionHandler
     fun handleException(e: CommentException): ResponseEntity<Unit> {
         val status = when (e) {
             is CommentNotFoundException, is RecommentNotFoundException, is CommentUserNotFoundException, is CommentArticleNotFoundException -> 404
-            is InvalidCommentUserException -> 401
+            is UnauthorizedCommentUserException -> 401
+            is PostBadCommentContentException -> 400
         }
 
         return ResponseEntity.status(status).build()

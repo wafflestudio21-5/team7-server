@@ -14,6 +14,7 @@ class ArticleController(
     private val articleService: ArticleService,
     private val articleViewService: ArticleViewService,
     private val articleLikeService: ArticleLikeService,
+    private val articleSearchService: ArticleSearchService,
 ) {
 
     @PostMapping("/api/v1/articles/post")
@@ -125,13 +126,45 @@ class ArticleController(
     fun getNotification(
     ): ArticleBriefResponse {
         return ArticleBriefResponse(articleService.getNotification())
+
+    @GetMapping("/api/v1/boards/{boardId}/search/{item}")
+    fun searchArticlesInBoard(
+        @RequestBody request: ArticleSearchRequest,
+        @PathVariable boardId: Long,
+        @PathVariable item: String,
+    ): ArticleBriefResponse {
+        return ArticleBriefResponse(articleSearchService.search(
+            item = item,
+            boardId = boardId,
+            searchCategory = request.searchCategory,
+            startDate = request.startDate,
+            endDate = request.endDate,
+            wordInclude = request.wordInclude,
+            wordExclude = request.wordExclude
+        ))
+    }
+
+    @GetMapping("/api/v1/search/{item}")
+    fun searchArticles(
+        @RequestBody request: ArticleSearchRequest,
+        @PathVariable item: String,
+    ): ArticleBriefResponse {
+        return ArticleBriefResponse(articleSearchService.search(
+            item = item,
+            boardId = null,
+            searchCategory = request.searchCategory,
+            startDate = request.startDate,
+            endDate = request.endDate,
+            wordInclude = request.wordInclude,
+            wordExclude = request.wordExclude
+        ))
     }
 
     @ExceptionHandler
     fun handleException(e: ArticleException): ResponseEntity<Unit> {
         val status = when (e) {
             is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException -> 404
-            is PostBadTitleException, is PostBadContentException, is ArticleAlreadyLikedException, is ArticleNotLikedException -> 400
+            is PostBadTitleException, is PostBadContentException, is ArticleAlreadyLikedException, is ArticleNotLikedException, is BadCategoryException -> 400
             is UnauthorizedModifyException -> 401
         }
         return ResponseEntity.status(status).build()
@@ -155,6 +188,14 @@ data class ArticleModifyRequest(
         val boardId: Long,
         val allowComments: Boolean,
         val isNotification: Boolean,
+)
+
+data class ArticleSearchRequest(
+    val searchCategory : Long,
+    val startDate : String,
+    val endDate: String,
+    val wordInclude: String,
+    val wordExclude: String
 )
 
 data class ArticlePostResponse(
