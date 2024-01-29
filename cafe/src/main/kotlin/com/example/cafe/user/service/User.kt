@@ -1,5 +1,6 @@
 package com.example.cafe.user.service
 
+import com.example.cafe.security.SecurityService
 import java.time.LocalDate
 
 data class User(
@@ -14,7 +15,7 @@ data class User(
 ) {
 
     fun getAccessToken(): String {
-        return nickname
+        return SecurityService().createSecretKey(id.toString())
     }
 
     enum class Rank(val s: String) {

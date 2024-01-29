@@ -8,6 +8,7 @@ drop table if exists board_likes cascade;
 drop table if exists board_views cascade;
 drop table if exists comments cascade;
 drop table if exists recomments cascade;
+drop table if exists cafe cascade;
 
 create table users (
     id bigint auto_increment,
@@ -19,7 +20,7 @@ create table users (
     email varchar(100),
     birth_date date,
     phone_number varchar(20),
-    rank varchar(20) default '씨앗',
+    rank varchar(20) default 'USER',
     register_date date not null default current_timestamp,
     introduction varchar(10000) default null,
     image varchar(200) default null,
@@ -37,7 +38,7 @@ create table articles (
     view_cnt bigint default 0,
     like_cnt bigint default 0,
     comment_cnt bigint default 0,
-    min_user_rank_allowed varchar(20) default '씨앗',
+    min_user_rank_allowed varchar(20) default 'USER',
     user_id bigint,
     board_id bigint,
     allow_comments boolean not null,
@@ -89,6 +90,7 @@ create table comments (
     last_modified datetime not null,
     user_id bigint,
     article_id bigint,
+    is_secret boolean default false,
     primary key (id)
 );
 create table recomments (
@@ -97,5 +99,13 @@ create table recomments (
     last_modified datetime not null,
     user_id bigint,
     comment_id bigint,
+    is_secret boolean default false,
+    primary key (id)
+);
+create table cafe (
+    id bigint auto_increment,
+    name varchar(255),
+    created_at datetime not null,
+    member_cnt bigint default 0,
     primary key (id)
 );
