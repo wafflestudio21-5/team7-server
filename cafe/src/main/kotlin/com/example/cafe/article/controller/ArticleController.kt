@@ -114,18 +114,24 @@ class ArticleController(
         @RequestParam("size", defaultValue = "20") size: Int,
         @RequestParam("page", defaultValue = "1") page: Int,
         @RequestParam("sortBy", defaultValue = "viewCnt") sortBy: String,
+        @RequestParam("time", defaultValue = "WEEK") time: String,
     ): ArticleBriefPageResponse {
 
-        if (sortBy !in hotSortProperties) throw HotSortPropertyNotFoundException()
-
-        val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
-        val pageRequest = PageRequest.of(page-1, size, sort)
-        return ArticleBriefPageResponse(articleService.getHotArticles(sortBy, pageRequest))
+        if (sortBy !in HotSortProperties) throw HotSortPropertyNotFoundException()
+        try{
+            val hotTimeType = HotTimeType.valueOf(time)
+            val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+            val pageRequest = PageRequest.of(page-1, size, sort)
+            return ArticleBriefPageResponse(articleService.getHotArticles(sortBy, pageRequest, hotTimeType))
+        }
+        catch(e: IllegalArgumentException){
+            throw HotTimeTypeNotFoundException()
+        }
     }
 
     @GetMapping("/api/v1/articles")
     fun getArticles(
-        @RequestParam("size", defaultValue = "20") size: Int,
+        @RequestParam("size", defaultValue = "15") size: Int,
         @RequestParam("page", defaultValue = "1") page: Int,
     ): ArticleBriefPageResponse {
         val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
@@ -193,7 +199,7 @@ class ArticleController(
     @ExceptionHandler
     fun handleException(e: ArticleException): ResponseEntity<Unit> {
         val status = when (e) {
-            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException, is HotSortPropertyNotFoundException -> 404
+            is BoardNotFoundException, is UserNotFoundException, is ArticleNotFoundException, is RankNotFoundException, is HotSortPropertyNotFoundException, is HotTimeTypeNotFoundException -> 404
             is PostBadTitleException, is PostBadContentException, is ArticleAlreadyLikedException, is ArticleNotLikedException, is BadCategoryException -> 400
             is UnauthorizedModifyException -> 401
         }
@@ -246,4 +252,10 @@ data class ArticleGetResponse(
     val isLiked: Boolean,
 )
 
-val hotSortProperties = listOf("viewCnt", "likeCnt", "commentCnt")
+val HotSortProperties = listOf("viewCnt", "likeCnt", "commentCnt")
+enum class HotTimeType(val days: Long){
+    WEEK(7),
+    MONTH(30),
+    ALL(15000)
+
+}

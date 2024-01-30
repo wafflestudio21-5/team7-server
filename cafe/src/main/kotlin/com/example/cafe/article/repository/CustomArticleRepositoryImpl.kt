@@ -1,5 +1,6 @@
 package com.example.cafe.article.repository
 
+import com.example.cafe.article.controller.HotTimeType
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import jakarta.persistence.TemporalType
@@ -20,14 +21,15 @@ class CustomArticleRepositoryImpl: CustomArticleRepository {
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findTop200ByProperty(property: String, pageable: Pageable): Page<ArticleEntity> {
+    override fun findTop200ByProperty(property: String, pageable: Pageable, hotTimeType: HotTimeType): Page<ArticleEntity> {
 
         val jpqlQuery = """SELECT a FROM articles a JOIN FETCH a.user 
             |WHERE a.createdAt >= :seven_days_ago 
             |ORDER BY a.$property DESC
             |""".trimMargin()
+
         val query = entityManager.createQuery(jpqlQuery, ArticleEntity::class.java)
-            .setParameter("seven_days_ago", LocalDateTime.now().minusDays(7))
+            .setParameter("seven_days_ago", LocalDateTime.now().minusDays(hotTimeType.days))
             .setMaxResults(200)
         val result = query.resultList
         result.sortBy { it.createdAt }
