@@ -87,6 +87,7 @@ class UserServiceImpl (
         val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
 
         userRepository.delete(entity)
+        cafeRepository.decrementMemberCnt(1)
     }
 
     override fun getUserBrief(id: Long): UserBrief {
