@@ -1,5 +1,6 @@
 package com.example.cafe.user.controller
 
+import com.example.cafe.article.service.CommentedArticle
 import com.example.cafe.user.service.*
 import com.example.cafe.article.service.UserArticleBrief
 import org.springframework.data.domain.PageRequest
@@ -95,6 +96,32 @@ class UserController(
         )
     }
 
+    @GetMapping("/api/v1/users/comments")
+    fun getUserComments(
+        @RequestParam("page", defaultValue = "1") page: Int,
+        @Authenticated user: User,
+    ): UserCommentsPageResponse {
+        return UserCommentsPageResponse(
+            userService.getUserComments(
+                user.id,
+                PageRequest.of(page - 1, 15, Sort.by(Sort.Direction.DESC, "lastModified", "id"))
+            )
+        )
+    }
+
+    @GetMapping("/api/v1/users/{nickname}/commented-articles")
+    fun getUserCommentedArticles(
+        @PathVariable nickname: String,
+        @RequestParam("page", defaultValue = "1") page: Int,
+    ): CommentedArticlesPageResponse {
+        return CommentedArticlesPageResponse(
+            userService.getUserCommentedArticles(
+                nickname,
+                PageRequest.of(page-1, 15, Sort.by(Sort.Direction.DESC, "id", "createdAt"))
+            )
+        )
+    }
+
     @ExceptionHandler
     fun handleException(e: UserException): ResponseEntity<Unit> {
         val status = when (e) {
@@ -138,6 +165,14 @@ class UserController(
 
     data class UserArticleBriefPageResponse(
         val articleBrief: Page<UserArticleBrief>
+    )
+
+    data class  UserCommentsPageResponse(
+        val userComments: Page<UserComment>
+    )
+
+    data class CommentedArticlesPageResponse(
+        val commentedArticles: Page<CommentedArticle>
     )
 }
 
