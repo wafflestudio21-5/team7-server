@@ -1,5 +1,6 @@
 package com.example.cafe.article.service
 
+import com.example.cafe.article.controller.HotTimeType
 import com.example.cafe.article.repository.ArticleEntity
 import com.example.cafe.article.repository.ArticleRepository
 import com.example.cafe.user.repository.UserRepository
@@ -127,8 +128,8 @@ class ArticleServiceImpl(
         )
     }
 
-    override fun getHotArticles(sortBy: String, pageable: Pageable): Page<ArticleBrief> {
-        val articles = articleRepository.findTop200ByProperty(sortBy, pageable)
+    override fun getHotArticles(sortBy: String, pageable: Pageable, hotTimeType: HotTimeType): Page<ArticleBrief> {
+        val articles = articleRepository.findTop200ByProperty(sortBy, pageable, hotTimeType)
         return convertPageToArticleBriefPage(articles)
     }
 

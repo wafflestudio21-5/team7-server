@@ -23,3 +23,5 @@ class RankNotFoundException : ArticleException()
 class BadCategoryException : ArticleException()
 
 class HotSortPropertyNotFoundException : ArticleException()
+
+class HotTimeTypeNotFoundException : ArticleException()
