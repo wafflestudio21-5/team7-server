@@ -128,6 +128,16 @@ class ArticleServiceImpl(
         )
     }
 
+    override fun getAroundArticleId(article: Article): Pair<Long?, Long?> {
+        val articles = articleRepository.findByBoardIdInList(article.board.id).sortedBy { article ->
+            article.createdAt
+        }.map{it.id}
+        val idx = articles.indexOf(article.id)
+        val nextId = if(idx!=0){ articles[idx-1] } else{ null }
+        val prevId = if(idx!=articles.size-1){ articles[idx+1] } else{ null }
+        return Pair(prevId,nextId)
+    }
+
     override fun getHotArticles(sortBy: String, pageable: Pageable, hotTimeType: HotTimeType): Page<ArticleBrief> {
         val articles = articleRepository.findTop200ByProperty(sortBy, pageable, hotTimeType)
         return convertPageToArticleBriefPage(articles)
@@ -138,7 +148,6 @@ class ArticleServiceImpl(
     ): Page<ArticleBrief> {
         val articles = articleRepository.findAll(pageable)
         return convertPageToArticleBriefPage(articles)
-
     }
 
     override fun getNotification(): List<ArticleBrief> {
@@ -183,7 +192,6 @@ class ArticleServiceImpl(
             )
         }
     }
-
 }
 
 
