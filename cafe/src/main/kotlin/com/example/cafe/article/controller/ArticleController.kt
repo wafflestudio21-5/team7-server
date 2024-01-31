@@ -89,7 +89,13 @@ class ArticleController(
             articleViewService.create(articleId = articleId, userId = user.id)
             articleLikeService.exists(articleId = articleId, userId = user.id)
         }
-        return ArticleGetResponse(article, isLiked)
+        val aroundId = articleService.getAroundArticleId(article)
+        return ArticleGetResponse(
+            article = article,
+            isLiked = isLiked,
+            prevId = aroundId.first,
+            nextId = aroundId.second
+        )
     }
 
 
@@ -250,6 +256,8 @@ data class ArticleModifyResponse(
 data class ArticleGetResponse(
     val article: Article,
     val isLiked: Boolean,
+    val prevId: Long?,
+    val nextId: Long?,
 )
 
 val HotSortProperties = listOf("viewCnt", "likeCnt", "commentCnt")

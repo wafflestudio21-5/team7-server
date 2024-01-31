@@ -26,7 +26,7 @@ class ArticleIntegrationTest @Autowired constructor(
     fun `게시물 작성`() {
         mvc.perform(
             post("/api/v1/articles/post")
-                .header("Authorization","Bearer hong")
+                .header("Authorization","Bearer")
                 .content(
                     mapper.writeValueAsString(
                         mapOf(
