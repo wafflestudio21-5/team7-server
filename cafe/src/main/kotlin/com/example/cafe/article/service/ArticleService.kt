@@ -38,6 +38,7 @@ interface ArticleService {
     fun getArticles(pageable: Pageable): Page<ArticleBrief>
 
     fun getNotification(): List<ArticleBrief>
+    fun getAroundArticleId(article: Article): Pair<Long?,Long?>
 
     enum class HotSortType {
         VIEW, LIKE, COMMENT

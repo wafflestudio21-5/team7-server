@@ -88,4 +88,9 @@ interface ArticleRepository : JpaRepository<ArticleEntity, Long>, CustomArticleR
         """
     )
     fun findByUser_NicknameContaining(item: String): List<ArticleEntity>
+
+    @Query("""
+        SELECT a FROM articles a WHERE a.board.id = :boardId
+    """)
+    fun findByBoardIdInList(boardId: Long): List<ArticleEntity>
 }
