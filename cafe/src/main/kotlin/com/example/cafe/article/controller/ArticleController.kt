@@ -6,6 +6,7 @@ import com.example.cafe.board.controller.ArticleBriefResponse
 import com.example.cafe.board.service.Board
 import com.example.cafe.user.service.Authenticated
 import com.example.cafe.user.service.User
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
@@ -126,9 +127,15 @@ class ArticleController(
         if (sortBy !in HotSortProperties) throw HotSortPropertyNotFoundException()
         try{
             val hotTimeType = HotTimeType.valueOf(time)
-            val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
+            val sort = Sort.by(Sort.Direction.DESC, sortBy)
             val pageRequest = PageRequest.of(page-1, size, sort)
-            return ArticleBriefPageResponse(articleService.getHotArticles(sortBy, pageRequest, hotTimeType))
+            val unsortedPage = articleService.getHotArticles(sortBy, pageRequest, hotTimeType)
+            return when(sortBy){
+                "viewCnt" -> ArticleBriefPageResponse(PageImpl(unsortedPage.content.sortedByDescending{it.viewCount},unsortedPage.pageable,unsortedPage.totalElements))
+                "likeCnt" -> ArticleBriefPageResponse(PageImpl(unsortedPage.content.sortedByDescending{it.likeCount},unsortedPage.pageable,unsortedPage.totalElements))
+                "commentCnt" -> ArticleBriefPageResponse(PageImpl(unsortedPage.content.sortedByDescending{it.commentCount},unsortedPage.pageable,unsortedPage.totalElements))
+                else -> throw HotSortPropertyNotFoundException()
+            }
         }
         catch(e: IllegalArgumentException){
             throw HotTimeTypeNotFoundException()
