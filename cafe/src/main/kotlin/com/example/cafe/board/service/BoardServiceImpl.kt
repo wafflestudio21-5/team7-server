@@ -95,7 +95,9 @@ class BoardServiceImpl (
     }
 
     private fun getHotBoardId(): List<Long> {
-        return boardRepository.findTop3ByOrderByLikeCntDesc().map { it.id }
+        return boardRepository.findTop3ByOrderByLikeCntDesc()
+            .filter { it.likeCnt >= 10 }
+            .map { it.id }
     }
 
     fun User(entity: UserEntity) = User(
