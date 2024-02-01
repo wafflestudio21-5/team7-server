@@ -164,7 +164,11 @@ class ArticleController(
 
     @GetMapping("/api/v1/boards/{boardId}/search/{item}")
     fun searchArticlesInBoard(
-        @RequestBody request: ArticleSearchRequest,
+        @RequestParam("searchCategory") searchCategory: Long,
+        @RequestParam("startDate") startDate: String,
+        @RequestParam("endDate") endDate: String,
+        @RequestParam("wordInclude") wordInclude: String,
+        @RequestParam("wordExclude") wordExclude: String,
         @PathVariable boardId: Long,
         @PathVariable item: String,
         @RequestParam("size", defaultValue = "15") size: Int,
@@ -176,11 +180,11 @@ class ArticleController(
             articleSearchService.search(
                 item = item,
                 boardId = boardId,
-                searchCategory = request.searchCategory,
-                startDate = request.startDate,
-                endDate = request.endDate,
-                wordInclude = request.wordInclude,
-                wordExclude = request.wordExclude,
+                searchCategory = searchCategory,
+                startDate = startDate,
+                endDate = endDate,
+                wordInclude = wordInclude,
+                wordExclude = wordExclude,
                 pageable = pageRequest
             )
         )
@@ -188,7 +192,11 @@ class ArticleController(
 
     @GetMapping("/api/v1/search/{item}")
     fun searchArticles(
-        @RequestBody request: ArticleSearchRequest,
+        @RequestParam("searchCategory") searchCategory: Long,
+        @RequestParam("startDate") startDate: String,
+        @RequestParam("endDate") endDate: String,
+        @RequestParam("wordInclude") wordInclude: String,
+        @RequestParam("wordExclude") wordExclude: String,
         @PathVariable item: String,
         @RequestParam("size", defaultValue = "15") size: Int,
         @RequestParam("page", defaultValue = "1") page: Int,
@@ -199,11 +207,11 @@ class ArticleController(
             articleSearchService.search(
                 item = item,
                 boardId = null,
-                searchCategory = request.searchCategory,
-                startDate = request.startDate,
-                endDate = request.endDate,
-                wordInclude = request.wordInclude,
-                wordExclude = request.wordExclude,
+                searchCategory = searchCategory,
+                startDate = startDate,
+                endDate = endDate,
+                wordInclude = wordInclude,
+                wordExclude = wordExclude,
                 pageable = pageRequest
             )
         )
