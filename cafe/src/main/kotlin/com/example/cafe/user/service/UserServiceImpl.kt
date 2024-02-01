@@ -36,7 +36,7 @@ class UserServiceImpl (
         username: String,
         password: String,
         name: String,
-        email: String,
+        email: String?,
         birthDate: String,
         phoneNumber: String,
         at: LocalDate
@@ -211,7 +211,7 @@ class UserServiceImpl (
         }
     }
 
-    private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {
+    private fun validate(username: String, password: String, email: String?, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 
         if (!validationUtil.isUsernameValid(username)) {
@@ -222,7 +222,7 @@ class UserServiceImpl (
             throw SignUpBadPasswordException()
         }
 
-        if (!validationUtil.isEmailValid(email)) {
+        if (!email.isNullOrEmpty() && !validationUtil.isEmailValid(email)) {
             throw SignUpBadEmailException()
         }
 
