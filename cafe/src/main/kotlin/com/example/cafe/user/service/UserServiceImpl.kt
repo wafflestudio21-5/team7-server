@@ -59,12 +59,15 @@ class UserServiceImpl (
         return User(entity)
     }
 
+    @Transactional
     override fun signIn(username: String, password: String): User {
         val entity = userRepository.findByUsername(username) ?: throw SignInUserNotFoundException()
 
         if (entity.password != password) {
             throw SignInInvalidPasswordException()
         }
+
+        userRepository.incrementVisitCnt(entity.id)
 
         return User(entity)
     }
