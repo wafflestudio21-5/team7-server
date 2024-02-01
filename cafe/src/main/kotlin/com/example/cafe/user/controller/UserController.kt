@@ -22,7 +22,7 @@ class UserController(
             username = request.username,
             name = request.name,
             password = request.password,
-            email = request.email,
+            email = request.email.orEmpty(),
             birthDate = request.birthDate,
             phoneNumber = request.phoneNumber,
         )
@@ -138,7 +138,7 @@ class UserController(
         val username: String,
         val name: String,
         val password: String,
-        val email: String,
+        val email: String?,
         val birthDate: String,
         val phoneNumber: String,
     )

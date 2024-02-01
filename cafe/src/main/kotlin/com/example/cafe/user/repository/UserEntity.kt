@@ -22,7 +22,7 @@ class UserEntity(
     val snsId: String? = null,
     val name: String,
     var nickname: String,
-    val email: String,
+    val email: String? = null,
     val birthDate: Date,
     val phoneNumber: String,
     val rank: String = User.Rank.USER.name,
