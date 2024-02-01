@@ -75,7 +75,7 @@ class AuthController(
                     val accessToken = authService.socialSignin(
                         snsId = profile.id,
                         name = profile.name,
-                        email = profile.email,
+                        email = profile.email.orEmpty(),
                         birthDate = toDate(profile.birthyear, profile.birthday),
                         phoneNumber = profile.mobile.replace("-", ""),
                         at = LocalDate.now()
@@ -128,8 +128,7 @@ class AuthController(
 
     data class NaverUser(
         val id: String,
-        val nickname: String,
-        val email: String,
+        val email: String?,
         val mobile: String,
         val mobile_e164: String,
         val name: String,
