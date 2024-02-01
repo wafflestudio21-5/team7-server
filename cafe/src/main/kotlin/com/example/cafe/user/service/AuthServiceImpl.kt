@@ -26,6 +26,7 @@ class AuthServiceImpl (
         var secretKey: String
 
         if (existingUser != null) {
+            userRepository.incrementVisitCnt(existingUser.id)
             // User already exists, return the user's ID
             secretKey = toSecretKey(existingUser.id.toString())
         } else {
@@ -39,8 +40,11 @@ class AuthServiceImpl (
                 phoneNumber = phoneNumber,
                 registerDate = at,
             )
+            userRepository.incrementVisitCnt(newUser.id)
+
             secretKey = toSecretKey(userRepository.save(newUser).id.toString())
         }
+
         return secretKey
     }
 
