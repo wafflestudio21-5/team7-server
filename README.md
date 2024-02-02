@@ -1,50 +1,61 @@
-<img src= "https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=1,2,3&animation=fadeIn&height=300&section=header&text=NAVER%20CAFE&fontSize=90&fontColor=ffffff"/>
-
-
-
-# team7-server
+<img src= "https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=1,2,3&animation=fadeIn&height=300&section=header&text=WAFFLE%20CAFE&fontSize=90&fontColor=ffffff"/>
 
 ## 목차
+1. [프로젝트 소개](#프로젝트-소개)
+2. [배포 링크](#배포-링크)
+3. [기술 스택](#기술-스택)
+4. [프로젝트 구조(ERD)](#프로젝트-구조(ERD))
+5. [기능 및 화면 소개](#기능-및-화면-소개)
+6. [개발 과정](#개발-과정)
+7. [팀원 정보](#팀원-정보)
 
+# 프로젝트 소개
+NAVER 카페 서비스의 각 카페 내에서 제공되는 기능들을 클론하였습니다.
+세미나 시간에 배우는 개념을 포함한 풍부한 구현 요소들로 인해 선정하였으며, 이의 세부적 기능까지 구현하는 것을 목표로 하였습니다.
 
-## 프로젝트 소개
+**✅ 필수 스펙 구현**
 
+- [x] 회원가입, 로그인 및 소셜 로그인 기능
+- [x] ...
 
-NAVER 카페 서비스의 각 카페 내에서 제공되는 기능들을 클론하였습니다. 기본적인 게시글 작성부터 게시글의 상세 검색, 좋아요, 댓글과 대댓글, 게시판 분류, 공지, 유저 세부 정보 조회 등의 풍부한 구현 요소들로 인해 선정하게 되었고, 이러한 세부적인 기능까지 구현하는 것을 목표 삼았습니다. 
+**☑️ 추가 스펙 구현**
 
-추가적으로 즐겨찾기 수를 기준으로 인기있는 게시판을 표시하는 기능과 그리고 비밀 댓글 기능을 구현하였습니다.
+- [x] 즐겨찾기 수를 기준으로 인기있는 게시판을 표시하는 기능
+- [x] 비밀 댓글 기능
 
 ## 배포 링크
-
 
 - 배포 URL : https://cafewaffle.shop/
 - 테스트 ID : hong
 - 테스트 PW : password123
 
-## 기술 스택 및 각각의 역할 설명
+## 기술 스택
 
-- 프론트엔드
-    1. React
-    2. TypeScript
-    3. Axios
-    4. Styled-Component
-    5. ContextAPI
-    6. React-Router-Dom
-- 백엔드
-    1. Spring Boot
-    2. Kotlin
-    3. MySQL
-    
-    Spring Boot 프레임워크를 적용하고 언어로는 Kotlin을 사용했습니다.
-    
-    관계형 데이터베이스 관리 시스템으로 MySQL을 사용했습니다.
-    
-- CI/CD
-    1. Docker
-    2. AWS EC2
-    
-    Docker 이미지를 빌드하고 AWS EC2 서버에서 이미지를 pull하여 배포했습니다.
-    
+### 🖥️ FrontEnd
+<div>
+ <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+ <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"> 
+ <img src="https://img.shields.io/badge/styled components-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white"> 
+ <img src="https://img.shields.io/badge/context api-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+ <img src="https://img.shields.io/badge/react router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white">
+<br>
+</div>
+
+### ⚙️ BackEnd
+<div>
+  <img src="https://img.shields.io/badge/spring boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> 
+  <img src="https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white"> 
+  <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
+<br>
+</div>
+
+### 📤 CI/CD
+<div>
+  <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"> 
+  <img src="https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white"> 
+  <img src="https://img.shields.io/badge/aws ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"> 
+<br>
+</div>
 
 ## 프로젝트 구조(ERD)
 
@@ -163,42 +174,35 @@ NAVER 카페 서비스의 각 카페 내에서 제공되는 기능들을 클론�
 - 백엔드: 자신을 제외한 팀원들을 리뷰어로 설정, 4명의 리뷰어가 있어야 merge 가능
 - 프론트:
 
-## 문제 발생과 극복 과정
 
 ## 팀원 정보
 
-Team 07
-
-황두현
-
----
-
-최영주(YJ0513)
-
----
-
-![KakaoTalk_20240113_001559970.jpg](https://prod-files-secure.s3.us-west-2.amazonaws.com/f54ad8d9-5e85-4a03-b287-fc7503d9267a/987f7f4e-0375-4582-9ea0-f440ec338684/KakaoTalk_20240113_001559970.jpg)
-
-전수빈(soobin-jeon)
-
----
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/f54ad8d9-5e85-4a03-b287-fc7503d9267a/89d5fdb4-16e4-4340-a8de-ed2baaba475a/Untitled.jpeg)
-
-정윤재
-
----
-
-박찬영(vitacpark)
-
----
-
-![박찬영_0003_브라운_반명함.jpg](https://prod-files-secure.s3.us-west-2.amazonaws.com/f54ad8d9-5e85-4a03-b287-fc7503d9267a/4544a9aa-c151-4c90-8fb1-b9c9216f033c/%EB%B0%95%EC%B0%AC%EC%98%81_0003_%EB%B8%8C%EB%9D%BC%EC%9A%B4_%EB%B0%98%EB%AA%85%ED%95%A8.jpg)
-
-조현우
-
----
-
-허유민
-
----
+<table>  
+<tr>  
+  <td>Team-07</td> 
+  <td>황두현(Leader)</td> 
+  <td>최영주</td> <td>전수빈</td> 
+  <td>정윤재</td>
+</tr> 
+<tr>
+  <td>GitHub</td>
+  <td><a href="https://github.com/DoohyunHwang97"><img src="https://avatars.githubusercontent.com/u/76721027?v=4" width="100"></a></td> 
+  <td><a href="https://github.com/YJ0513"><img src="https://avatars.githubusercontent.com/u/135787320?v=4" width="100"></a></td> 
+  <td><a href="https://github.com/soobin-jeon"><img src="https://avatars.githubusercontent.com/u/142797788?v=4" width="100"></a></td> 
+  <td><a href="https://github.com/darwinj07"><img src="https://avatars.githubusercontent.com/u/54761229?v=4" width="100"></a></td> 
+</tr> 
+<tr>
+  <td></td>
+  <td>박찬영</td>
+  <td>조현우</td>
+  <td>허유민</td>
+  <td></td>
+</tr>
+<tr>
+  <td>GitHub</td>
+  <td><a href="https://github.com/vitacpark"><img src = "https://avatars.githubusercontent.com/u/55388254?v=4" Width = "100"></a></td>
+  <td><a href="https://github.com/hwoo-cho04"><img src = "https://avatars.githubusercontent.com/u/90887713?v=4" width = "100"></a></td>
+  <td><a href="https://github.com/Yumin22224"><img src = "https://avatars.githubusercontent.com/u/128684390?v=4" width = "100"></a></td>
+  <td></td>
+</tr>
+</table>
