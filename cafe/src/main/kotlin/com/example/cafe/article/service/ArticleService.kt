@@ -39,6 +39,7 @@ interface ArticleService {
 
     fun getNotification(): List<ArticleBrief>
     fun getAroundArticleId(article: Article): Pair<Long?,Long?>
+    fun deleteNotification(articleId: Long, user: User)
 
     enum class HotSortType {
         VIEW, LIKE, COMMENT

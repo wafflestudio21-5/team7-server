@@ -167,6 +167,28 @@ class ArticleServiceImpl(
 
     }
 
+    override fun deleteNotification(articleId: Long, user: User) {
+        if(user.rank != User.Rank.ADMIN.name){
+            throw UnauthorizedModifyException()
+        } else{
+            val article = articleRepository.findById(articleId).orElseThrow{ throw ArticleNotFoundException() }
+            articleRepository.save(
+                ArticleEntity(
+                    id = article.id,
+                    title = article.title,
+                    content = article.content,
+                    createdAt = article.createdAt,
+                    viewCnt = article.viewCnt,
+                    likeCnt = article.likeCnt,
+                    user = article.user,
+                    board = article.board,
+                    allowComments = article.allowComments,
+                    isNotification = false
+                )
+            )
+        }
+    }
+
     fun User(entity: UserEntity) = User(
         id = entity.id,
         nickname = entity.nickname,

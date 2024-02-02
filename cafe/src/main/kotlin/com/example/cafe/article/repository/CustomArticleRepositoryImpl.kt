@@ -24,15 +24,17 @@ class CustomArticleRepositoryImpl: CustomArticleRepository {
     override fun findTop200ByProperty(property: String, pageable: Pageable, hotTimeType: HotTimeType): Page<ArticleEntity> {
 
         val jpqlQuery = """SELECT a FROM articles a JOIN FETCH a.user 
-            |WHERE a.createdAt >= :seven_days_ago 
-            |ORDER BY a.$property DESC
+            |WHERE a.createdAt >= :days_ago 
+            |ORDER BY a.$property DESC, a.createdAt DESC
             |""".trimMargin()
 
         val query = entityManager.createQuery(jpqlQuery, ArticleEntity::class.java)
-            .setParameter("seven_days_ago", LocalDateTime.now().minusDays(hotTimeType.days))
+            .setParameter("days_ago", LocalDateTime.now().minusDays(hotTimeType.days))
             .setMaxResults(200)
         val result = query.resultList
-        result.sortBy { it.createdAt }
+        if(property=="viewCnt"){
+            result.sortBy { it.createdAt }
+        }
         val startIndex = pageable.pageNumber * pageable.pageSize
         val endIndex = min(startIndex + pageable.pageSize, result.size)
         return PageImpl(result.subList(startIndex, endIndex), pageable, result.size.toLong())
