@@ -174,14 +174,12 @@ NAVER 카페 서비스의 각 카페 내에서 제공되는 기능들을 클론�
 - 백엔드: 자신을 제외한 팀원들을 리뷰어로 설정, 4명의 리뷰어가 있어야 merge 가능
 - 프론트:
 
-## 문제 발생과 극복 과정
 
 ## 팀원 정보
 
-Team 07
 <table>  
 <tr>  
-  <td></td> 
+  <td>Team-07</td> 
   <td>황두현(Leader)</td> 
   <td>최영주</td> <td>전수빈</td> 
   <td>정윤재</td>
@@ -198,47 +196,13 @@ Team 07
   <td>박찬영</td>
   <td>조현우</td>
   <td>허유민</td>
+  <td></td>
 </tr>
 <tr>
   <td>GitHub</td>
   <td><a href="https://github.com/vitacpark"><img src = "https://avatars.githubusercontent.com/u/55388254?v=4" Width = "100"></a></td>
   <td><a href="https://github.com/hwoo-cho04"><img src = "https://avatars.githubusercontent.com/u/90887713?v=4" width = "100"></a></td>
   <td><a href="https://github.com/Yumin22224"><img src = "https://avatars.githubusercontent.com/u/128684390?v=4" width = "100"></a></td>
+  <td></td>
 </tr>
 </table>
-
-
-
-황두현
-
----
-
-최영주(YJ0513)
-
----
-
-![KakaoTalk_20240113_001559970.jpg](https://prod-files-secure.s3.us-west-2.amazonaws.com/f54ad8d9-5e85-4a03-b287-fc7503d9267a/987f7f4e-0375-4582-9ea0-f440ec338684/KakaoTalk_20240113_001559970.jpg)
-
-전수빈(soobin-jeon)
-
----
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/f54ad8d9-5e85-4a03-b287-fc7503d9267a/89d5fdb4-16e4-4340-a8de-ed2baaba475a/Untitled.jpeg)
-
-정윤재
-
----
-
-박찬영(vitacpark)
-
----
-
-![박찬영_0003_브라운_반명함.jpg](https://prod-files-secure.s3.us-west-2.amazonaws.com/f54ad8d9-5e85-4a03-b287-fc7503d9267a/4544a9aa-c151-4c90-8fb1-b9c9216f033c/%EB%B0%95%EC%B0%AC%EC%98%81_0003_%EB%B8%8C%EB%9D%BC%EC%9A%B4_%EB%B0%98%EB%AA%85%ED%95%A8.jpg)
-
-조현우
-
----
-
-허유민
-
----
