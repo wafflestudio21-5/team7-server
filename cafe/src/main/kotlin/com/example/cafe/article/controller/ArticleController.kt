@@ -123,19 +123,12 @@ class ArticleController(
         @RequestParam("sortBy", defaultValue = "viewCnt") sortBy: String,
         @RequestParam("time", defaultValue = "WEEK") time: String,
     ): ArticleBriefPageResponse {
-
         if (sortBy !in HotSortProperties) throw HotSortPropertyNotFoundException()
         try{
             val hotTimeType = HotTimeType.valueOf(time)
-            val sort = Sort.by(Sort.Direction.DESC, sortBy)
+            val sort = Sort.by(Sort.Direction.DESC, "createdAt", "id")
             val pageRequest = PageRequest.of(page-1, size, sort)
-            val unsortedPage = articleService.getHotArticles(sortBy, pageRequest, hotTimeType)
-            return when(sortBy){
-                "viewCnt" -> ArticleBriefPageResponse(PageImpl(unsortedPage.content.sortedByDescending{it.viewCount},unsortedPage.pageable,unsortedPage.totalElements))
-                "likeCnt" -> ArticleBriefPageResponse(PageImpl(unsortedPage.content.sortedByDescending{it.likeCount},unsortedPage.pageable,unsortedPage.totalElements))
-                "commentCnt" -> ArticleBriefPageResponse(PageImpl(unsortedPage.content.sortedByDescending{it.commentCount},unsortedPage.pageable,unsortedPage.totalElements))
-                else -> throw HotSortPropertyNotFoundException()
-            }
+            return ArticleBriefPageResponse(articleService.getHotArticles(sortBy, pageRequest, hotTimeType))
         }
         catch(e: IllegalArgumentException){
             throw HotTimeTypeNotFoundException()
