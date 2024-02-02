@@ -95,9 +95,9 @@ class BoardServiceTest @Autowired constructor(
     @Transactional
     @Test
     fun `게시판 그룹, 인기게시판 조회`() {
-        for (i: Int in 1..3)
+        for (i: Int in 1..11)
             boardLikeRepository.incrementLikeCnt(2)
-        for (i: Int in 1..3)
+        for (i: Int in 1..11)
             boardLikeRepository.incrementLikeCnt(3)
         for (i: Int in 1..2)
             boardLikeRepository.incrementLikeCnt(5)
@@ -121,7 +121,7 @@ class BoardServiceTest @Autowired constructor(
             false, false, false
         ))
         assertThat(list[2].boards.map { it.isHot }).isEqualTo(listOf(
-            true, false
+            false, false
         ))
     }
 

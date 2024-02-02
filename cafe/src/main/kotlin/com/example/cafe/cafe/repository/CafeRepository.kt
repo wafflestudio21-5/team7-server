@@ -14,4 +14,13 @@ interface CafeRepository : JpaRepository<CafeEntity, Long>{
     """
     )
     fun incrementMemberCnt(cafeId: Long)
+
+    @Modifying
+    @Transactional
+    @Query(
+        """
+        UPDATE cafe c SET c.memberCnt = c.memberCnt - 1 WHERE c.id = :cafeId
+    """
+    )
+    fun decrementMemberCnt(cafeId: Long)
 }

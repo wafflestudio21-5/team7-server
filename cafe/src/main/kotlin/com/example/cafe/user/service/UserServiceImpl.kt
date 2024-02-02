@@ -36,7 +36,7 @@ class UserServiceImpl (
         username: String,
         password: String,
         name: String,
-        email: String,
+        email: String?,
         birthDate: String,
         phoneNumber: String,
         at: LocalDate
@@ -59,12 +59,15 @@ class UserServiceImpl (
         return User(entity)
     }
 
+    @Transactional
     override fun signIn(username: String, password: String): User {
         val entity = userRepository.findByUsername(username) ?: throw SignInUserNotFoundException()
 
         if (entity.password != password) {
             throw SignInInvalidPasswordException()
         }
+
+        userRepository.incrementVisitCnt(entity.id)
 
         return User(entity)
     }
@@ -87,6 +90,7 @@ class UserServiceImpl (
         val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
 
         userRepository.delete(entity)
+        cafeRepository.decrementMemberCnt(1)
     }
 
     override fun getUserBrief(id: Long): UserBrief {
@@ -210,7 +214,7 @@ class UserServiceImpl (
         }
     }
 
-    private fun validate(username: String, password: String, email: String, birthDate: String, phoneNumber: String) {
+    private fun validate(username: String, password: String, email: String?, birthDate: String, phoneNumber: String) {
         val validationUtil = ValidationUtil()
 
         if (!validationUtil.isUsernameValid(username)) {
@@ -221,7 +225,7 @@ class UserServiceImpl (
             throw SignUpBadPasswordException()
         }
 
-        if (!validationUtil.isEmailValid(email)) {
+        if (!email.isNullOrEmpty() && !validationUtil.isEmailValid(email)) {
             throw SignUpBadEmailException()
         }
 
