@@ -162,6 +162,17 @@ class ArticleController(
         return ArticleBriefResponse(articleService.getNotification())
     }
 
+    @DeleteMapping("/api/v1/articles/{articleId}/notification")
+    fun deleteNotification(
+        @PathVariable articleId: Long,
+        @Authenticated user: User,
+    ){
+        articleService.deleteNotification(
+            articleId = articleId,
+            user = user,
+        )
+    }
+
     @GetMapping("/api/v1/boards/{boardId}/search/{item}")
     fun searchArticlesInBoard(
         @RequestBody request: ArticleSearchRequest,

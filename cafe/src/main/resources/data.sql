@@ -3,6 +3,9 @@ INSERT into users (id, username, password, name, nickname, email, birth_date, ph
 (3, 'username1','password1','홍길은','nickname1','email@example.com','2000-02-02','01012345678'),
 (4, 'username2','password2','홍길금','nickname2','email@example.com','2000-02-02','01012345679');
 
+INSERT into users (id, username, password, name, nickname, email, birth_date, phone_number, rank) VALUES
+(5, 'admin','adminpassword','관리자','adminnick','email@example.com','2003-02-02','01012345678','ADMIN');
+
 INSERT into board_groups (id, name) VALUES (1, '백엔드'),
 (2, '프론트엔드'),
 (3, '프로그래밍 언어');
@@ -31,7 +34,7 @@ INSERT INTO articles (id, title, content, created_at, user_id, board_id, allow_c
 (12, 'test12', '<p>.</p>', '2024-01-12', 4, 2, true, false, 40, 15, 3),
 (13, 'test13', '<p>.</p>', '2024-01-13', 1, 3, true, false, 75, 35, 12),
 (16, 'test16', '<p>.</p>', '2024-01-14', 2, 4, true, false, 95, 50, 18),
-(15, 'test15', '<p>.</p>', '2024-01-14', 3, 1, true, false, 160, 75, 30),
+(15, 'test15', '<p>.</p>', '2024-01-14', 5, 1, true, false, 160, 75, 30),
 (14, 'test14', '<p>이것은 첫 번째 단락입니다. HTML에서 <strong>단락</strong>은 <code>&lt;p&gt;</code>와 <code>&lt;/p&gt;</code> 태그로 묶여 표현됩니다.</p><p>이것은 두 번째 단락입니다. 각 단락은 별도의 블록으로 처리되어, 자동으로 상하 여백이 생깁니다.</p><p>마지막으로, 이것은 세 번째 단락입니다. 웹 페이지에서 텍스트의 구조와 가독성을 높이기 위해 단락을 사용합니다.</p>', '2023-01-14', 4, 2, true, false, 120, 60, 25);
 
 INSERT into comments (id, content, last_modified, user_id, article_id) VALUES (1, '잘 읽었습니다.', CURRENT_TIMESTAMP, 1, 1),
