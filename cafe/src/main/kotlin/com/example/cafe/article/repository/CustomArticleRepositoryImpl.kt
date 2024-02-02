@@ -33,7 +33,7 @@ class CustomArticleRepositoryImpl: CustomArticleRepository {
             .setMaxResults(200)
         val result = query.resultList
         if(property=="viewCnt"){
-            result.sortBy { it.createdAt }
+            result.sortByDescending{ it.createdAt }
         }
         val startIndex = pageable.pageNumber * pageable.pageSize
         val endIndex = min(startIndex + pageable.pageSize, result.size)

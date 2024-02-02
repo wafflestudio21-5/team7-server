@@ -51,7 +51,8 @@ class ArticleSearchServiceImpl(
         }
         val result = articleFoundFiltered.filter {article ->
             article.createdAt.isAfter(startDateInDate) && article.createdAt.isBefore(endDateInDate) && (boardId?.equals(article.board.id)?:true)
-        }
+        }.toMutableList()
+        result.sortByDescending{it.createdAt}
         val startIndex = pageable.pageNumber * pageable.pageSize
         val endIndex = min(startIndex + pageable.pageSize, result.size)
         return PageImpl(result.subList(startIndex, endIndex), pageable, result.size.toLong())
