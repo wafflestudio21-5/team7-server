@@ -7,7 +7,7 @@ data class User(
     val id: Long,
     val nickname: String,
     val registerDate: LocalDate,
-    val email: String,
+    val email: String?,
     val rank: String,
     val visitCount: Long,
     val articlesCount: Long,

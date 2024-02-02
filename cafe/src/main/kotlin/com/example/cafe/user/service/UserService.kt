@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable
 import java.time.LocalDate
 
 interface UserService {
-    fun signUp(username: String, password: String, name: String, email: String, birthDate: String, phoneNumber: String, at: LocalDate = LocalDate.now()): User
+    fun signUp(username: String, password: String, name: String, email: String?, birthDate: String, phoneNumber: String, at: LocalDate = LocalDate.now()): User
     fun signIn(username: String, password: String): User
     fun updateProfile(id: Long, nickname: String, introduction: String, image: String): User
     fun delete(id: Long)

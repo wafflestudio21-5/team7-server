@@ -40,4 +40,13 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
         UPDATE users u SET u.commentsCount = u.commentsCount - 1 WHERE u.id = :userId
     """)
     fun decrementCommentsCount(userId: Long)
+
+    @Modifying
+    @Transactional
+    @Query(
+        """
+        UPDATE users u SET u.visitCount = u.visitCount + 1 WHERE u.id = :userId
+    """
+    )
+    fun incrementVisitCnt(userId: Long)
 }

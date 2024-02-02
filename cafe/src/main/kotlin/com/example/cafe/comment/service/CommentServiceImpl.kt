@@ -129,8 +129,6 @@ class CommentServiceImpl (
                 isSecret = isSecret,
             )
         )
-        articleRepository.incrementCommentCnt(articleId)
-        userRepository.incrementCommentsCount(userId)
 
         return Recomment(
             id = recomment.id,
@@ -208,7 +206,5 @@ class CommentServiceImpl (
             throw UnauthorizedCommentUserException()
         }
         recommentRepository.delete(recomment)
-        articleRepository.decrementCommentCnt(articleId)
-        userRepository.decrementCommentsCount(userId)
     }
 }

@@ -62,7 +62,6 @@ create table boards (
     id bigint auto_increment,
     name varchar(255),
     group_id bigint,
-    view_cnt bigint default 0,
     like_cnt bigint default 0,
     primary key (id)
 );
@@ -75,13 +74,6 @@ create table board_likes (
     id bigint auto_increment,
     board_id bigint not null,
     user_id bigint not null,
-    primary key (id)
-);
-create table board_views (
-    id bigint auto_increment,
-    board_id bigint not null,
-    user_id bigint not null,
-    created_at datetime not null,
     primary key (id)
 );
 create table comments (
