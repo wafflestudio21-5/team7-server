@@ -149,7 +149,7 @@ NAVER 카페 서비스의 각 카페 내에서 제공되는 기능들을 클론�
 - Git 브랜치
     - main
     - dev : 통합 브랜치
-    - feature: 기능 개발 브렌치
+    - feature: 기능 개발 브랜치
     - setEntity
 
 ### 회의 방식(Agile)
