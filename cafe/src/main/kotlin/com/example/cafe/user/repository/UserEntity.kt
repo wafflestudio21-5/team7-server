@@ -28,7 +28,7 @@ class UserEntity(
     val visitCount: Long = 0L,
     val articlesCount: Long = 0L,
     var commentsCount: Long = 0L,
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
     val articles: List<ArticleEntity> = mutableListOf(),
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
     val comments: List<CommentEntity> = mutableListOf(),
