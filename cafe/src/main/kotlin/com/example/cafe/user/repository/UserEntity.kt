@@ -31,7 +31,7 @@ class UserEntity(
     var image: String? = null,
     val visitCount: Long = 0L,
     val articlesCount: Long = 0L,
-    val commentsCount: Long = 0L,
+    var commentsCount: Long = 0L,
     @OneToMany(mappedBy = "user")
     val articles: List<ArticleEntity> = mutableListOf(),
     @OneToMany(mappedBy = "user")

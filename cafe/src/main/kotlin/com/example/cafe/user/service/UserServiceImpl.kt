@@ -93,8 +93,11 @@ class UserServiceImpl (
         cafeRepository.decrementMemberCnt(1)
     }
 
+    @Transactional
     override fun getUserBrief(id: Long): UserBrief {
         val entity: UserEntity = userRepository.findById(id).orElseThrow { UserNotFoundException() }
+        val commentCnt = entity.comments.size.toLong()
+        entity.commentsCount = commentCnt
 
         return UserBrief(
             nickname = entity.nickname,
