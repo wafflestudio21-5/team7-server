@@ -45,4 +45,4 @@ INSERT into comments (id, content, last_modified, user_id, article_id) VALUES (1
 
 INSERT into recomments (id, content, last_modified, user_id, comment_id) VALUES (1, '감사합니다.', CURRENT_TIMESTAMP, 1, 1);
 
-INSERT into cafe (id, name, created_at, member_cnt) VALUES (1, '와플', CURRENT_TIMESTAMP, 0);
+INSERT into cafe (id, name, created_at, member_cnt) VALUES (1, '와플', CURRENT_TIMESTAMP, 7);
