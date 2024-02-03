@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BoardServiceImpl (
@@ -43,10 +44,16 @@ class BoardServiceImpl (
         }
     }
 
+    @Transactional
     override fun getArticles(boardId: Long, page: Int, size: Int, sort: List<String>): Page<ArticleBrief> {
         val board = boardRepository.findById(boardId).orElseThrow{ BoardNotFoundException() }
         val pageable = PageRequest.of(page, size, sortBy(sort))
         val articleList = articleRepository.findByBoardId(boardId, pageable)
+
+        articleList.forEach { articleEntity ->
+            val commentCount = articleEntity.comments.size.toLong()
+            articleEntity.commentCnt = commentCount
+        }
 
         return articleList.map {article->
             ArticleBrief(

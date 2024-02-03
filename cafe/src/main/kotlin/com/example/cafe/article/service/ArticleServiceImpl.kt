@@ -147,10 +147,15 @@ class ArticleServiceImpl(
         return convertPageToArticleBriefPage(articles)
     }
 
+    @Transactional
     override fun getArticles(
         pageable: Pageable
     ): Page<ArticleBrief> {
         val articles = articleRepository.findAll(pageable)
+        articles.forEach { articleEntity ->
+            val commentCount = articleEntity.comments.size.toLong()
+            articleEntity.commentCnt = commentCount
+        }
         return convertPageToArticleBriefPage(articles)
     }
 
