@@ -104,12 +104,16 @@ class ArticleServiceImpl(
         articleRepository.delete(article)
     }
 
+    @Transactional
     override fun get(id: Long): Article {
         val article = articleRepository.findById(id).orElseThrow{ ArticleNotFoundException() }
         val author = article.user
         val board = article.board
         val likeCount = article.likeCnt
         val viewCount = article.viewCnt
+        val commentCount = article.comments.size.toLong()
+        article.commentCnt = commentCount
+
         return Article(
             id = id,
             title = article.title,
