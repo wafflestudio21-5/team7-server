@@ -143,7 +143,12 @@ class ArticleServiceImpl(
     }
 
     override fun getHotArticles(sortBy: String, pageable: Pageable, hotTimeType: HotTimeType): Page<ArticleBrief> {
-        val articles = articleRepository.findTop200ByProperty(sortBy, pageable, hotTimeType)
+        val filteredHotTimeType: HotTimeType = if(sortBy == "viewCnt"){
+            HotTimeType.WEEK
+        } else {
+            hotTimeType
+        }
+        val articles = articleRepository.findTop200ByProperty(sortBy, pageable, filteredHotTimeType)
         return convertPageToArticleBriefPage(articles)
     }
 
