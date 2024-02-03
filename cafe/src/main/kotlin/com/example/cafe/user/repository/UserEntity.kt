@@ -4,11 +4,7 @@ import com.example.cafe.article.repository.ArticleEntity
 import com.example.cafe.comment.repository.CommentEntity
 import com.example.cafe.comment.repository.RecommentEntity
 import com.example.cafe.user.service.User
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
+import jakarta.persistence.*
 import java.sql.Date
 import java.time.LocalDate
 
@@ -32,10 +28,10 @@ class UserEntity(
     val visitCount: Long = 0L,
     val articlesCount: Long = 0L,
     var commentsCount: Long = 0L,
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
     val articles: List<ArticleEntity> = mutableListOf(),
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
     val comments: List<CommentEntity> = mutableListOf(),
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
     val recomments: List<RecommentEntity> = mutableListOf()
 )
